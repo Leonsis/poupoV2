@@ -1,0 +1,163 @@
+.secao button {
+    background-color: var(--cor-principal);
+}
+
+.secao button a{
+    color: var(--cor-branco);
+    font-weight: bold;
+}
+
+section {
+    padding-top: 40px;
+    margin-top: 40px;
+}
+
+section.secao {
+    border-top: 1px solid var(--cor-principal);
+    border-bottom: 1px solid var(--cor-principal);
+}
+
+section#descricao {
+    border-top: 1px solid var(--cor-branco);
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+section#descricao::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 166vw solid transparent;
+    border-right: 0 solid var(--cor-principal);
+    border-top: 98vh solid var(--cor-principal);
+    position: absolute;
+    bottom: 189px;
+    right: 0;
+    z-index: -1;
+}
+
+section#descricao h2{
+   font-size: 2.5rem;
+}
+
+section#descricao span{
+    font-weight: bold;
+}
+
+section#descricao .imagem{
+    margin-left: 45px;
+}
+
+section#organizadorFinanceiro h2{
+    background: var(--cor-principal);
+    display: inline;
+    padding: 1px 0;
+}
+
+section#organizadorFinanceiro form{
+    margin-top: 10px;
+}
+
+section#organizadorFinanceiro fieldset{
+    padding: 10px;
+    font-weight: bolder;
+    margin: 30px;
+}
+
+section#organizadorFinanceiro fieldset .box{
+    padding: 10px;
+    text-align: right ;
+}
+
+
+section#organizadorFinanceiro fieldset.entradaD1 div{
+    display: block;
+}
+
+section#organizadorFinanceiro fieldset.entradaD1 input{
+    width: 100%;
+}
+
+.bordai {
+    border: 1px solid var(--cor-principal);
+}
+
+section#organizadorFinanceiro fieldset.entradaD1 label input{
+    width: 20px;
+}
+
+section#organizadorFinanceiro fieldset.entradaD1 label svg:hover{
+    cursor:pointer;
+}
+
+
+section#organizadorFinanceiro fieldset #aviso{
+    color: var(--cor-secudaria);
+    position: absolute;
+    display: inline;
+    z-index: 1;
+}
+
+
+section#organizadorFinanceiro .meta,
+section#organizadorFinanceiro .valor{
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 5px;
+}
+
+section#organizadorFinanceiro fieldset .input-group{
+    width: 80%;
+}
+
+section#organizadorFinanceiro button{
+    margin: 10px auto;
+}
+
+.botao {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid var(--cor-principal);
+}
+
+section#organizadorFinanceiro .opcao{
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+section#organizadorFinanceiro .row{
+    margin-bottom: 5px;
+}
+
+#obs {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.obsTesto {
+    font-size: 0.8em;
+}
+
+@media (max-width: 1200px) {
+    section#organizadorFinanceiro fieldset #aviso{
+        display: block;
+    }
+}
+
+/*
+    Aqui eu estou colocando um hover em uma tag irmã da div#aviso.
+*/
+svg#alerta1:hover + div#aviso {
+    display: block !important;
+}
+
+@media (max-width: 768px) {
+    section#descricao {
+        height: 400px;
+    }
+
+    section#descricao .testo {
+        padding-top: 90px;
+        text-align: center;
+    }
+}
