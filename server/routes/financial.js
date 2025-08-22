@@ -448,10 +448,28 @@ router.post('/expenses', [
     body('amount').isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
     body('description').optional().isLength({ max: 500 }).withMessage('Descrição muito longa'),
     body('payment_method').isIn(['debito', 'credito', 'pix']).withMessage('Método de pagamento inválido'),
-    body('expense_date').isISO8601().withMessage('Data inválida'),
+    body('expense_date').custom((value) => {
+        if (!value) {
+            throw new Error('Data é obrigatória');
+        }
+        const date = new Date(value);
+        return !isNaN(date.getTime());
+    }).withMessage('Data inválida'),
     body('category').optional().isLength({ max: 100 }).withMessage('Categoria muito longa'),
-    body('installments').optional().isInt({ min: 1, max: 24 }).withMessage('Número de parcelas deve estar entre 1 e 24'),
-    body('bank_account_id').optional().isInt({ min: 1 }).withMessage('ID da conta bancária inválido')
+    body('installments').optional().custom((value) => {
+        if (value === '' || value === null || value === undefined) {
+            return true; // Permite valores vazios
+        }
+        const num = parseInt(value);
+        return !isNaN(num) && num >= 1 && num <= 24;
+    }).withMessage('Número de parcelas deve estar entre 1 e 24'),
+    body('bank_account_id').optional().custom((value) => {
+        if (value === '' || value === null || value === undefined) {
+            return true; // Permite valores vazios
+        }
+        const num = parseInt(value);
+        return !isNaN(num) && num > 0;
+    }).withMessage('ID da conta bancária inválido')
 ], async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -464,13 +482,25 @@ router.post('/expenses', [
 
         const { amount, description, payment_method, expense_date, category, installments, bank_account_id } = req.body;
 
+        // Processar dados antes de inserir no banco
+        const processedData = {
+            amount: parseFloat(amount),
+            description: description || null,
+            payment_method,
+            expense_date,
+            category: category || null,
+            installments: installments && installments !== '' ? parseInt(installments) : null,
+            bank_account_id: bank_account_id && bank_account_id !== '' ? parseInt(bank_account_id) : null
+        };
+
         console.log('Dados recebidos:', { amount, description, payment_method, expense_date, category, installments, bank_account_id });
+        console.log('Dados processados:', processedData);
 
         // Verificar se há limite suficiente para gastos em crédito
-        if (payment_method === 'credito' && bank_account_id) {
+        if (processedData.payment_method === 'credito' && processedData.bank_account_id) {
             const account = await db.get(
                 'SELECT credit_limit FROM bank_accounts WHERE id = ? AND user_id = ? AND account_category = ?',
-                [bank_account_id, req.user.userId, 'credito']
+                [processedData.bank_account_id, req.user.userId, 'credito']
             );
             
             if (!account) {
@@ -480,7 +510,7 @@ router.post('/expenses', [
                 });
             }
             
-            if (account.credit_limit < amount) {
+            if (account.credit_limit < processedData.amount) {
                 return res.status(400).json({
                     success: false,
                     message: `Limite insuficiente. Limite disponível: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(account.credit_limit)}`
@@ -490,25 +520,25 @@ router.post('/expenses', [
 
         const result = await db.run(
             'INSERT INTO expenses (user_id, amount, description, payment_method, expense_date, category, installments, bank_account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, amount, description, payment_method, expense_date, category, installments, bank_account_id]
+            [req.user.userId, processedData.amount, processedData.description, processedData.payment_method, processedData.expense_date, processedData.category, processedData.installments, processedData.bank_account_id]
         );
 
         // Atualizar saldo/limite da conta bancária se especificada
-        if (bank_account_id) {
-            if (payment_method === 'debito' || payment_method === 'pix') {
+        if (processedData.bank_account_id) {
+            if (processedData.payment_method === 'debito' || processedData.payment_method === 'pix') {
                 // Para débito e PIX: deduzir do saldo
-                console.log(`Atualizando saldo da conta ${bank_account_id} com -${amount} (${payment_method})`);
+                console.log(`Atualizando saldo da conta ${processedData.bank_account_id} com -${processedData.amount} (${processedData.payment_method})`);
                 await db.run(
                     'UPDATE bank_accounts SET balance = balance - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                    [amount, bank_account_id, req.user.userId]
+                    [processedData.amount, processedData.bank_account_id, req.user.userId]
                 );
                 console.log('Saldo atualizado com sucesso');
-            } else if (payment_method === 'credito') {
+            } else if (processedData.payment_method === 'credito') {
                 // Para crédito: deduzir do limite disponível
-                console.log(`Atualizando limite da conta ${bank_account_id} com -${amount} (crédito)`);
+                console.log(`Atualizando limite da conta ${processedData.bank_account_id} com -${processedData.amount} (crédito)`);
                 await db.run(
                     'UPDATE bank_accounts SET credit_limit = credit_limit - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                    [amount, bank_account_id, req.user.userId]
+                    [processedData.amount, processedData.bank_account_id, req.user.userId]
                 );
                 console.log('Limite atualizado com sucesso');
             }
