@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { testBackendConnection, testRegistration, checkEnvironment } from '../utils/testConnection';
+import { testBackendConnection, checkEnvironment } from '../utils/testConnection';
 import { Button, Input, Card } from '../components/ui';
 import {
     Eye,
@@ -12,7 +12,6 @@ import {
     Lock,
     Calendar,
     Phone,
-    DollarSign,
     PiggyBank,
     ArrowLeft,
     Sun,
@@ -173,8 +172,8 @@ const Login = () => {
         PiggyBank className = "w-7 h-7 text-white" / >
         <
         /div> <
-        h1 className = "text-3xl font-bold text-gradient" > Poupo < /h1> <
-        /div>
+        h1 className = "text-3xl font-bold text-gradient" > Poupo < /h1> < /
+        div >
 
         <
         h2 className = "text-2xl font-semibold text-gray-900 dark:text-light" > { isLogin ? 'Bem-vindo de volta!' : 'Crie sua conta' } <
@@ -188,8 +187,7 @@ const Login = () => {
             process.env.NODE_ENV === 'development' && ( <
                 button type = "button"
                 onClick = { handleTestConnection }
-                className = "mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm" >
-                🧪Testar Conexão <
+                className = "mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm" > 🧪Testar Conexão <
                 /button>
             )
         } <
@@ -244,7 +242,8 @@ const Login = () => {
         placeholder = "Digite sua senha"
         error = { errors.password }
         onRightIconClick = {
-            () => setShowPassword(!showPassword) }
+            () => setShowPassword(!showPassword)
+        }
         />
 
         { /* Confirmar senha (apenas para registro) */ } {
@@ -259,14 +258,16 @@ const Login = () => {
                 placeholder = "Confirme sua senha"
                 error = { errors.confirmPassword }
                 onRightIconClick = {
-                    () => setShowConfirmPassword(!showConfirmPassword) }
+                    () => setShowConfirmPassword(!showConfirmPassword)
+                }
                 />
             )
         }
 
         { /* Campos adicionais para registro */ } {
             !isLogin && ( <
-                > { /* Data de nascimento */ } <
+                >
+                { /* Data de nascimento */ } <
                 Input type = "date"
                 name = "birth_date"
                 label = "Data de nascimento"
@@ -293,10 +294,9 @@ const Login = () => {
         Button type = "submit"
         variant = "primary"
         size = "lg"
-        fullWidth loading = { isLoading } >
-        { isLogin ? 'Entrar' : 'Criar conta' } <
-        /Button> <
-        /form> <
+        fullWidth loading = { isLoading } > { isLogin ? 'Entrar' : 'Criar conta' } <
+        /Button> < /
+        form > <
         /Card.Content>
 
         { /* Toggle entre login e registro */ } <
@@ -307,39 +307,37 @@ const Login = () => {
         p className = "text-gray-600 dark:text-light" > { isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?' } <
         /p> <
         button onClick = { toggleMode }
-        className = "text-primary hover:text-primary-dark font-medium mt-1 transition-colors" >
-        { isLogin ? 'Criar conta gratuita' : 'Fazer login' } <
-        /button> <
-        /div> <
-        /Card.Footer> <
-        /Card>
+        className = "text-primary hover:text-primary-dark font-medium mt-1 transition-colors" > { isLogin ? 'Criar conta gratuita' : 'Fazer login' } <
+        /button> < /
+        div > <
+        /Card.Footer> < /
+        Card >
 
         { /* Toggle de tema */ } <
         div className = "text-center mt-6" >
         <
         button onClick = { toggleTheme }
-        className = "p-2 rounded-lg bg-white dark:bg-dark-light shadow-lg hover:shadow-xl transition-all duration-300" >
-        {
+        className = "p-2 rounded-lg bg-white dark:bg-dark-light shadow-lg hover:shadow-xl transition-all duration-300" > {
             isDarkMode ? ( <
                 div className = "flex items-center space-x-2 text-primary" >
                 <
                 Sun className = "w-5 h-5" / >
                 <
-                span className = "text-sm" > Modo claro < /span> <
-                /div>
+                span className = "text-sm" > Modo claro < /span> < /
+                div >
             ) : ( <
                 div className = "flex items-center space-x-2 text-secondary" >
                 <
                 Moon className = "w-5 h-5" / >
                 <
-                span className = "text-sm" > Modo escuro < /span> <
-                /div>
+                span className = "text-sm" > Modo escuro < /span> < /
+                div >
             )
         } <
-        /button> <
-        /div> <
-        /div> <
-        /div>
+        /button> < /
+        div > <
+        /div> < /
+        div >
     );
 };
 

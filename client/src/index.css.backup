@@ -89,9 +89,9 @@ body {
 
 .btn-primary {
     @apply bg-primary text-black font-medium px-6 py-3 rounded-lg transition-all duration-300;
-    @apply hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/25;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
-    @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    @apply hover: bg-primary-dark hover: shadow-lg hover: shadow-primary/25;
+    @apply focus: outline-none focus: ring-2 focus: ring-primary focus: ring-opacity-50;
+    @apply active: scale-95 disabled: opacity-50 disabled: cursor-not-allowed disabled: transform-none;
     @apply border-0 shadow-sm;
 }
 
@@ -101,17 +101,17 @@ body {
 
 .btn-secondary {
     @apply bg-secondary text-white font-medium px-6 py-3 rounded-lg transition-all duration-300;
-    @apply hover:bg-secondary-light hover:shadow-lg hover:shadow-secondary/25;
-    @apply focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50;
-    @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    @apply hover: bg-secondary-light hover: shadow-lg hover: shadow-secondary/25;
+    @apply focus: outline-none focus: ring-2 focus: ring-secondary focus: ring-opacity-50;
+    @apply active: scale-95 disabled: opacity-50 disabled: cursor-not-allowed disabled: transform-none;
     @apply border-0 shadow-sm;
 }
 
 .btn-outline {
     @apply border-2 border-primary text-primary font-medium px-6 py-3 rounded-lg transition-all duration-300;
-    @apply hover:bg-primary hover:text-black hover:shadow-lg hover:shadow-primary/25;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
-    @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    @apply hover: bg-primary hover: text-black hover: shadow-lg hover: shadow-primary/25;
+    @apply focus: outline-none focus: ring-2 focus: ring-primary focus: ring-opacity-50;
+    @apply active: scale-95 disabled: opacity-50 disabled: cursor-not-allowed disabled: transform-none;
     @apply bg-transparent shadow-sm;
 }
 
@@ -121,9 +121,9 @@ body {
 
 .btn-danger {
     @apply bg-red-600 text-white font-medium px-6 py-3 rounded-lg transition-all duration-300;
-    @apply hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25;
-    @apply focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50;
-    @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    @apply hover: bg-red-700 hover: shadow-lg hover: shadow-red-600/25;
+    @apply focus: outline-none focus: ring-2 focus: ring-red-600 focus: ring-opacity-50;
+    @apply active: scale-95 disabled: opacity-50 disabled: cursor-not-allowed disabled: transform-none;
     @apply border-0 shadow-sm;
 }
 
@@ -140,10 +140,10 @@ body {
 
 .input-primary {
     @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg;
-    @apply focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+    @apply focus: border-primary focus: outline-none focus: ring-2 focus: ring-primary focus: ring-opacity-50;
     @apply transition-all duration-300 bg-white text-gray-900;
-    @apply placeholder:text-gray-500;
-    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply placeholder: text-gray-500;
+    @apply disabled: opacity-50 disabled: cursor-not-allowed;
 }
 
 .input-primary:focus {
@@ -154,13 +154,13 @@ body {
 /* Cards customizados */
 
 .card {
-    @apply bg-white dark:bg-dark-light rounded-xl shadow-lg p-6 transition-all duration-300;
-    @apply hover:shadow-xl border border-gray-100 dark:border-gray-700;
+    @apply bg-white dark: bg-dark-light rounded-xl shadow-lg p-6 transition-all duration-300;
+    @apply hover: shadow-xl border border-gray-100 dark: border-gray-700;
 }
 
 .card-dark {
-    @apply bg-dark-light dark:bg-dark-lighter rounded-xl shadow-lg p-6 transition-all duration-300;
-    @apply hover:shadow-xl border border-gray-700 dark:border-gray-600;
+    @apply bg-dark-light dark: bg-dark-lighter rounded-xl shadow-lg p-6 transition-all duration-300;
+    @apply hover: shadow-xl border border-gray-700 dark: border-gray-600;
 }
 
 
@@ -180,7 +180,7 @@ body {
 }
 
 .dark .input-primary {
-    @apply bg-dark-light border-gray-600 text-light placeholder:text-gray-400;
+    @apply bg-dark-light border-gray-600 text-light placeholder: text-gray-400;
 }
 
 .dark .input-primary:focus {
@@ -294,15 +294,15 @@ body {
 /* Status indicators */
 
 .status-paid {
-    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+    @apply bg-green-100 text-green-800 dark: bg-green-900 dark: text-green-200;
 }
 
 .status-pending {
-    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+    @apply bg-yellow-100 text-yellow-800 dark: bg-yellow-900 dark: text-yellow-200;
 }
 
 .status-overdue {
-    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+    @apply bg-red-100 text-red-800 dark: bg-red-900 dark: text-red-200;
 }
 
 
@@ -313,7 +313,7 @@ body {
 }
 
 .form-label {
-    @apply block text-sm font-medium text-gray-700 dark:text-light mb-2;
+    @apply block text-sm font-medium text-gray-700 dark: text-light mb-2;
 }
 
 .form-error {
@@ -328,7 +328,7 @@ body {
 /* Melhorias para tabelas */
 
 .table-container {
-    @apply overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700;
+    @apply overflow-x-auto rounded-lg border border-gray-200 dark: border-gray-700;
 }
 
 .table {
@@ -336,15 +336,15 @@ body {
 }
 
 .table th {
-    @apply text-left py-3 px-4 font-medium text-gray-700 dark:text-light bg-gray-50 dark:bg-dark-lighter;
+    @apply text-left py-3 px-4 font-medium text-gray-700 dark: text-light bg-gray-50 dark: bg-dark-lighter;
 }
 
 .table td {
-    @apply py-3 px-4 text-gray-900 dark:text-light border-b border-gray-100 dark:border-gray-800;
+    @apply py-3 px-4 text-gray-900 dark: text-light border-b border-gray-100 dark: border-gray-800;
 }
 
 .table tr:hover {
-    @apply bg-gray-50 dark:bg-dark-lighter;
+    @apply bg-gray-50 dark: bg-dark-lighter;
 }
 
 
@@ -355,30 +355,30 @@ body {
 }
 
 .badge-primary {
-    @apply bg-primary/20 text-primary dark:bg-primary/30 dark:text-primary;
+    @apply bg-primary/20 text-primary dark: bg-primary/30 dark: text-primary;
 }
 
 .badge-secondary {
-    @apply bg-secondary/20 text-secondary dark:bg-secondary/30 dark:text-secondary;
+    @apply bg-secondary/20 text-secondary dark: bg-secondary/30 dark: text-secondary;
 }
 
 .badge-success {
-    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+    @apply bg-green-100 text-green-800 dark: bg-green-900 dark: text-green-200;
 }
 
 .badge-warning {
-    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+    @apply bg-yellow-100 text-yellow-800 dark: bg-yellow-900 dark: text-yellow-200;
 }
 
 .badge-error {
-    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+    @apply bg-red-100 text-red-800 dark: bg-red-900 dark: text-red-200;
 }
 
 
 /* Melhorias para navegação */
 
 .nav-link {
-    @apply text-gray-600 dark:text-light hover:text-primary dark:hover:text-primary transition-colors;
+    @apply text-gray-600 dark: text-light hover: text-primary dark: hover: text-primary transition-colors;
 }
 
 .nav-link.active {
@@ -393,7 +393,7 @@ body {
 }
 
 .modal-content {
-    @apply bg-white dark:bg-dark-light rounded-xl shadow-2xl p-6 max-w-md w-full mx-4;
+    @apply bg-white dark: bg-dark-light rounded-xl shadow-2xl p-6 max-w-md w-full mx-4;
 }
 
 
@@ -420,7 +420,7 @@ body {
 }
 
 .dropdown-menu {
-    @apply absolute right-0 mt-2 w-48 bg-white dark:bg-dark-light rounded-lg shadow-lg border border-gray-200 dark:border-gray-700;
+    @apply absolute right-0 mt-2 w-48 bg-white dark: bg-dark-light rounded-lg shadow-lg border border-gray-200 dark: border-gray-700;
     @apply opacity-0 invisible transform scale-95 transition-all duration-200;
 }
 
@@ -436,8 +436,8 @@ body {
 }
 
 .pagination-item {
-    @apply px-3 py-2 text-sm font-medium text-gray-700 dark:text-light bg-white dark:bg-dark-light border border-gray-300 dark:border-gray-600 rounded-lg;
-    @apply hover:bg-gray-50 dark:hover:bg-dark-lighter transition-colors;
+    @apply px-3 py-2 text-sm font-medium text-gray-700 dark: text-light bg-white dark: bg-dark-light border border-gray-300 dark: border-gray-600 rounded-lg;
+    @apply hover: bg-gray-50 dark: hover: bg-dark-lighter transition-colors;
 }
 
 .pagination-item.active {
@@ -445,5 +445,5 @@ body {
 }
 
 .pagination-item.disabled {
-    @apply opacity-50 cursor-not-allowed hover:bg-white dark:hover:bg-dark-light;
+    @apply opacity-50 cursor-not-allowed hover: bg-white dark: hover: bg-dark-light;
 }
