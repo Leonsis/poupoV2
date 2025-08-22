@@ -53,8 +53,6 @@ const IncomeForm = () => {
         }));
     };
 
-
-
     const handleEditAccount = (item) => {
         setEditingId(item.id);
         setEditingAccountId(item.bank_account_id || '');
@@ -239,12 +237,12 @@ const IncomeForm = () => {
                 /label> <
                 div className = "relative" >
                 <
-                FileText className = "absolute left-3 top-3 text-gray-400 w-5 h-5" / >
+                FileText className = "absolute left-3 top-3 text-gray-400 w-5 h-5 pointer-events-none z-10" / >
                 <
                 textarea name = "description"
                 value = { formData.description }
                 onChange = { handleInputChange }
-                className = "input-primary pl-10"
+                className = "input-primary pl-10 relative z-0"
                 rows = "3"
                 placeholder = "Descrição adicional do ganho..." /
                 >
