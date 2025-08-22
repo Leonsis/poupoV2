@@ -320,6 +320,22 @@ export const FinancialProvider = ({ children }) => {
                 return { success: true };
             }
         } catch (error) {
+            // Log detalhado do erro
+            if (window.errorLogger) {
+                window.errorLogger.log('EXPENSE_ERROR', 'Erro ao registrar gasto', {
+                    originalData: expenseData,
+                    processedData: processedData,
+                    error: {
+                        message: error.message,
+                        stack: error.stack,
+                        response: error.response?.data,
+                        status: error.response?.status,
+                        statusText: error.response?.statusText
+                    },
+                    timestamp: new Date().toISOString()
+                });
+            }
+
             console.error('Erro detalhado ao registrar gasto:', error);
             console.error('Response data:', error.response?.data);
 

@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
 import AdminPanel from './components/dashboard/AdminPanel';
+import ErrorLogViewer from './components/ErrorLogViewer';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -51,6 +52,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <AdminPanel />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/logs"
+                  element={
+                    <ProtectedRoute>
+                      <ErrorLogViewer />
                     </ProtectedRoute>
                   }
                 />

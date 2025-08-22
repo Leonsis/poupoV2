@@ -12,6 +12,7 @@ const authRoutes = require('./routes/auth');
 const financialRoutes = require('./routes/financial');
 const adminPanelRoutes = require('./routes/admin');
 const detailedLogger = require('./middleware/detailedLogger');
+const { errorLogger, errorLoggerMiddleware } = require('./middleware/errorLogger');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -72,6 +73,9 @@ app.use((req, res, next) => {
 // Middleware de logging detalhado
 app.use(detailedLogger);
 
+// Middleware de logging de erros
+app.use(errorLoggerMiddleware);
+
 // Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/financial', financialRoutes);
@@ -86,6 +90,39 @@ app.get('/api/health', (req, res) => {
         environment: process.env.NODE_ENV || 'development'
     });
 });
+
+// Rota para visualizar logs de erro (apenas em desenvolvimento)
+if (process.env.NODE_ENV === 'development') {
+    app.get('/api/logs', (req, res) => {
+        const { level, limit = 100 } = req.query;
+        const logs = errorLogger.getLogs(level, parseInt(limit));
+        res.json({
+            success: true,
+            logs,
+            total: logs.length
+        });
+    });
+
+    app.delete('/api/logs', (req, res) => {
+        errorLogger.clearLogs();
+        res.json({
+            success: true,
+            message: 'Logs limpos com sucesso'
+        });
+    });
+
+    app.get('/api/logs/export', (req, res) => {
+        const exportFile = errorLogger.exportLogs();
+        if (exportFile) {
+            res.download(exportFile);
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao exportar logs'
+            });
+        }
+    });
+}
 
 // Rota raiz
 app.get('/', (req, res) => {

@@ -54,6 +54,17 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Log detalhado do erro usando o errorLogger
+    if (window.errorLogger) {
+      window.errorLogger.logApiError(
+        error.config?.url,
+        error.config?.method,
+        error.config?.data,
+        error.response,
+        error
+      );
+    }
+    
     logError({
       url: error.config?.url,
       method: error.config?.method,

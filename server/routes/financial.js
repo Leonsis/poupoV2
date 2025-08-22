@@ -3,6 +3,7 @@ const { body, validationResult, query } = require('express-validator');
 const db = require('../config/database');
 const { auth } = require('../middleware/auth');
 const geminiService = require('../services/geminiService');
+const { errorLogger } = require('../middleware/errorLogger');
 
 const router = express.Router();
 router.use(auth); // Todas as rotas neste arquivo requerem autenticação
@@ -501,6 +502,9 @@ router.post('/expenses', [
         
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            // Log detalhado dos erros de validação
+            errorLogger.logValidationError(req, errors);
+            
             return res.status(400).json({
                 success: false,
                 errors: errors.array()
@@ -582,6 +586,12 @@ router.post('/expenses', [
             expense
         });
     } catch (error) {
+        // Log detalhado do erro
+        errorLogger.logRequestError(req, error, {
+            operation: 'registrar_gasto',
+            requestData: req.body
+        });
+        
         console.error('Erro ao registrar gasto:', error);
         res.status(500).json({
             success: false,
