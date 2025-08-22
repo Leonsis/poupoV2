@@ -491,14 +491,6 @@ router.post('/expenses', [
     }).withMessage('ID da conta bancária inválido')
 ], async (req, res) => {
     try {
-        console.log('=== DEBUG EXPENSES ===');
-        console.log('Body recebido:', JSON.stringify(req.body, null, 2));
-        console.log('User ID:', req.user.userId);
-        console.log('Headers:', JSON.stringify(req.headers, null, 2));
-        console.log('Content-Type:', req.headers['content-type']);
-        console.log('========================');
-        
-        
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
