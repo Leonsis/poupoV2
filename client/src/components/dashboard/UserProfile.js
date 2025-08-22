@@ -1,0 +1,256 @@
+import React, { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { 
+  User, 
+  Mail, 
+  Calendar, 
+  Phone, 
+  Edit3,
+  Save,
+  X,
+  Trash2
+} from 'lucide-react';
+
+const UserProfile = () => {
+  const { user, updateUserPreferences, logout } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    birth_date: user?.birth_date ? user.birth_date.split('T')[0] : '',
+    phone: user?.phone || ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      // Garantir que a data seja enviada no formato correto
+      let birthDate = formData.birth_date;
+      if (birthDate) {
+        // Adicionar o fuso horário local para evitar problemas de conversão
+        const date = new Date(birthDate + 'T00:00:00');
+        birthDate = date.toISOString().split('T')[0];
+      }
+      
+      const result = await updateUserPreferences({
+        name: formData.name,
+        birth_date: birthDate,
+        phone: formData.phone
+      });
+      
+      if (result.success) {
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar perfil:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: user?.name || '',
+      email: user?.email || '',
+      birth_date: user?.birth_date ? user.birth_date.split('T')[0] : '',
+      phone: user?.phone || ''
+    });
+    setIsEditing(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível!')) return;
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/auth/delete-account`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Erro ao excluir conta.');
+      }
+      logout(); // Desloga e redireciona
+    } catch (error) {
+      alert('Erro ao excluir conta: ' + (error.message || 'Tente novamente.'));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Não informado';
+    
+    // Garantir que a data seja tratada como data local
+    const date = new Date(dateString + 'T00:00:00');
+    return date.toLocaleDateString('pt-BR');
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Card Principal */}
+        <div className="lg:col-span-2">
+          <div className="card">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-light">
+                Informações Pessoais
+              </h2>
+              
+              {!isEditing ? (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="btn-outline flex items-center space-x-2"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  <span>Editar</span>
+                </button>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={handleSave}
+                    disabled={isLoading}
+                    className="btn-primary flex items-center space-x-2"
+                  >
+                    {isLoading ? (
+                      <div className="spinner w-4 h-4"></div>
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )}
+                    <span>Salvar</span>
+                  </button>
+                  
+                  <button
+                    onClick={handleCancel}
+                    className="btn-outline flex items-center space-x-2"
+                  >
+                    <X className="w-4 h-4" />
+                    <span>Cancelar</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-6">
+              {/* Nome */}
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary-dark rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-light mb-1">
+                    Nome Completo
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="input-primary"
+                      placeholder="Digite seu nome completo"
+                    />
+                  ) : (
+                    <p className="text-lg text-gray-900 dark:text-light">
+                      {user?.name || 'Não informado'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-secondary to-secondary-light rounded-full flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-light mb-1">
+                    Email
+                  </label>
+                  <p className="text-lg text-gray-900 dark:text-light">
+                    {user?.email || 'Não informado'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Data de Nascimento */}
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary-dark rounded-full flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-light mb-1">
+                    Data de Nascimento
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="date"
+                      name="birth_date"
+                      value={formData.birth_date}
+                      onChange={handleInputChange}
+                      className="input-primary"
+                    />
+                  ) : (
+                    <p className="text-lg text-gray-900 dark:text-light">
+                      {formatDate(user?.birth_date)}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Telefone */}
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-secondary to-secondary-light rounded-full flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-light mb-1">
+                    Telefone
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="input-primary"
+                      placeholder="(11) 99999-9999"
+                    />
+                  ) : (
+                    <p className="text-lg text-gray-900 dark:text-light">
+                      {user?.phone || 'Não informado'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Botão de excluir conta */}
+      <div className="mt-8 text-center">
+        <button
+          onClick={handleDeleteAccount}
+          className="btn-danger flex items-center space-x-2 mx-auto"
+          disabled={isDeleting}
+        >
+          {isDeleting ? <div className="spinner w-4 h-4"></div> : <Trash2 className="w-4 h-4" />}
+          <span>Excluir Conta</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
