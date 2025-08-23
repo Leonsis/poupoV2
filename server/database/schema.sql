@@ -11,7 +11,9 @@ CREATE TABLE users (
     gross_salary DECIMAL(10,2) DEFAULT 0.00,
     dark_mode BOOLEAN DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_banned BOOLEAN DEFAULT 0,
+    deleted_at TIMESTAMP
 );
 
 -- Tabela de Contas Bancárias
@@ -45,7 +47,7 @@ CREATE TABLE expenses (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     amount DECIMAL(10,2) NOT NULL,
     expense_date DATE NOT NULL,
-    payment_method TEXT NOT NULL, -- debito, pix, credito
+    payment_method TEXT NOT NULL, -- debito, credito
     card_name TEXT,
     description TEXT,
     category TEXT,

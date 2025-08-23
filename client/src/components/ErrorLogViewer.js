@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Trash2, Eye, Filter } from 'lucide-react';
+import { Download, Trash2, Eye } from 'lucide-react';
 
 const ErrorLogViewer = () => {
     const [logs, setLogs] = useState([]);

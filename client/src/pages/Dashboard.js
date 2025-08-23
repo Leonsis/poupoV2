@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useFinancial } from '../contexts/FinancialContext';
-import { Button, Card, NotificationContainer } from '../components/ui';
+import { Button, Card, NotificationContainer, useNotifications } from '../components/ui';
 import { 
   Menu, 
   X, 
@@ -12,7 +12,6 @@ import {
   CreditCard, 
   FileText, 
   BarChart3, 
-  Brain,
   LogOut,
   Sun,
   Moon,
@@ -26,15 +25,32 @@ import ExpenseForm from '../components/dashboard/ExpenseForm';
 import FixedExpenses from '../components/dashboard/FixedExpenses';
 import FinancialOverview from '../components/dashboard/FinancialOverview';
 import BankAccounts from '../components/dashboard/BankAccounts';
-import AdminPanel from '../components/dashboard/AdminPanel';
+
+import DetailedSummaries from '../components/dashboard/DetailedSummaries';
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout, notifications, removeNotification } = useAuth();
+  const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { loadInitialData, hasLoadedInitialData } = useFinancial();
+  const { notifications, removeNotification, showSuccess, showError } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Escutar eventos de notificação do AuthContext
+  React.useEffect(() => {
+    const handleNotification = (event) => {
+      const { type, message } = event.detail;
+      if (type === 'success') {
+        showSuccess(message);
+      } else if (type === 'error') {
+        showError(message);
+      }
+    };
+
+    window.addEventListener('showNotification', handleNotification);
+    return () => window.removeEventListener('showNotification', handleNotification);
+  }, [showSuccess, showError]);
 
   // Carregar dados financeiros após login
   React.useEffect(() => {
@@ -43,7 +59,7 @@ const Dashboard = () => {
     }
   }, [user, hasLoadedInitialData, loadInitialData]);
 
-  const isAdmin = user && user.name === "CAIO LEONNI SANTANA E SILVA" && user.email === "caiolenni@gmail.com";
+
 
   const menuItems = [
     {
@@ -51,6 +67,18 @@ const Dashboard = () => {
       label: 'Sobre o Usuário',
       icon: <User className="w-5 h-5" />,
       path: '/dashboard/profile'
+    },
+    {
+      id: 'bank-accounts',
+      label: 'Contas Bancárias',
+      icon: <PiggyBank className="w-5 h-5" />,
+      path: '/dashboard/bank-accounts'
+    },
+    {
+      id: 'overview',
+      label: 'Visão Geral',
+      icon: <BarChart3 className="w-5 h-5" />,
+      path: '/dashboard/overview'
     },
     {
       id: 'income',
@@ -71,24 +99,11 @@ const Dashboard = () => {
       path: '/dashboard/fixed-expenses'
     },
     {
-      id: 'overview',
-      label: 'Planilha de Organização',
-      icon: <BarChart3 className="w-5 h-5" />,
-      path: '/dashboard/overview'
-    },
-    {
-      id: 'bank-accounts',
-      label: 'Contas Bancárias',
-      icon: <PiggyBank className="w-5 h-5" />,
-      path: '/dashboard/bank-accounts'
-    },
-    // Adiciona Admin apenas se for admin
-    ...(isAdmin ? [{
-      id: 'admin',
-      label: 'Admin',
-      icon: <Brain className="w-5 h-5" />,
-      path: '/dashboard/admin'
-    }] : [])
+      id: 'detailed-summaries',
+      label: 'Resumos Detalhados',
+      icon: <TrendingUp className="w-5 h-5" />,
+      path: '/dashboard/detailed-summaries'
+    }
   ];
 
   const handleLogout = () => {
@@ -116,17 +131,17 @@ const Dashboard = () => {
       {/* Sidebar Mobile Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-light shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-light shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 overflow-hidden flex flex-col ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Logo */}
-        <Card className="h-16 border-0 rounded-none shadow-none">
+        <Card className="h-16 border-0 rounded-none shadow-none flex-shrink-0">
           <div className="flex items-center justify-center h-full px-6">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
@@ -138,17 +153,21 @@ const Dashboard = () => {
         </Card>
 
         {/* Menu Items */}
-        <nav className="mt-8 px-4">
+        <nav className="mt-8 px-4 flex-1">
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.id}>
                 <Button
                   variant={location.pathname === item.path ? 'primary' : 'ghost'}
-                  className={`w-full justify-start ${location.pathname === item.path ? 'shadow-lg' : ''}`}
+                  className={`w-full justify-start h-auto min-h-[44px] py-3 ${location.pathname === item.path ? 'shadow-lg' : ''}`}
                   onClick={() => handleMenuClick(item.path)}
                 >
-                  {item.icon}
-                  <span className="ml-3 font-medium">{item.label}</span>
+                  <div className="flex items-center w-full">
+                    <div className="flex-shrink-0">
+                      {item.icon}
+                    </div>
+                    <span className="ml-3 font-medium text-left leading-tight break-words">{item.label}</span>
+                  </div>
                 </Button>
               </li>
             ))}
@@ -156,7 +175,7 @@ const Dashboard = () => {
         </nav>
 
         {/* User Info & Actions */}
-        <Card className="absolute bottom-0 left-0 right-0 m-4 border-0 rounded-lg">
+        <Card className="m-4 border-0 rounded-lg flex-shrink-0">
           <Card.Content className="p-4">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-secondary to-secondary-light rounded-full flex items-center justify-center">
@@ -260,18 +279,13 @@ const Dashboard = () => {
             <Route path="/income" element={<IncomeForm />} />
             <Route path="/expenses" element={<ExpenseForm />} />
             <Route path="/fixed-expenses" element={<FixedExpenses />} />
+            <Route path="/detailed-summaries" element={<DetailedSummaries />} />
             <Route path="/overview" element={<FinancialOverview />} />
             <Route path="/bank-accounts" element={<BankAccounts />} />
-            {isAdmin && <Route path="/admin" element={<AdminPanel />} />}
           </Routes>
         </main>
       </div>
 
-      {/* Notification Container */}
-      <NotificationContainer 
-        notifications={notifications} 
-        onRemove={removeNotification} 
-      />
     </div>
   );
 };

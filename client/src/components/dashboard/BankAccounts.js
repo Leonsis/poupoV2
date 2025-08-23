@@ -11,11 +11,13 @@ import {
   PiggyBank,
   TrendingUp
 } from 'lucide-react';
+import { ConfirmModal, useNotifications } from '../ui';
 
 const BankAccounts = () => {
   const { bankAccounts, createBankAccount, deleteBankAccount, isLoading, updateBankAccount } = useFinancial();
+  const { showError, showSuccess } = useNotifications();
   const [isCreating, setIsCreating] = useState(false);
-  const [isEditing, setIsEditing] = useState(null);
+
   const [deletingAccount, setDeletingAccount] = useState(null);
   const [formData, setFormData] = useState({
     account_name: '',
@@ -27,7 +29,9 @@ const BankAccounts = () => {
   const [editingNameId, setEditingNameId] = useState(null);
   const [editingNameValue, setEditingNameValue] = useState('');
   const [showCreditCardInfo, setShowCreditCardInfo] = useState(false);
-  const [pendingCreate, setPendingCreate] = useState(false);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,13 +47,20 @@ const BankAccounts = () => {
     }
     if (formData.account_category === 'credito' && !showCreditCardInfo) {
       setShowCreditCardInfo(true);
-      setPendingCreate(true);
+      
       return;
     }
-    // Se não for crédito, não envia credit_limit
+    
+    // Preparar dados para envio
     const dataToSend = { ...formData };
-    if (formData.account_category !== 'credito') {
+    
+    // Se for crédito, definir account_type como 'corrente' (padrão para cartões)
+    if (formData.account_category === 'credito') {
+      dataToSend.account_type = 'corrente';
+      // Se não for crédito, não envia credit_limit e due_date
+    } else {
       delete dataToSend.credit_limit;
+      delete dataToSend.due_date;
     }
 
     console.log('Criando conta com dados:', dataToSend);
@@ -71,6 +82,10 @@ const BankAccounts = () => {
       }
     } catch (error) {
       console.error('Erro ao criar conta bancária:', error);
+      
+      // Mostrar mensagem de erro genérica
+      showError('Erro ao criar conta bancária');
+      
       // Mesmo com erro, resetar o formulário para evitar estado inconsistente
       setFormData({
         account_name: '',
@@ -92,22 +107,30 @@ const BankAccounts = () => {
       due_date: ''
     });
     setIsCreating(false);
-    setIsEditing(null);
+
   };
 
   const handleDelete = async (accountId, accountName) => {
-    if (window.confirm(`Tem certeza que deseja excluir a conta "${accountName}"? Esta ação não pode ser desfeita.`)) {
-      setDeletingAccount(accountId);
-      try {
-        const result = await deleteBankAccount(accountId);
-        if (!result.success) {
-          console.error('Erro ao excluir conta:', result.message);
-        }
-      } catch (error) {
-        console.error('Erro ao excluir conta bancária:', error);
-      } finally {
-        setDeletingAccount(null);
+    setItemToDelete({ id: accountId, name: accountName });
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    setDeletingAccount(itemToDelete.id);
+    try {
+      const result = await deleteBankAccount(itemToDelete.id);
+      if (result.success) {
+        showSuccess('Conta excluída com sucesso!');
+      } else {
+        showError('Erro ao excluir conta: ' + result.message);
       }
+    } catch (error) {
+      showError('Erro ao excluir conta bancária.');
+    } finally {
+      setDeletingAccount(null);
+      setItemToDelete(null);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -198,18 +221,17 @@ const BankAccounts = () => {
           </h3>
           {/* Modal de aviso para cartão de crédito */}
           {showCreditCardInfo && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-lg max-w-md w-full">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
+              <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
                 <h4 className="text-lg font-bold mb-2 text-yellow-700">Atenção!</h4>
                 <p className="text-gray-800 dark:text-gray-200 mb-4 text-sm">
-                  Lembre-se: o cartão de crédito também é considerado uma despesa fixa. Sempre registre suas compras feitas no cartão como <b>gastos</b>. Depois, a fatura do cartão aparecerá automaticamente em <b>Despesas Fixas</b> para você acompanhar e pagar.
+                  Lembre-se: o cartão de crédito também é considerado uma despesa. Sempre registre suas compras feitas no cartão como <b>gastos</b>. Depois, crie uma <b>Despesas Fixas</b> da fatura para você acompanhar e pagar.
                 </p>
                 <div className="flex justify-end space-x-2">
                   <button
                     className="btn-outline"
                     onClick={() => {
                       setShowCreditCardInfo(false);
-                      setPendingCreate(false);
                     }}
                   >
                     Cancelar
@@ -218,7 +240,6 @@ const BankAccounts = () => {
                     className="btn-primary"
                     onClick={async () => {
                       setShowCreditCardInfo(false);
-                      setPendingCreate(false);
                       await handleCreate();
                     }}
                   >
@@ -323,7 +344,7 @@ const BankAccounts = () => {
             <button
               onClick={handleCreate}
               disabled={isLoading || !formData.account_name || showCreditCardInfo}
-              className="btn-primary"
+              className="btn-primary flex items-center space-x-2"
             >
               {isLoading ? (
                 <div className="spinner w-4 h-4"></div>
@@ -398,26 +419,32 @@ const BankAccounts = () => {
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    (account.account_category || 'debito') === 'credito'
-                      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                      : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                  }`}>
-                    {getAccountCategoryLabel(account.account_category || 'debito')}
-                  </span>
+                  {/* Mostrar categoria apenas quando não estiver editando */}
+                  {editingNameId !== account.id && (
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      (account.account_category || 'debito') === 'credito'
+                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                        : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    }`}>
+                      {getAccountCategoryLabel(account.account_category || 'debito')}
+                    </span>
+                  )}
                   
-                  <button
-                    onClick={() => handleDelete(account.id, account.account_name)}
-                    disabled={deletingAccount === account.id}
-                    className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
-                    title="Excluir conta"
-                  >
-                    {deletingAccount === account.id ? (
-                      <div className="spinner w-4 h-4"></div>
-                    ) : (
-                      <Trash2 className="w-4 h-4" />
-                    )}
-                  </button>
+                  {/* Mostrar botão de excluir apenas quando não estiver editando */}
+                  {editingNameId !== account.id && (
+                    <button
+                      onClick={() => handleDelete(account.id, account.account_name)}
+                      disabled={deletingAccount === account.id}
+                      className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                      title="Excluir conta"
+                    >
+                      {deletingAccount === account.id ? (
+                        <div className="spinner w-4 h-4"></div>
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -467,20 +494,32 @@ const BankAccounts = () => {
                     )}
                   </>
                 ) : (
-                  <div className="p-3 bg-gray-50 dark:bg-dark-lighter rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-600 dark:text-light">
-                        Saldo Atual
+                  <>
+                    <div className="p-3 bg-gray-50 dark:bg-dark-lighter rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600 dark:text-light">
+                          Saldo Atual
+                        </span>
+                        <span className={`text-lg font-bold ${
+                          account.balance >= 0 
+                            ? 'text-green-600 dark:text-green-400' 
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {formatCurrency((account.balance === undefined || account.balance === null || (account.balance === 0 && (!account.hasOwnProperty('balance') || account.balance === 0))) ? 0 : account.balance)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Tipo de Conta para contas de débito */}
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
+                      <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                        Tipo de Conta
                       </span>
-                      <span className={`text-lg font-bold ${
-                        account.balance >= 0 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        {formatCurrency((account.balance === undefined || account.balance === null || (account.balance === 0 && (!account.hasOwnProperty('balance') || account.balance === 0))) ? 0 : account.balance)}
+                      <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                        {getAccountTypeLabel(account.account_type)}
                       </span>
                     </div>
-                  </div>
+                  </>
                 )}
 
                 <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -505,14 +544,27 @@ const BankAccounts = () => {
             Comece criando sua primeira conta ou cartão para organizar suas finanças.
           </p>
           <button
-            onClick={() => setIsCreating(true)}
-            className="btn-primary"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Criar Primeira Conta ou Cartão</span>
-          </button>
+             onClick={() => setIsCreating(true)}
+             className="mx-auto btn-primary flex items-center justify-center space-x-2"
+           >
+             <Plus className="w-4 h-4" />
+             <span>Criar Primeira Conta ou Cartão</span>
+           </button>
         </div>
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar Exclusão"
+        message={`Tem certeza que deseja excluir a conta "${itemToDelete?.name}"? Esta ação não pode ser desfeita.`}
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        type="danger"
+        isLoading={deletingAccount === itemToDelete?.id}
+      />
     </div>
   );
 };

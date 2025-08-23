@@ -9,9 +9,9 @@ import { FinancialProvider } from './contexts/FinancialContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
-import AdminPanel from './components/dashboard/AdminPanel';
 import ErrorLogViewer from './components/ErrorLogViewer';
 
 function App() {
@@ -39,19 +39,12 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route
                   path="/dashboard/*"
                   element={
                     <ProtectedRoute>
                       <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <AdminPanel />
                     </ProtectedRoute>
                   }
                 />

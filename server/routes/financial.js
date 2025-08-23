@@ -4,6 +4,8 @@ const db = require('../config/database');
 const { auth } = require('../middleware/auth');
 const geminiService = require('../services/geminiService');
 const { errorLogger } = require('../middleware/errorLogger');
+const FixedExpenseTransitionService = require('../services/fixedExpenseTransitionService');
+const MonthlySummaryService = require('../services/monthlySummaryService');
 
 const router = express.Router();
 router.use(auth); // Todas as rotas neste arquivo requerem autenticação
@@ -143,6 +145,35 @@ router.delete('/bank-accounts/:id', async (req, res) => {
             });
         }
 
+        // Verificar se há ganhos vinculados a esta conta
+        const incomeCount = await db.query(
+            'SELECT COUNT(*) as count FROM income WHERE bank_account_id = ?',
+            [accountId]
+        );
+
+        // Verificar se há gastos vinculados a esta conta
+        const expensesCount = await db.query(
+            'SELECT COUNT(*) as count FROM expenses WHERE bank_account_id = ?',
+            [accountId]
+        );
+
+        // Se houver ganhos ou gastos vinculados, deletá-los primeiro
+        if (incomeCount[0]?.count > 0) {
+            console.log(`Deletando ${incomeCount[0].count} ganhos vinculados à conta ${accountId}`);
+            await db.run(
+                'DELETE FROM income WHERE bank_account_id = ?',
+                [accountId]
+            );
+        }
+
+        if (expensesCount[0]?.count > 0) {
+            console.log(`Deletando ${expensesCount[0].count} gastos vinculados à conta ${accountId}`);
+            await db.run(
+                'DELETE FROM expenses WHERE bank_account_id = ?',
+                [accountId]
+            );
+        }
+
         // Excluir a conta
         await db.run(
             'DELETE FROM bank_accounts WHERE id = ? AND user_id = ?',
@@ -156,9 +187,22 @@ router.delete('/bank-accounts/:id', async (req, res) => {
         );
         const net_balance = accounts.reduce((sum, acc) => sum + (parseFloat(acc.balance) || 0), 0);
 
+        // Preparar mensagem informativa
+        let message = 'Conta bancária excluída com sucesso';
+        if (incomeCount[0]?.count > 0 || expensesCount[0]?.count > 0) {
+            const deletedItems = [];
+            if (incomeCount[0]?.count > 0) {
+                deletedItems.push(`${incomeCount[0].count} ganho(s)`);
+            }
+            if (expensesCount[0]?.count > 0) {
+                deletedItems.push(`${expensesCount[0].count} gasto(s)`);
+            }
+            message += `. Também foram excluídos: ${deletedItems.join(' e ')} vinculados a esta conta.`;
+        }
+
         res.json({
             success: true,
-            message: 'Conta bancária excluída com sucesso',
+            message,
             accounts,
             net_balance
         });
@@ -228,6 +272,9 @@ router.put('/bank-accounts/:id', async (req, res) => {
             'SELECT * FROM bank_accounts WHERE id = ? AND user_id = ?',
             [id, userId]
         );
+        
+
+        
         res.json({
             success: true,
             message: 'Conta bancária atualizada com sucesso',
@@ -410,7 +457,7 @@ router.put('/income/:id', async (req, res) => {
 router.get('/expenses', [
     query('start_date').optional().isISO8601().withMessage('Data inicial inválida'),
     query('end_date').optional().isISO8601().withMessage('Data final inválida'),
-    query('payment_method').optional().isIn(['debito', 'credito', 'pix']).withMessage('Método de pagamento inválido')
+            query('payment_method').optional().isIn(['debito', 'credito']).withMessage('Método de pagamento inválido')
 ], async (req, res) => {
     try {
         const { start_date, end_date, payment_method } = req.query;
@@ -448,7 +495,7 @@ router.get('/expenses', [
 router.post('/expenses', [
     body('amount').isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
     body('description').optional().isLength({ max: 500 }).withMessage('Descrição muito longa'),
-    body('payment_method').isIn(['debito', 'credito', 'pix']).withMessage('Método de pagamento inválido'),
+    body('payment_method').isIn(['debito', 'credito']).withMessage('Método de pagamento inválido'),
     body('expense_date').custom((value) => {
         if (!value) {
             throw new Error('Data é obrigatória');
@@ -565,9 +612,9 @@ router.post('/expenses', [
 
         // Atualizar saldo/limite da conta bancária se especificada
         if (processedData.bank_account_id) {
-            if (processedData.payment_method === 'debito' || processedData.payment_method === 'pix') {
-                // Para débito e PIX: deduzir do saldo
-                console.log(`Atualizando saldo da conta ${processedData.bank_account_id} com -${processedData.amount} (${processedData.payment_method})`);
+            if (processedData.payment_method === 'debito') {
+                // Para débito: deduzir do saldo
+                console.log(`Atualizando saldo da conta ${processedData.bank_account_id} com -${processedData.amount} (débito)`);
                 await db.run(
                     'UPDATE bank_accounts SET balance = balance - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
                     [processedData.amount, processedData.bank_account_id, req.user.userId]
@@ -624,8 +671,8 @@ router.delete('/expenses/:id', async (req, res) => {
     }
     // Restituir valor à conta bancária
     if (expense.bank_account_id) {
-      if (expense.payment_method === 'debito' || expense.payment_method === 'pix') {
-        // Restituir ao saldo para débito e PIX
+      if (expense.payment_method === 'debito') {
+        // Restituir ao saldo para débito
         await db.run('UPDATE bank_accounts SET balance = balance + ? WHERE id = ? AND user_id = ?', [expense.amount, expense.bank_account_id, userId]);
       } else if (expense.payment_method === 'credito') {
         // Restituir ao limite para crédito
@@ -933,15 +980,24 @@ router.put('/expenses/:id', [
 
 // Resumo financeiro
 router.get('/summary', [
-    query('period').isIn(['day', 'week', 'month', 'year']).withMessage('Período inválido')
+    query('period').isIn(['day', 'week', 'month', 'year']).withMessage('Período inválido'),
+    query('custom_date').optional().isISO8601().withMessage('Data customizada inválida')
 ], async (req, res) => {
     try {
-        const { period } = req.query;
+        const { period, custom_date } = req.query;
         const userId = req.user.userId;
 
         // Calcular datas baseado no período
-        const now = new Date();
         let startDate, endDate;
+        
+        if (custom_date && period === 'month') {
+            // Se for uma data customizada no formato YYYY-MM, usar essa data
+            const [year, month] = custom_date.split('-');
+            startDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+            endDate = new Date(parseInt(year), parseInt(month), 1);
+        } else {
+            // Usar a data atual
+            const now = new Date();
 
         switch (period) {
             case 'day':
@@ -962,6 +1018,7 @@ router.get('/summary', [
                 startDate = new Date(now.getFullYear(), 0, 1);
                 endDate = new Date(now.getFullYear() + 1, 0, 1);
                 break;
+            }
         }
 
         const startDateStr = startDate.toISOString().split('T')[0];
@@ -979,14 +1036,47 @@ router.get('/summary', [
             [userId, startDateStr, endDateStr]
         );
 
+        // Buscar apenas gastos de débito (excluir cartão de crédito das despesas)
         const expenses = await db.query(
-            'SELECT SUM(amount) as total FROM expenses WHERE user_id = ? AND expense_date BETWEEN ? AND ?',
+            `SELECT SUM(e.amount) as total 
+             FROM expenses e 
+             LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id 
+             WHERE e.user_id = ? AND e.expense_date BETWEEN ? AND ? 
+             AND (e.payment_method = 'debito' OR ba.account_category = 'debito')`,
             [userId, startDateStr, endDateStr]
         );
 
-        // Buscar gastos variáveis detalhados
+        // Buscar gastos variáveis detalhados (apenas débito)
         const expensesDetails = await db.query(
-            'SELECT e.*, ba.account_name, ba.account_category FROM expenses e LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id WHERE e.user_id = ? AND e.expense_date BETWEEN ? AND ? ORDER BY e.expense_date DESC',
+            `SELECT e.*, ba.account_name, ba.account_category 
+             FROM expenses e 
+             LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id 
+             WHERE e.user_id = ? AND e.expense_date BETWEEN ? AND ? 
+             AND (e.payment_method = 'debito' OR ba.account_category = 'debito')
+             ORDER BY e.expense_date DESC`,
+            [userId, startDateStr, endDateStr]
+        );
+
+
+
+        // Buscar gastos com cartão de crédito separadamente
+        const creditCardExpenses = await db.query(
+            `SELECT SUM(e.amount) as total 
+             FROM expenses e 
+             LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id 
+             WHERE e.user_id = ? AND e.expense_date BETWEEN ? AND ? 
+             AND (e.payment_method = 'credito' OR ba.account_category = 'credito')`,
+            [userId, startDateStr, endDateStr]
+        );
+
+        // Buscar detalhes dos gastos com cartão de crédito
+        const creditCardExpensesDetails = await db.query(
+            `SELECT e.*, ba.account_name, ba.account_category 
+             FROM expenses e 
+             LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id 
+             WHERE e.user_id = ? AND e.expense_date BETWEEN ? AND ? 
+             AND (e.payment_method = 'credito' OR ba.account_category = 'credito')
+             ORDER BY e.expense_date DESC`,
             [userId, startDateStr, endDateStr]
         );
 
@@ -1018,6 +1108,10 @@ router.get('/summary', [
             account_category: account.account_category || 'debito'
         }));
 
+
+
+
+
         const summary = {
             period,
             startDate: startDateStr,
@@ -1025,13 +1119,15 @@ router.get('/summary', [
             totalIncome: income[0]?.total || 0,
             totalExpenses: expenses[0]?.total || 0,
             totalFixedExpenses: fixedExpenses[0]?.total || 0,
+            totalCreditCardExpenses: creditCardExpenses[0]?.total || 0,
             balance: (income[0]?.total || 0) - (expenses[0]?.total || 0) - (fixedExpenses[0]?.total || 0),
             expensesByMethod,
             bankAccounts: bankAccountsWithCategory,
             // Dados detalhados
             incomeDetails,
             expensesDetails,
-            fixedExpensesDetails
+            fixedExpensesDetails,
+            creditCardExpensesDetails
         };
 
         res.json({
@@ -1139,6 +1235,245 @@ router.get('/financial-advice/last', async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar último conselho:', error);
         res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+    }
+});
+
+// ===== ROTAS PARA TRANSIÇÃO MENSAL DE DESPESAS FIXAS =====
+
+// Verificar se precisa fazer transição mensal
+router.get('/fixed-expenses/check-transition', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const needsTransition = await FixedExpenseTransitionService.needsMonthlyTransition(userId);
+        
+        res.json({
+            success: true,
+            needsTransition,
+            message: needsTransition ? 'Transição mensal necessária' : 'Transição mensal não necessária'
+        });
+    } catch (error) {
+        console.error('Erro ao verificar transição mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Executar transição mensal
+router.post('/fixed-expenses/execute-transition', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const result = await FixedExpenseTransitionService.executeMonthlyTransition(userId);
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao executar transição mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Buscar despesas fixas com informações de transição
+router.get('/fixed-expenses/with-transition', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const expenses = await FixedExpenseTransitionService.getFixedExpensesWithTransition(userId);
+        
+        res.json({
+            success: true,
+            expenses
+        });
+    } catch (error) {
+        console.error('Erro ao buscar despesas fixas com transição:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Pagar despesa vencida
+router.post('/fixed-expenses/:id/pay-overdue', [
+    body('bank_account_id').isInt().withMessage('ID da conta bancária é obrigatório')
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
+        }
+
+        const expenseId = parseInt(req.params.id);
+        const { bank_account_id } = req.body;
+        const userId = req.user.userId;
+
+        const result = await FixedExpenseTransitionService.payOverdueExpense(expenseId, bank_account_id);
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao pagar despesa vencida:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Erro interno do servidor'
+        });
+    }
+});
+
+// Contar despesas vencidas
+router.get('/fixed-expenses/overdue-count', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const count = await FixedExpenseTransitionService.getOverdueExpensesCount(userId);
+        
+        res.json({
+            success: true,
+            count
+        });
+    } catch (error) {
+        console.error('Erro ao contar despesas vencidas:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// ===== ROTAS PARA RESUMOS MENSAIS =====
+
+// Verificar se é necessário gerar resumo do mês anterior
+router.get('/monthly-summaries/check-generation', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const result = await MonthlySummaryService.checkMonthlySummaryGeneration(userId);
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao verificar geração de resumo mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Gerar resumo mensal específico
+router.post('/monthly-summaries/generate', [
+    body('monthYear').matches(/^\d{4}-\d{2}$/).withMessage('Formato de mês/ano inválido (YYYY-MM)')
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
+        }
+
+        const userId = req.user.userId;
+        const { monthYear } = req.body;
+
+        const result = await MonthlySummaryService.generateAndStoreMonthlySummary(userId, monthYear);
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao gerar resumo mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Listar todos os resumos mensais
+router.get('/monthly-summaries', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const summaries = await MonthlySummaryService.listMonthlySummaries(userId);
+        
+        res.json({
+            success: true,
+            summaries
+        });
+    } catch (error) {
+        console.error('Erro ao listar resumos mensais:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Buscar resumo mensal específico
+router.get('/monthly-summaries/:monthYear', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { monthYear } = req.params;
+
+        const summary = await MonthlySummaryService.getMonthlySummary(userId, monthYear);
+        
+        if (!summary) {
+            return res.status(404).json({
+                success: false,
+                message: 'Resumo mensal não encontrado'
+            });
+        }
+
+        res.json({
+            success: true,
+            summary
+        });
+    } catch (error) {
+        console.error('Erro ao buscar resumo mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Gerar todos os resumos pendentes desde a criação da conta
+router.post('/monthly-summaries/generate-all-pending', async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        
+        // Buscar data de criação da conta do usuário
+        const user = await db.get('SELECT created_at FROM users WHERE id = ?', [userId]);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
+        }
+
+        const result = await MonthlySummaryService.generateAllPendingSummaries(userId, user.created_at);
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao gerar resumos pendentes:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
     }
 });
 

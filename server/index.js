@@ -10,7 +10,8 @@ require('./generate-frontend-env');
 
 const authRoutes = require('./routes/auth');
 const financialRoutes = require('./routes/financial');
-const adminPanelRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
+
 const detailedLogger = require('./middleware/detailedLogger');
 const { errorLogger, errorLoggerMiddleware } = require('./middleware/errorLogger');
 
@@ -79,7 +80,7 @@ app.use(errorLoggerMiddleware);
 // Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/financial', financialRoutes);
-app.use('/api/admin', adminPanelRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Rota de teste
 app.get('/api/health', (req, res) => {
@@ -133,7 +134,7 @@ app.get('/', (req, res) => {
         endpoints: {
             auth: '/api/auth',
             financial: '/api/financial',
-            admin: '/api/admin',
+          
             health: '/api/health'
         }
     });

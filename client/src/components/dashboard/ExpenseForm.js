@@ -3,14 +3,11 @@ import { useFinancial } from '../../contexts/FinancialContext';
 import { Button, Input, Card, ConfirmModal, useNotifications } from '../ui';
 import {
     CreditCard,
-    Search,
     Plus,
     Calendar,
     DollarSign,
-    FileText,
     Filter,
-    Tag,
-    Trash2
+    Tag
 } from 'lucide-react';
 
 const ExpenseForm = () => {
@@ -48,7 +45,7 @@ const ExpenseForm = () => {
 
     useEffect(() => {
         loadExpenses();
-    }, []);
+    }, [loadExpenses]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -162,7 +159,7 @@ const ExpenseForm = () => {
     const getPaymentMethodLabel = (method) => {
         const labels = {
             debito: 'Débito',
-            pix: 'PIX',
+    
             credito: 'Crédito'
         };
         return labels[method] || method;
@@ -214,482 +211,406 @@ const ExpenseForm = () => {
         setSelectedAccountId('');
     };
 
-    return ( <
-            div className = "max-w-6xl mx-auto" > { /* Header */ } <
-            div className = "flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6" >
-            <
-            div >
-            <
-            h2 className = "text-2xl font-bold text-gray-900 dark:text-light" >
-            Registrar Gastos <
-            /h2> <
-            p className = "text-gray-600 dark:text-light mt-1" >
-            Controle suas despesas e mantenha o orçamento em dia <
-            /p> < /
-            div >
+    return (
+        <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-light">
+                        Registrar Gastos
+                    </h2>
+                    <p className="text-gray-600 dark:text-light mt-1">
+                        Controle suas despesas e mantenha o orçamento em dia
+                    </p>
+                </div>
 
-            <
-            Button variant = "primary"
-            onClick = {
-                () => setShowForm(!showForm)
-            }
-            className = "mt-4 sm:mt-0" >
-            <
-            Plus className = "w-4 h-4 mr-2" / > { showForm ? 'Cancelar' : 'Novo Gasto' } <
-            /Button> < /
-            div >
+                <Button 
+                    variant="primary"
+                    onClick={() => setShowForm(!showForm)}
+                    className="mt-4 sm:mt-0"
+                >
+                    <Plus className="w-4 h-4 mr-2" />
+                    {showForm ? 'Cancelar' : 'Novo Gasto'}
+                </Button>
+            </div>
 
-            { /* Formulário */ } {
-                showForm && ( <
-                    Card className = "mb-6" >
-                    <
-                    Card.Header >
-                    <
-                    h3 className = "text-lg font-semibold text-gray-900 dark:text-light" >
-                    Novo Gasto <
-                    /h3> < /
-                    Card.Header >
+            {/* Formulário */}
+            {showForm && (
+                <Card className="mb-6">
+                    <Card.Header>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
+                            Novo Gasto
+                        </h3>
+                    </Card.Header>
 
-                    <
-                    Card.Content >
-                    <
-                    form onSubmit = { handleSubmit }
-                    className = "grid md:grid-cols-2 gap-6" > { /* Valor */ } <
-                    Input type = "number"
-                    name = "amount"
-                    label = "Valor *"
-                    leftIcon = { DollarSign }
-                    value = { formData.amount }
-                    onChange = { handleInputChange }
-                    placeholder = "0.00"
-                    step = "0.01"
-                    min = "0.01"
-                    required /
-                    >
+                    <Card.Content>
+                        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
+                            {/* Valor */}
+                            <Input
+                                type="number"
+                                name="amount"
+                                label="Valor *"
+                                leftIcon={DollarSign}
+                                value={formData.amount}
+                                onChange={handleInputChange}
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0.01"
+                                required
+                            />
 
-                    { /* Data */ } <
-                    div >
-                    <
-                    label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
-                    Data *
-                    <
-                    /label> <
-                    div className = "relative" >
-                    <
-                    Calendar className = "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none z-10" / >
-                    <
-                    input type = "date"
-                    name = "expense_date"
-                    value = { formData.expense_date }
-                    onChange = { handleInputChange }
-                    className = "input-primary pl-10 relative z-0"
-                    required /
-                    >
-                    <
-                    /div> < /
-                    div >
+                            {/* Data */}
+                            <Input
+                                type="date"
+                                name="expense_date"
+                                label="Data *"
+                                leftIcon={Calendar}
+                                value={formData.expense_date}
+                                onChange={handleInputChange}
+                                required
+                            />
 
-                    { /* Método de Pagamento */ } <
-                    div >
-                    <
-                    label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
+                            {/* Método de Pagamento */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
                     Método de Pagamento *
-                    <
-                    /label> <
-                    select name = "payment_method"
-                    value = { formData.payment_method }
-                    onChange = { handleInputChange }
-                    className = "input-primary"
-                    required >
-                    <
-                    option value = "debito" > Débito < /option> <
-                    option value = "pix" > PIX < /option> <
-                    option value = "credito" > Crédito < /option> < /
-                    select > <
-                    /div>
+                                </label>
+                                <select
+                                    name="payment_method"
+                                    value={formData.payment_method}
+                                    onChange={handleInputChange}
+                                    className="input-primary"
+                                    required
+                                >
+                                    <option value="debito">Débito</option>
+                                    <option value="credito">Crédito</option>
+                                </select>
+                            </div>
 
-                    { /* Quantidade de Parcelas (se crédito) */ } {
-                        formData.payment_method === 'credito' && ( <
-                            div >
-                            <
-                            label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
-                            Quantidade de Parcelas <
-                            /label> <
-                            input type = "number"
-                            name = "installments"
-                            value = { formData.installments }
-                            onChange = { handleInputChange }
-                            className = "input-primary"
-                            placeholder = "Ex: 3, 6, 12"
-                            min = "1"
-                            max = "24" /
-                            >
-                            <
-                            /div>
-                        )
-                    }
+                            {/* Quantidade de Parcelas (se crédito) */}
+                            {formData.payment_method === 'credito' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                                        Quantidade de Parcelas
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="installments"
+                                        value={formData.installments}
+                                        onChange={handleInputChange}
+                                        className="input-primary"
+                                        placeholder="Ex: 3, 6, 12"
+                                        min="1"
+                                        max="24"
+                                    />
+                                </div>
+                            )}
 
-                    { /* Categoria */ } <
-                    div >
-                    <
-                    label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
-                    Categoria <
-                    /label> <
-                    div className = "relative" >
-                    <
-                    Tag className = "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none z-10" / >
-                    <
-                    input type = "text"
-                    name = "category"
-                    value = { formData.category }
-                    onChange = { handleInputChange }
-                    className = "input-primary pl-10 relative z-0"
-                    placeholder = "Ex: Alimentação, Transporte, Lazer" /
-                    >
-                    <
-                    /div> < /
-                    div >
+                            {/* Categoria */}
+                            <Input
+                                type="text"
+                                name="category"
+                                label="Categoria"
+                                leftIcon={Tag}
+                                value={formData.category}
+                                onChange={handleInputChange}
+                                placeholder="Ex: Alimentação, Transporte, Lazer"
+                            />
 
-                    { /* Conta Bancária */ } <
-                    div >
-                    <
-                    label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
-                    Conta Bancária <
-                    /label> {
-                    (() => {
+                            {/* Conta Bancária */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                                    Conta Bancária
+                                </label>
+                                {(() => {
                             const compatibleAccounts = bankAccounts.filter(account => {
                                 // Se o método de pagamento for crédito, mostrar apenas contas de crédito
                                 if (formData.payment_method === 'credito') {
                                     return account.account_category === 'credito';
                                 }
-                                // Se o método for débito ou PIX, mostrar apenas contas de débito
-                                else if (formData.payment_method === 'debito' || formData.payment_method === 'pix') {
+                                // Se o método for débito, mostrar apenas contas de débito
+                                else if (formData.payment_method === 'debito') {
                                     return account.account_category === 'debito';
                                 }
                                 // Caso padrão, mostrar todas as contas
                                 return true;
                             });
 
-                            return ( <
-                                    >
-                                    <
-                                    select name = "bank_account_id"
-                                    value = { formData.bank_account_id }
-                                    onChange = { handleInputChange }
-                                    className = "input-primary" >
-                                    <
-                                    option value = "" > Selecione uma conta < /option> {
-                                    compatibleAccounts.map(account => ( <
-                                        option key = { account.id }
-                                        value = { account.id } > {
-                                            account.account_category === 'credito' ?
-                                            `${account.account_name} - Limite: ${formatCurrency(account.credit_limit || 0)}` : `${account.account_name} - Saldo: ${formatCurrency(account.balance || 0)}`
-                                        } <
-                                        /option>
-                                    ))
-                                } <
-                                /select> {
-                            compatibleAccounts.length === 0 && ( <
-                                p className = "text-sm text-orange-600 dark:text-orange-400 mt-1" > ⚠️Nenhuma conta { formData.payment_method === 'credito' ? 'de crédito' : 'de débito' }
-                                encontrada. <
-                                a href = "/dashboard/bank-accounts"
-                                className = "text-blue-600 dark:text-blue-400 underline ml-1" >
-                                Criar conta <
-                                /a> < /
-                                p >
-                            )
-                        } <
+                                    return (
+                                        <>
+                                            <select
+                                                name="bank_account_id"
+                                                value={formData.bank_account_id}
+                                                onChange={handleInputChange}
+                                                className="input-primary"
+                                            >
+                                                <option value="">Selecione uma conta</option>
+                                                {compatibleAccounts.map(account => (
+                                                    <option key={account.id} value={account.id}>
+                                                        {account.account_category === 'credito' ?
+                                                            `${account.account_name} - Limite: ${formatCurrency(account.credit_limit || 0)}` :
+                                                            `${account.account_name} - Saldo: ${formatCurrency(account.balance || 0)}`
+                                                        }
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {compatibleAccounts.length === 0 && (
+                                                <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
+                                                    ⚠️ Nenhuma conta {formData.payment_method === 'credito' ? 'de crédito' : 'de débito'} encontrada.
+                                                    <a href="/dashboard/bank-accounts" className="text-blue-600 dark:text-blue-400 underline ml-1">
+                                                        Criar conta
+                                                    </a>
+                                                </p>
+                                            )}
+                                        </>
+                                    );
+                                })()}
+                            </div>
+
+                            {/* Descrição */}
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                                    Descrição
+                                </label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    className="input-primary"
+                                    rows="3"
+                                    placeholder="Descrição do gasto..."
+                                />
+                            </div>
+
+                            {/* Botões */}
+                            <div className="md:col-span-2 flex justify-end space-x-3">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setShowForm(false)}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    loading={isLoading}
+                                >
+                                    {isLoading ? 'Registrando...' : 'Registrar Gasto'}
+                                </Button>
+                            </div>
+                        </form>
+                    </Card.Content>
+                </Card>
+            )}
+
+            {/* Filtros */}
+            <Card className="mb-6">
+                <Card.Header>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
+                        Filtros e Pesquisa
+                    </h3>
+                </Card.Header>
+                <Card.Content>
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                            <input
+                                type="date"
+                                value={dateFilter}
+                                onChange={(e) => setDateFilter(e.target.value)}
+                                className="input-primary"
+                            />
+
+                            <select
+                                value={methodFilter}
+                                onChange={(e) => setMethodFilter(e.target.value)}
+                                className="input-primary"
+                            >
+                                <option value="">Todos os métodos</option>
+                                <option value="debito">Débito</option>
+                                <option value="credito">Crédito</option>
+                            </select>
+
+                            <Button variant="primary" onClick={handleSearch}>
+                                <Filter className="w-4 h-4 mr-2" />
+                                Filtrar
+                            </Button>
+
+                            <Button variant="outline" onClick={handleClearFilters}>
+                                Limpar
+                            </Button>
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Pesquisar por descrição ou categoria..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="input-primary w-full sm:w-64"
                         />
-                    );
-                })()
-        } <
-        /div>
+                    </div>
+                </Card.Content>
+            </Card>
 
-    { /* Descrição */ } <
-    div className = "md:col-span-2" >
-        <
-        label className = "block text-sm font-medium text-gray-700 dark:text-light mb-2" >
-        Descrição <
-        /label> <
-    div className = "relative" >
-        <
-        FileText className = "absolute left-3 top-3 text-gray-400 w-5 h-5 pointer-events-none z-10" / >
-        <
-        textarea name = "description"
-    value = { formData.description }
-    onChange = { handleInputChange }
-    className = "input-primary pl-10 relative z-0"
-    rows = "3"
-    placeholder = "Descrição do gasto..." /
-        >
-        <
-        /div> < /
-        div >
+            {/* Lista de Gastos */}
+            <Card>
+                <Card.Header>
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
+                            Gastos Registrados
+                        </h3>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {filteredExpenses.length} gasto(s) encontrado(s)
+                        </span>
+                    </div>
+                </Card.Header>
 
-        { /* Botões */ } <
-        div className = "md:col-span-2 flex justify-end space-x-3" >
-        <
-        Button type = "button"
-    variant = "outline"
-    onClick = {
-            () => setShowForm(false)
-        } >
-        Cancelar <
-        /Button> <
-    Button type = "submit"
-    variant = "primary"
-    loading = { isLoading } > { isLoading ? 'Registrando...' : 'Registrar Gasto' } <
-        /Button> < /
-        div > <
-        /form> < /
-        Card.Content > <
-        /Card>
-)
-}
-
-{ /* Filtros */ } <
-Card className = "mb-6" >
-    <
-    Card.Header >
-    <
-    h3 className = "text-lg font-semibold text-gray-900 dark:text-light" >
-    Filtros e Pesquisa <
-    /h3> < /
-    Card.Header > <
-    Card.Content >
-    <
-    div className = "flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4" >
-    <
-    div className = "flex flex-col sm:flex-row gap-3 w-full lg:w-auto" >
-    <
-    div className = "relative" >
-    <
-    Search className = "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" / >
-    <
-    input type = "text"
-placeholder = "Pesquisar por descrição ou categoria..."
-value = { searchTerm }
-onChange = {
-    (e) => setSearchTerm(e.target.value)
-}
-className = "input-primary pl-10 pr-4 w-full sm:w-64 relative z-0" /
-    >
-    <
-    /div>
-
-<
-input type = "date"
-value = { dateFilter }
-onChange = {
-    (e) => setDateFilter(e.target.value)
-}
-className = "input-primary" /
-    >
-
-    <
-    select value = { methodFilter }
-onChange = {
-    (e) => setMethodFilter(e.target.value)
-}
-className = "input-primary" >
-    <
-    option value = "" > Todos os métodos < /option> <
-option value = "debito" > Débito < /option> <
-option value = "pix" > PIX < /option> <
-option value = "credito" > Crédito < /option> < /
-    select >
-
-    <
-    Button variant = "primary"
-onClick = { handleSearch } >
-    <
-    Filter className = "w-4 h-4 mr-2" / >
-    Filtrar <
-    /Button>
-
-<
-Button variant = "outline"
-onClick = { handleClearFilters } >
-    Limpar <
-    /Button> < /
-    div > <
-    /div> < /
-    Card.Content > <
-    /Card>
-
-{ /* Lista de Gastos */ } <
-Card >
-    <
-    Card.Header >
-    <
-    div className = "flex items-center justify-between" >
-    <
-    h3 className = "text-lg font-semibold text-gray-900 dark:text-light" >
-    Gastos Registrados <
-    /h3> <
-span className = "text-sm text-gray-500 dark:text-gray-400" > { filteredExpenses.length }
-gasto(s) encontrado(s) <
-    /span> < /
-    div > <
-    /Card.Header>
-
-<
-Card.Content > {
-    filteredExpenses.length === 0 ? ( <
-        div className = "text-center py-8" >
-        <
-        CreditCard className = "w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" / >
-        <
-        p className = "text-gray-500 dark:text-gray-400" >
-        Nenhum gasto registrado ainda <
-        /p> < /
-        div >
-    ) : ( <
-            div className = "overflow-x-auto" >
-            <
-            table className = "w-full" >
-            <
-            thead >
-            <
-            tr className = "border-b border-gray-200 dark:border-gray-700" >
-            <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Data < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Descrição < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Valor < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Método < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Parcelas < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Categoria < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Conta < /th> <
-            th className = "text-left py-3 px-4 font-medium text-gray-700 dark:text-light" > Ações < /th> < /
-            tr > <
-            /thead> <
-            tbody > {
-                filteredExpenses.map((item) => ( <
-                        tr key = { item.id }
-                        className = "border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-dark-lighter" >
-                        <
-                        td className = "py-3 px-4 text-gray-900 dark:text-light" > { formatDate(item.expense_date) } <
-                        /td> <
-                        td className = "py-3 px-4 text-gray-900 dark:text-light font-medium" > { item.description || '-' } <
-                        /td> <
-                        td className = "py-3 px-4 text-red-600 dark:text-red-400 font-bold" > { formatCurrency(item.amount) } <
-                        /td> <
-                        td className = "py-3 px-4" >
-                        <
-                        span className = { `px-2 py-1 rounded-full text-xs font-medium ${
+                <Card.Content>
+                    {filteredExpenses.length === 0 ? (
+                        <div className="text-center py-8">
+                            <CreditCard className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                            <p className="text-gray-500 dark:text-gray-400">
+                                Nenhum gasto registrado ainda
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Data</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Descrição</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Valor</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Método</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Parcelas</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Categoria</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light">Conta</th>
+                                        <th className="text-left py-3 px-4 font-medium text-gray-700 dark:text-light text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredExpenses.map((item) => (
+                                        <tr key={item.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-dark-lighter">
+                                            <td className="py-3 px-4 text-gray-900 dark:text-light">
+                                                {formatDate(item.expense_date)}
+                                            </td>
+                                            <td className="py-3 px-4 text-gray-900 dark:text-light font-medium">
+                                                {item.description || '-'}
+                                            </td>
+                                            <td className="py-3 px-4 text-red-600 dark:text-red-400 font-bold">
+                                                {formatCurrency(item.amount)}
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           item.payment_method === 'credito' 
                             ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                            : item.payment_method === 'pix'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                            : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                        }` } > { getPaymentMethodLabel(item.payment_method) } <
-                        /span> < /
-                        td > <
-                        td className = "py-3 px-4 text-gray-600 dark:text-light" > {
-                            item.payment_method === 'credito' && item.installments ?
-                            `${item.installments}x` : '-'
-                        } <
-                        /td> <
-                        td className = "py-3 px-4 text-gray-600 dark:text-light" > { item.category || '-' } <
-                        /td> <
-                        td className = "py-3 px-4 text-gray-600 dark:text-light" > {
-                            editingExpenseId === item.id ? ( <
-                                div className = "flex items-center space-x-2" >
-                                <
-                                select className = "input-primary"
-                                value = { selectedAccountId }
-                                onChange = { e => setSelectedAccountId(e.target.value) } >
-                                <
-                                option value = "" > Selecione uma conta < /option> {
-                                bankAccounts
-                                .filter(account => {
-                                    // Se o método de pagamento for crédito, mostrar apenas contas de crédito
-                                    if (item.payment_method === 'credito') {
-                                        return account.account_category === 'credito';
-                                    }
-                                    // Se o método for débito ou PIX, mostrar apenas contas de débito
-                                    else if (item.payment_method === 'debito' || item.payment_method === 'pix') {
-                                        return account.account_category === 'debito';
-                                    }
-                                    // Caso padrão, mostrar todas as contas
-                                    return true;
-                                })
-                                .map(account => ( <
-                                    option key = { account.id }
-                                    value = { account.id } > {
-                                        account.account_category === 'credito' ?
-                                        `${account.account_name} - Limite: ${formatCurrency(account.credit_limit || 0)}` : `${account.account_name} - Saldo: ${formatCurrency(account.balance || 0)}`
-                                    } <
-                                    /option>
-                                ))
-                            } <
-                            /select> <
-                            Button variant = "primary"
-                            size = "sm"
-                            className = "px-2 py-1 text-xs"
-                            onClick = {
-                                () => handleSaveAccount(item)
-                            } >
-                            Salvar <
-                            /Button> <
-                            Button variant = "outline"
-                            size = "sm"
-                            className = "px-2 py-1 text-xs"
-                            onClick = { handleCancelEdit } >
-                            Cancelar <
-                            /Button> < /
-                            div >
-                        ): ( <
-                            div className = "flex items-center space-x-2" > { item.account_name || 'Não especificada' } <
-                            Button variant = "outline"
-                            size = "sm"
-                            className = "px-2 py-1 text-xs"
-                            onClick = {
-                                () => handleEditAccount(item)
-                            } >
-                            Editar <
-                            /Button> < /
-                            div >
-                        )
-                    } <
-                    /td> <
-                    td className = "py-3 px-4 text-right" >
-                    <
-                    button onClick = {
-                        () => handleDeleteExpense(item.id)
-                    }
-                    className = "text-red-500 hover:text-red-700 transition-colors"
-                    title = "Excluir gasto" >
-                    <
-                    Trash2 className = "w-5 h-5" / >
-                    <
-                    /button> < /
-                    td > <
-                    /tr>
-                ))
-        } <
-        /tbody> < /
-        table > <
-        /div>
-)
-} <
-/Card.Content> < /
-Card >
 
-    { /* Modal de Confirmação */ } <
-    ConfirmModal isOpen = {!!confirmDelete }
-onClose = {
-    () => setConfirmDelete(null)
-}
-onConfirm = { confirmDeleteAction }
-title = "Confirmar Exclusão"
-message = "Tem certeza que deseja excluir este gasto? Esta ação não pode ser desfeita."
-confirmText = "Excluir"
-cancelText = "Cancelar"
-type = "danger" /
-    >
-    <
-    /div>
+                            : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                                                }`}>
+                                                    {getPaymentMethodLabel(item.payment_method)}
+                                                </span>
+                                            </td>
+                                            <td className="py-3 px-4 text-gray-600 dark:text-light">
+                                                {item.payment_method === 'credito' && item.installments ?
+                            `${item.installments}x` : '-'
+                                                }
+                                            </td>
+                                            <td className="py-3 px-4 text-gray-600 dark:text-light">
+                                                {item.category || '-'}
+                                            </td>
+                                            <td className="py-3 px-4 text-gray-600 dark:text-light">
+                                                {editingExpenseId === item.id ? (
+                                                    <select
+                                                        className="input-primary"
+                                                        value={selectedAccountId}
+                                                        onChange={e => setSelectedAccountId(e.target.value)}
+                                                    >
+                                                        <option value="">Selecione uma conta</option>
+                                                        {bankAccounts
+                            .filter(account => {
+                                // Se o método de pagamento for crédito, mostrar apenas contas de crédito
+                                if (item.payment_method === 'credito') {
+                                    return account.account_category === 'credito';
+                                }
+                                // Se o método for débito, mostrar apenas contas de débito
+                                else if (item.payment_method === 'debito') {
+                                    return account.account_category === 'debito';
+                                }
+                                // Caso padrão, mostrar todas as contas
+                                return true;
+                            })
+                                                            .map(account => (
+                                                                <option key={account.id} value={account.id}>
+                                                                    {account.account_category === 'credito' ?
+                                                                        `${account.account_name} - Limite: ${formatCurrency(account.credit_limit || 0)}` :
+                                                                        `${account.account_name} - Saldo: ${formatCurrency(account.balance || 0)}`
+                                                                    }
+                                                                </option>
+                                                            ))
+                                                        }
+                                                    </select>
+                                                ) : (
+                                                    item.account_name || 'Não especificada'
+                                                )}
+                                            </td>
+                                            <td className="py-3 px-4 text-center">
+                                                {editingExpenseId === item.id ? (
+                                                    <>
+                                                        <button
+                                                            className="bg-primary text-black font-medium px-3 py-1.5 rounded text-xs mr-2 hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                            onClick={() => handleSaveAccount(item)}
+                                                            disabled={!selectedAccountId}
+                                                        >
+                                                            Salvar
+                                                        </button>
+                                                        <button
+                                                            className="border border-primary text-primary font-medium px-3 py-1.5 rounded text-xs hover:bg-primary hover:text-black transition-colors"
+                                                            onClick={handleCancelEdit}
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <button
+                                                        className="p-2 rounded-full text-blue-600 hover:text-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mr-2"
+                                                        title="Editar conta do gasto"
+                                                        onClick={() => handleEditAccount(item)}
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 11l6 6M3 17v4h4l10.293-10.293a1 1 0 00-1.414-1.414L3 17z" />
+                                                        </svg>
+                                                    </button>
+                                                )}
+                                                <button
+                                                    className="p-2 rounded-full text-red-600 hover:text-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    title="Excluir gasto"
+                                                    onClick={() => handleDeleteExpense(item.id)}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </Card.Content>
+            </Card>
+
+            {/* Modal de Confirmação */}
+            <ConfirmModal
+                isOpen={!!confirmDelete}
+                onClose={() => setConfirmDelete(null)}
+                onConfirm={confirmDeleteAction}
+                title="Confirmar Exclusão"
+                message="Tem certeza que deseja excluir este gasto? Esta ação não pode ser desfeita."
+                confirmText="Excluir"
+                cancelText="Cancelar"
+                type="danger"
+            />
+        </div>
 );
 };
 

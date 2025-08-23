@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { Button, Card, StatCard } from '../ui';
 import { 
-  BarChart3, 
   TrendingUp, 
   TrendingDown, 
-  DollarSign, 
   PiggyBank,
   Brain,
   RefreshCw,
@@ -15,7 +12,6 @@ import {
 } from 'lucide-react';
 
 const FinancialOverview = () => {
-  const { user } = useAuth();
   const { 
     summary, 
     financialAdvice, 
@@ -23,16 +19,15 @@ const FinancialOverview = () => {
     loadFinancialAdvice,
     loadLastFinancialAdvice, // <-- Importa função do contexto
     loadBankAccounts,
-    getTotalIncome,
-    getTotalExpenses,
-    getTotalFixedExpenses,
     getTotalBankBalance,
     getExpensesByMethod,
-    bankAccounts // <-- Adicionado aqui
+    bankAccounts, // <-- Adicionado aqui
+    resetMonthlyData
   } = useFinancial();
   
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [isLoadingAdvice, setIsLoadingAdvice] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
     // Só carregar dados se o usuário estiver autenticado
@@ -41,7 +36,7 @@ const FinancialOverview = () => {
       loadSummary(selectedPeriod);
       loadLastFinancialAdvice(); // <-- Carrega o último conselho salvo ao abrir
     }
-  }, [selectedPeriod]);
+  }, [selectedPeriod, loadSummary, loadLastFinancialAdvice]);
 
   const handleLoadAdvice = async () => {
     setIsLoadingAdvice(true);
@@ -49,6 +44,26 @@ const FinancialOverview = () => {
       await loadFinancialAdvice();
     } finally {
       setIsLoadingAdvice(false);
+    }
+  };
+
+  const handleUpdateData = async () => {
+    try {
+      await loadSummary(selectedPeriod);
+      await loadBankAccounts();
+    } catch (error) {
+      console.error('❌ Erro ao atualizar dados:', error);
+    }
+  };
+
+  const handleResetMonthlyData = async () => {
+    setIsResetting(true);
+    try {
+      await resetMonthlyData();
+    } catch (error) {
+      console.error('Erro ao resetar dados mensais:', error);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -108,14 +123,21 @@ const FinancialOverview = () => {
         <div className="flex items-center space-x-3 mt-4 lg:mt-0">
           <Button
             variant="outline"
-            onClick={() => {
-              loadSummary(selectedPeriod);
-              loadBankAccounts();
-            }}
+            onClick={handleUpdateData}
             title="Atualizar dados"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Atualizar
+          </Button>
+          
+          <Button
+            variant="outline"
+            onClick={handleResetMonthlyData}
+            title="Resetar dados mensais"
+            loading={isResetting}
+          >
+            <Calendar className="w-4 h-4 mr-2" />
+            Reset Mensal
           </Button>
           
           <select
@@ -142,7 +164,7 @@ const FinancialOverview = () => {
         
         <StatCard
           title={`Gastos (${getPeriodLabel(selectedPeriod)})`}
-          value={formatCurrency(getTotalExpenses())}
+          value={formatCurrency(summary?.totalExpenses || 0)}
           icon={TrendingDown}
           trendType="negative"
         />
@@ -166,33 +188,45 @@ const FinancialOverview = () => {
             <Card>
               <Card.Header>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
-                  Saldo por Conta Bancária
+                  Saldo por Conta e Cartão
                 </h3>
               </Card.Header>
               
               <Card.Content>
              
              <div className="space-y-4">
-               {summary?.bankAccounts?.map((account) => (
-                 <div key={account.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-lighter rounded-lg">
-                   <div className="flex items-center space-x-3">
-                     <div className="w-3 h-3 bg-primary rounded-full"></div>
-                     <div>
-                       <h4 className="font-medium text-gray-900 dark:text-light">
-                         {account.account_name}
-                       </h4>
-                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                         {account.account_type}
-                       </p>
+               {summary?.bankAccounts?.map((account) => {
+                 return (
+                   <div key={account.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-lighter rounded-lg">
+                     <div className="flex items-center space-x-3">
+                       <div className="w-3 h-3 bg-primary rounded-full"></div>
+                       <div>
+                         <h4 className="font-medium text-gray-900 dark:text-light">
+                           {account.account_name}
+                         </h4>
+                         <p className="text-sm text-gray-500 dark:text-gray-400">
+                           {account.account_category === 'credito' ? 'Crédito' : 
+                            account.account_type === 'corrente' ? 'Conta Corrente' :
+                            account.account_type === 'poupanca' ? 'Conta Poupança' :
+                            account.account_type === 'investimento' ? 'Conta Investimento' :
+                            account.account_type}
+                         </p>
+                       </div>
+                     </div>
+                     <div className="text-right">
+                       <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                         {account.account_category === 'credito' ? 'Limite' : 'Saldo'}
+                       </div>
+                       <div className="text-lg font-bold text-gray-900 dark:text-light">
+                         {account.account_category === 'credito' 
+                           ? formatCurrency(account.credit_limit || 0)
+                           : formatCurrency(account.balance || 0)
+                         }
+                       </div>
                      </div>
                    </div>
-                   <div className="text-right">
-                     <div className="text-lg font-bold text-gray-900 dark:text-light">
-                       {formatCurrency(account.balance)}
-                     </div>
-                   </div>
-                 </div>
-               ))}
+                 );
+               })}
              </div>
              </Card.Content>
            </Card>
@@ -215,10 +249,10 @@ const FinancialOverview = () => {
                    <div className="flex items-center space-x-2">
                      <div className={`w-3 h-3 rounded-full ${
                        method === 'credito' ? 'bg-blue-500' :
-                       method === 'pix' ? 'bg-green-500' : 'bg-purple-500'
+                                                           'bg-purple-500'
                      }`}></div>
                      <span className="text-sm font-medium text-gray-700 dark:text-light capitalize">
-                       {method === 'credito' ? 'Crédito' : method === 'pix' ? 'PIX' : 'Débito'}
+                                               {method === 'credito' ? 'Crédito' : 'Débito'}
                      </span>
                    </div>
                    <span className="text-sm font-bold text-gray-900 dark:text-light">
@@ -342,10 +376,10 @@ const FinancialOverview = () => {
                 </h4>
                 
                 <div className="space-y-4">
-                  {/* Gastos Variáveis */}
+                  {/* Gastos Variáveis (Débito) */}
                   <div>
                     <div className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg mb-3">
-                      <span className="text-gray-700 dark:text-light font-medium">Gastos Variáveis:</span>
+                                              <span className="text-gray-700 dark:text-light font-medium">Gastos Variáveis (Débito):</span>
                       <span className="font-bold text-red-600">{formatCurrency(summary.totalExpenses)}</span>
                     </div>
                     
@@ -360,24 +394,20 @@ const FinancialOverview = () => {
                               </div>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
                                 {new Date(expense.expense_date).toLocaleDateString('pt-BR')}
-                                {expense.account_name && (
-                                  <div className="flex items-center gap-1 mt-1">
-                                    <span className={`px-1 py-0.5 rounded text-xs ${
-                                      expense.account_category === 'credito' 
-                                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                                        : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                                    }`}>
-                                      {expense.account_name}
+                                <div className="flex items-center gap-1 mt-1">
+                                  {expense.bank_account_id && (
+                                    <span className="px-1 py-0.5 rounded text-xs bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                                      {expense.account_name || `Conta ID: ${expense.bank_account_id}`}
                                     </span>
-                                    <span className={`px-1 py-0.5 rounded text-xs ${
-                                      expense.account_category === 'credito' 
-                                        ? 'bg-blue-200 text-blue-900 dark:bg-blue-800 dark:text-blue-100'
-                                        : 'bg-purple-200 text-purple-900 dark:bg-purple-800 dark:text-purple-100'
-                                    }`}>
-                                      {expense.account_category === 'credito' ? 'Crédito' : 'Débito'}
-                                    </span>
-                                  </div>
-                                )}
+                                  )}
+                                  <span className={`px-1 py-0.5 rounded text-xs ${
+                                    expense.payment_method === 'credito'
+                                      ? 'bg-blue-200 text-blue-900 dark:bg-blue-800 dark:text-blue-100'
+                                      : 'bg-purple-200 text-purple-900 dark:bg-purple-800 dark:text-purple-100'
+                                  }`}>
+                                    {expense.payment_method === 'credito' ? 'Crédito' : 'Débito'}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                             <span className="text-sm font-bold text-red-600">{formatCurrency(expense.amount)}</span>
@@ -390,6 +420,45 @@ const FinancialOverview = () => {
                       </div>
                     )}
                   </div>
+
+                  {/* Gastos com Cartão de Crédito */}
+                  {summary.totalCreditCardExpenses > 0 && (
+                    <div>
+                      <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg mb-3">
+                        <span className="text-gray-700 dark:text-light font-medium">Gastos com Cartão de Crédito:</span>
+                        <span className="font-bold text-blue-600">{formatCurrency(summary.totalCreditCardExpenses)}</span>
+                      </div>
+                      
+                      {summary.creditCardExpensesDetails && summary.creditCardExpensesDetails.length > 0 ? (
+                        <div className="space-y-2">
+                          <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400">Detalhamento:</h5>
+                          {summary.creditCardExpensesDetails.map((expense) => (
+                            <div key={expense.id} className="flex justify-between items-center p-2 bg-gray-50 dark:bg-dark-lighter rounded">
+                              <div className="flex-1">
+                                <div className="text-sm font-medium text-gray-800 dark:text-light">
+                                  {expense.description || 'Sem descrição'}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {new Date(expense.expense_date).toLocaleDateString('pt-BR')}
+                                  {expense.account_name && (
+                                    <div className="flex items-center gap-1 mt-1">
+                                      <span className="px-1 py-0.5 rounded text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                        {expense.account_name}
+                                      </span>
+                                      <span className="px-1 py-0.5 rounded text-xs bg-blue-200 text-blue-900 dark:bg-blue-800 dark:text-blue-100">
+                                        Crédito
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <span className="text-sm font-bold text-blue-600">{formatCurrency(expense.amount)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                   
                   {/* Despesas Fixas */}
                   <div>

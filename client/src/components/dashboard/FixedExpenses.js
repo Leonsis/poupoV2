@@ -7,9 +7,9 @@ import {
   DollarSign, 
   Tag,
   CheckCircle,
-  Circle,
-  Building
+  Circle
 } from 'lucide-react';
+import { ConfirmModal, useNotifications, Input } from '../ui';
 
 const FixedExpenses = () => {
   const { 
@@ -18,14 +18,26 @@ const FixedExpenses = () => {
     createFixedExpense, 
     updateFixedExpensePayment, 
     deleteFixedExpense,
-    updateFixedExpenseAccount // <-- Adicionado
+    updateFixedExpenseAccount,
+    checkMonthlyTransition,
+    executeMonthlyTransition,
+    loadFixedExpensesWithTransition,
+    payOverdueExpense,
+    getOverdueExpensesCount
   } = useFinancial();
+  const { showError, showSuccess } = useNotifications();
   
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ open: false, expenseId: null });
   const [selectedBankId, setSelectedBankId] = useState('');
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [showTransitionModal, setShowTransitionModal] = useState(false);
+
+  const [showOverduePaymentModal, setShowOverduePaymentModal] = useState(false);
+  const [selectedOverdueExpense, setSelectedOverdueExpense] = useState(null);
 
   const [formData, setFormData] = useState({
     description: '',
@@ -53,7 +65,7 @@ const FixedExpenses = () => {
     e.preventDefault();
     
     if (!formData.description || !formData.amount || !formData.due_date) {
-      alert('Por favor, preencha todos os campos obrigatórios');
+      showError('Por favor, preencha todos os campos obrigatórios');
       return;
     }
 
@@ -102,7 +114,7 @@ const FixedExpenses = () => {
 
   const handleConfirmPayment = async () => {
     if (!selectedBankId) {
-      alert('Selecione uma conta bancária para registrar o pagamento.');
+      showError('Selecione uma conta bancária para registrar o pagamento.');
       return;
     }
     setConfirmLoading(true);
@@ -118,8 +130,21 @@ const FixedExpenses = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta despesa fixa?')) return;
-    await deleteFixedExpense(id);
+    setItemToDelete({ id });
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    try {
+      await deleteFixedExpense(itemToDelete.id);
+      showSuccess('Despesa fixa excluída com sucesso!');
+    } catch (error) {
+      showError('Erro ao excluir despesa fixa.');
+    } finally {
+      setItemToDelete(null);
+      setShowDeleteConfirm(false);
+    }
   };
 
   // Edição inline da conta associada
@@ -140,6 +165,64 @@ const FixedExpenses = () => {
     setSelectedFixedAccountId('');
   };
 
+  // Verificar transição mensal e carregar despesas vencidas
+  useEffect(() => {
+    const checkTransitionAndLoadData = async () => {
+      try {
+        // Verificar se precisa fazer transição mensal
+        const transitionCheck = await checkMonthlyTransition();
+        if (transitionCheck.needsTransition) {
+          setShowTransitionModal(true);
+        }
+
+        // Carregar despesas com informações de transição
+        await loadFixedExpensesWithTransition();
+
+        // Contar despesas vencidas
+        await getOverdueExpensesCount();
+      } catch (error) {
+        console.error('Erro ao verificar transição mensal:', error);
+      }
+    };
+
+    checkTransitionAndLoadData();
+  }, [checkMonthlyTransition, getOverdueExpensesCount, loadFixedExpensesWithTransition]);
+
+  const handleExecuteTransition = async () => {
+    try {
+      const result = await executeMonthlyTransition();
+      if (result.success) {
+        setShowTransitionModal(false);
+        // Recarregar dados
+        await loadFixedExpensesWithTransition();
+        await getOverdueExpensesCount();
+      }
+    } catch (error) {
+      console.error('Erro ao executar transição:', error);
+    }
+  };
+
+  const handlePayOverdueExpense = async () => {
+    if (!selectedOverdueExpense || !selectedBankId) {
+      showError('Selecione uma conta bancária para pagar a despesa vencida.');
+      return;
+    }
+
+    try {
+      const result = await payOverdueExpense(selectedOverdueExpense.id, selectedBankId);
+      if (result.success) {
+        setShowOverduePaymentModal(false);
+        setSelectedOverdueExpense(null);
+        setSelectedBankId('');
+        // Recarregar dados
+        await loadFixedExpensesWithTransition();
+        await getOverdueExpensesCount();
+      }
+    } catch (error) {
+      console.error('Erro ao pagar despesa vencida:', error);
+    }
+  };
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -156,15 +239,19 @@ const FixedExpenses = () => {
   };
 
   const getUnpaidExpenses = () => {
-    return fixedExpenses.filter(item => !item.is_paid);
+    return fixedExpenses.filter(item => !item.is_paid && !item.is_overdue);
+  };
+
+  const getOverdueExpenses = () => {
+    return fixedExpenses.filter(item => item.is_overdue);
   };
 
   return (
     <div className="max-w-6xl mx-auto">
       {/* Modal de confirmação de pagamento */}
       {confirmModal.open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md relative mx-4">
             <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-light">Confirmar Pagamento</h4>
             <p className="mb-4 text-gray-700 dark:text-light">Você tem certeza que pagou esta despesa fixa?</p>
             <div className="mb-4">
@@ -232,29 +319,36 @@ const FixedExpenses = () => {
         </button>
       </div>
 
-      {/* Estatísticas */}
-      <div className="grid md:grid-cols-3 gap-6 mb-6">
-        <div className="card text-center">
-          <div className="text-3xl font-bold text-primary mb-2">
-            {formatCurrency(getTotalFixedExpenses())}
-          </div>
-          <div className="text-gray-600 dark:text-light">Total Mensal</div>
-        </div>
-        
-        <div className="card text-center">
-          <div className="text-3xl font-bold text-green-600 mb-2">
-            {getPaidExpenses().length}
-          </div>
-          <div className="text-gray-600 dark:text-light">Pagas</div>
-        </div>
-        
-        <div className="card text-center">
-          <div className="text-3xl font-bold text-red-600 mb-2">
-            {getUnpaidExpenses().length}
-          </div>
-          <div className="text-gray-600 dark:text-light">Pendentes</div>
-        </div>
-      </div>
+             {/* Estatísticas */}
+       <div className="grid md:grid-cols-4 gap-6 mb-6">
+         <div className="card text-center">
+           <div className="text-3xl font-bold text-primary mb-2">
+             {formatCurrency(getTotalFixedExpenses())}
+           </div>
+           <div className="text-gray-600 dark:text-light">Total Mensal</div>
+         </div>
+         
+         <div className="card text-center">
+           <div className="text-3xl font-bold text-green-600 mb-2">
+             {getPaidExpenses().length}
+           </div>
+           <div className="text-gray-600 dark:text-light">Pagas</div>
+         </div>
+         
+         <div className="card text-center">
+           <div className="text-3xl font-bold text-red-600 mb-2">
+             {getUnpaidExpenses().length}
+           </div>
+           <div className="text-gray-600 dark:text-light">Pendentes</div>
+         </div>
+
+         <div className="card text-center">
+           <div className="text-3xl font-bold text-orange-600 mb-2">
+             {getOverdueExpenses().length}
+           </div>
+           <div className="text-gray-600 dark:text-light">Vencidas</div>
+         </div>
+       </div>
 
       {/* Formulário */}
       {showForm && (
@@ -266,130 +360,123 @@ const FixedExpenses = () => {
           <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
             {/* Descrição */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Descrição *
-              </label>
-              <div className="relative">
-                <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="input-primary pl-10"
-                  placeholder="Ex: Conta de luz, internet, aluguel..."
-                  required
-                />
-              </div>
+              <Input
+                type="text"
+                name="description"
+                label="Descrição *"
+                leftIcon={FileText}
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Ex: Conta de luz, internet, aluguel..."
+                required
+              />
             </div>
 
             {/* Valor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Valor *
-              </label>
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="number"
-                  name="amount"
-                  value={formData.amount}
-                  onChange={handleInputChange}
-                  className="input-primary pl-10"
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0.01"
-                  required
-                />
-              </div>
+              <Input
+                type="number"
+                name="amount"
+                label="Valor *"
+                leftIcon={DollarSign}
+                value={formData.amount}
+                onChange={handleInputChange}
+                placeholder="0.00"
+                step="0.01"
+                min="0.01"
+                required
+              />
             </div>
 
             {/* Dia de Vencimento */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Dia de Vencimento *
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="number"
-                  name="due_date"
-                  value={formData.due_date}
-                  onChange={handleInputChange}
-                  className="input-primary pl-10"
-                  placeholder="1-31"
-                  min="1"
-                  max="31"
-                  required
-                />
-              </div>
+              <Input
+                type="number"
+                name="due_date"
+                label="Dia de Vencimento *"
+                leftIcon={Calendar}
+                value={formData.due_date}
+                onChange={handleInputChange}
+                placeholder="1-31"
+                min="1"
+                max="31"
+                required
+              />
             </div>
 
             {/* Categoria */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Categoria
-              </label>
-              <div className="relative">
-                <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  className="input-primary pl-10"
-                  placeholder="Ex: Moradia, Serviços, etc."
-                />
-              </div>
+              <Input
+                type="text"
+                name="category"
+                label="Categoria"
+                leftIcon={Tag}
+                value={formData.category}
+                onChange={handleInputChange}
+                placeholder="Ex: Moradia, Serviços, etc."
+              />
             </div>
 
-            {/* É boleto? */}
+            {/* É boleto ou fatura? */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                É boleto?
+                É boleto ou fatura?
               </label>
               <input
                 type="checkbox"
                 name="is_boleto"
                 checked={formData.is_boleto}
-                onChange={e => setFormData(prev => ({ ...prev, is_boleto: e.target.checked }))}
+                onChange={e => {
+                  const isChecked = e.target.checked;
+                  setFormData(prev => ({
+                    ...prev,
+                    is_boleto: isChecked,
+                    // Limpar campos de parcelas se desmarcar o checkbox
+                    total_installments: isChecked ? prev.total_installments : '',
+                    paid_installments: isChecked ? prev.paid_installments : ''
+                  }));
+                }}
                 className="mr-2"
               />
               <span className="text-gray-700 dark:text-light">Sim</span>
             </div>
 
-            {/* Total de parcelas */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Total de parcelas
-              </label>
-              <input
-                type="number"
-                name="total_installments"
-                value={formData.total_installments}
-                onChange={handleInputChange}
-                className="input-primary"
-                placeholder="Ex: 12"
-                min="1"
-              />
-            </div>
+            {/* Total de parcelas - Só aparece se for boleto */}
+            {formData.is_boleto && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Total de parcelas
+                </label>
+                <input
+                  type="number"
+                  name="total_installments"
+                  value={formData.total_installments}
+                  onChange={handleInputChange}
+                  className="input-primary"
+                  placeholder="Ex: 12"
+                  min="1"
+                />
+              </div>
+            )}
 
-            {/* Parcelas já pagas */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
-                Parcelas já pagas
-              </label>
-              <input
-                type="number"
-                name="paid_installments"
-                value={formData.paid_installments}
-                onChange={handleInputChange}
-                className="input-primary"
-                placeholder="Ex: 3"
-                min="0"
-                max={formData.total_installments || ''}
-              />
-            </div>
+            {/* Parcelas já pagas - Só aparece se for boleto */}
+            {formData.is_boleto && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Parcelas já pagas
+                </label>
+                <input
+                  type="number"
+                  name="paid_installments"
+                  value={formData.paid_installments}
+                  onChange={handleInputChange}
+                  className="input-primary"
+                  placeholder="Ex: 3"
+                  min="0"
+                  max={formData.total_installments || ''}
+                />
+              </div>
+            )}
 
             {/* Botões */}
             <div className="md:col-span-2 flex justify-end space-x-3">
@@ -445,18 +532,20 @@ const FixedExpenses = () => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h4 className="font-semibold text-gray-900 dark:text-light">
-                        {expense.description}
-                      </h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        expense.is_paid
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                      }`}>
-                        {expense.is_paid ? 'Paga' : 'Pendente'}
-                      </span>
-                    </div>
+                                         <div className="flex items-center space-x-3 mb-2">
+                       <h4 className="font-semibold text-gray-900 dark:text-light">
+                         {expense.description}
+                       </h4>
+                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                         expense.is_overdue
+                           ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+                           : expense.is_paid
+                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                       }`}>
+                         {expense.is_overdue ? 'Vencida' : expense.is_paid ? 'Paga' : 'Pendente'}
+                       </span>
+                     </div>
                     
                     <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-light">
                       <div>
@@ -504,36 +593,143 @@ const FixedExpenses = () => {
                       )
                     )}
                   </div>
-                  <div className="flex flex-col items-end space-y-2">
-                    <button
-                      onClick={() => handleTogglePayment(expense.id, expense.is_paid)}
-                      className={`p-2 rounded-full transition-colors ${
-                        expense.is_paid
-                          ? 'text-green-600 hover:text-green-700'
-                          : 'text-yellow-600 hover:text-yellow-700'
-                      }`}
-                      title={expense.is_paid ? 'Marcar como pendente' : 'Marcar como paga'}
-                    >
-                      {expense.is_paid ? (
-                        <CheckCircle className="w-6 h-6" />
-                      ) : (
-                        <Circle className="w-6 h-6" />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(expense.id)}
-                      className="p-2 rounded-full text-red-600 hover:text-red-800 transition-colors"
-                      title="Excluir despesa fixa"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                  </div>
+                                     <div className="flex flex-col items-end space-y-2">
+                     {expense.is_overdue ? (
+                       <button
+                         onClick={() => {
+                           setSelectedOverdueExpense(expense);
+                           setShowOverduePaymentModal(true);
+                         }}
+                         className="p-2 rounded-full text-orange-600 hover:text-orange-700 transition-colors"
+                         title="Pagar despesa vencida"
+                       >
+                         <DollarSign className="w-6 h-6" />
+                       </button>
+                     ) : (
+                       <button
+                         onClick={() => handleTogglePayment(expense.id, expense.is_paid)}
+                         className={`p-2 rounded-full transition-colors ${
+                           expense.is_paid
+                             ? 'text-green-600 hover:text-green-700'
+                             : 'text-yellow-600 hover:text-yellow-700'
+                         }`}
+                         title={expense.is_paid ? 'Marcar como pendente' : 'Marcar como paga'}
+                       >
+                         {expense.is_paid ? (
+                           <CheckCircle className="w-6 h-6" />
+                         ) : (
+                           <Circle className="w-6 h-6" />
+                         )}
+                       </button>
+                     )}
+                     <button
+                       onClick={() => handleDelete(expense.id)}
+                       className="p-2 rounded-full text-red-600 hover:text-red-800 transition-colors"
+                       title="Excluir despesa fixa"
+                     >
+                       <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                     </button>
+                   </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+             {/* Modal de Confirmação de Exclusão */}
+       <ConfirmModal
+         isOpen={showDeleteConfirm}
+         onClose={() => setShowDeleteConfirm(false)}
+         onConfirm={handleConfirmDelete}
+         title="Confirmar Exclusão"
+         message="Tem certeza que deseja excluir esta despesa fixa?"
+         confirmText="Excluir"
+         cancelText="Cancelar"
+         type="danger"
+       />
+
+       {/* Modal de Transição Mensal */}
+       {showTransitionModal && (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
+           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md relative mx-4">
+             <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-light">Transição Mensal</h4>
+             <p className="mb-4 text-gray-700 dark:text-light">
+               É necessário fazer a transição para o novo mês. As despesas fixas serão atualizadas:
+             </p>
+             <ul className="mb-6 text-sm text-gray-600 dark:text-light space-y-2">
+               <li>• Despesas pagas serão resetadas para o novo mês</li>
+               <li>• Despesas não pagas serão marcadas como vencidas</li>
+               <li>• Novas despesas serão criadas para o novo mês</li>
+             </ul>
+             <div className="flex justify-end space-x-3">
+               <button
+                 className="btn-outline"
+                 onClick={() => setShowTransitionModal(false)}
+               >
+                 Cancelar
+               </button>
+               <button
+                 className="btn-primary"
+                 onClick={handleExecuteTransition}
+               >
+                 Executar Transição
+               </button>
+             </div>
+           </div>
+         </div>
+       )}
+
+       {/* Modal de Pagamento de Despesa Vencida */}
+       {showOverduePaymentModal && selectedOverdueExpense && (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
+           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md relative mx-4">
+             <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-light">Pagar Despesa Vencida</h4>
+             <p className="mb-4 text-gray-700 dark:text-light">
+               Você está pagando a despesa vencida: <strong>{selectedOverdueExpense.description}</strong>
+             </p>
+             <p className="mb-4 text-gray-700 dark:text-light">
+               Valor: <strong>{formatCurrency(selectedOverdueExpense.amount)}</strong>
+             </p>
+             <div className="mb-4">
+               <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                 Selecione a conta bancária utilizada *
+               </label>
+               <select
+                 className="input-primary w-full"
+                 value={selectedBankId}
+                 onChange={e => setSelectedBankId(e.target.value)}
+               >
+                 <option value="">Selecione uma conta</option>
+                 {bankAccounts.map(account => (
+                   <option key={account.id} value={account.id}>
+                     {account.account_name} - {formatCurrency(account.balance)}
+                   </option>
+                 ))}
+               </select>
+             </div>
+             <div className="flex justify-end space-x-3">
+               <button
+                 className="btn-outline"
+                 onClick={() => {
+                   setShowOverduePaymentModal(false);
+                   setSelectedOverdueExpense(null);
+                   setSelectedBankId('');
+                 }}
+               >
+                 Cancelar
+               </button>
+               <button
+                 className="btn-primary"
+                 onClick={handlePayOverdueExpense}
+                 disabled={!selectedBankId}
+               >
+                 Confirmar Pagamento
+               </button>
+             </div>
+           </div>
+         </div>
+       )}
     </div>
   );
 };

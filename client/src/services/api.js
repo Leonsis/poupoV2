@@ -17,6 +17,14 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Adicionar credenciais de admin quando necessário
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken && config.url.includes('/admin/')) {
+      config.headers.username = 'CLAdmin';
+      config.headers.password = '!@#$%622060122';
+    }
+    
     // Logging detalhado
     logRequest({
       url: config.url,

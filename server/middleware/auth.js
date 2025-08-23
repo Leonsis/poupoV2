@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'admin-panel-secret';
 
-const auth = (req, res, next) => {
+
+const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
@@ -17,17 +17,30 @@ const auth = (req, res, next) => {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded;
         } catch (err) {
-            // Tenta decodificar com o segredo do painel admin
-            try {
-                jwt.verify(token, ADMIN_JWT_SECRET);
-                req.user = { isPanelAdmin: true };
-            } catch (err2) {
-                return res.status(401).json({ 
-                    success: false, 
-                    message: 'Token inválido ou expirado' 
-                });
-            }
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Token inválido ou expirado' 
+            });
         }
+
+        // Verificar se o usuário está banido
+        const db = require('../config/database');
+        const user = await db.get('SELECT is_banned FROM users WHERE id = ?', [decoded.userId]);
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Usuário não encontrado' 
+            });
+        }
+
+        if (user.is_banned) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Sua conta foi banida. Entre em contato com o administrador.' 
+            });
+        }
+
         next();
     } catch (error) {
         console.error('Erro na autenticação:', error);
@@ -46,11 +59,7 @@ const optionalAuth = (req, res, next) => {
             try {
                 decoded = jwt.verify(token, process.env.JWT_SECRET);
             } catch (err) {
-                try {
-                    decoded = jwt.verify(token, ADMIN_JWT_SECRET);
-                } catch (err2) {
-                    // continua sem autenticação
-                }
+                // continua sem autenticação
             }
             req.user = decoded;
         }

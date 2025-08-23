@@ -41,13 +41,13 @@ const Notification = ({
   };
 
   const getStyles = () => {
-    const baseStyles = 'fixed top-4 right-4 z-50 max-w-sm w-full bg-white dark:bg-dark-light border rounded-lg shadow-lg transform transition-all duration-300';
+    const baseStyles = 'fixed top-4 right-4 z-[9999] max-w-sm w-full border-2 rounded-lg shadow-2xl transform transition-all duration-300 backdrop-blur-md';
     
     const typeStyles = {
-      success: 'border-green-200 dark:border-green-700',
-      error: 'border-red-200 dark:border-red-700',
-      warning: 'border-yellow-200 dark:border-yellow-700',
-      info: 'border-blue-200 dark:border-blue-700'
+      success: 'bg-green-100/95 dark:bg-green-900/95 border-green-400 dark:border-green-500 shadow-green-300/50 dark:shadow-green-600/30',
+      error: 'bg-red-100/95 dark:bg-red-900/95 border-red-400 dark:border-red-500 shadow-red-300/50 dark:shadow-red-600/30',
+      warning: 'bg-yellow-100/95 dark:bg-yellow-900/95 border-yellow-400 dark:border-yellow-500 shadow-yellow-300/50 dark:shadow-yellow-600/30',
+      info: 'bg-blue-100/95 dark:bg-blue-900/95 border-blue-400 dark:border-blue-500 shadow-blue-300/50 dark:shadow-blue-600/30'
     };
 
     const visibilityStyles = isVisible 
@@ -80,12 +80,12 @@ const Notification = ({
           
           <div className="ml-3 flex-1">
             {title && (
-              <h3 className="text-sm font-medium text-gray-900 dark:text-light">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">
                 {title}
               </h3>
             )}
             {message && (
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              <p className="mt-1 text-sm font-medium text-gray-800 dark:text-gray-100">
                 {message}
               </p>
             )}
@@ -148,13 +148,14 @@ export const useNotifications = () => {
 // Componente para renderizar todas as notificações
 export const NotificationContainer = ({ notifications, onRemove }) => {
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-4 right-4 z-[9999] space-y-3 pointer-events-none">
       {notifications.map((notification) => (
-        <Notification
-          key={notification.id}
-          {...notification}
-          onClose={() => onRemove(notification.id)}
-        />
+        <div key={notification.id} className="pointer-events-auto">
+          <Notification
+            {...notification}
+            onClose={() => onRemove(notification.id)}
+          />
+        </div>
       ))}
     </div>
   );

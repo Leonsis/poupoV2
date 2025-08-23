@@ -130,13 +130,15 @@ router.post('/login', [
             });
         }
 
-        // Impede login de usuário banido
+        // Verificar se o usuário está banido
         if (user.is_banned) {
             return res.status(403).json({
                 success: false,
-                message: 'Usuário banido. Entre em contato com o administrador.'
+                message: 'Sua conta foi banida. Entre em contato com o administrador.'
             });
         }
+
+
 
         // Verificar senha
         const isPasswordValid = await bcrypt.compare(password, user.password_hash);
@@ -186,7 +188,7 @@ router.post('/login', [
 router.get('/verify', auth, async (req, res) => {
     try {
         const user = await db.get(
-            'SELECT id, name, email, birth_date, phone, gross_salary, dark_mode, created_at FROM users WHERE id = ?',
+            'SELECT id, name, email, birth_date, phone, gross_salary, dark_mode, created_at, is_banned FROM users WHERE id = ?',
             [req.user.userId]
         );
 
@@ -194,6 +196,14 @@ router.get('/verify', auth, async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Usuário não encontrado'
+            });
+        }
+
+        // Verificar se o usuário está banido
+        if (user.is_banned) {
+            return res.status(403).json({
+                success: false,
+                message: 'Sua conta foi banida. Entre em contato com o administrador.'
             });
         }
 
@@ -308,8 +318,8 @@ router.delete('/delete-account', auth, async (req, res) => {
         await db.run('DELETE FROM expenses WHERE user_id = ?', [userId]);
         // Remover contas bancárias
         await db.run('DELETE FROM bank_accounts WHERE user_id = ?', [userId]);
-        // Remover usuário
-        await db.run('DELETE FROM users WHERE id = ?', [userId]);
+        // Marcar usuário como excluído (soft delete)
+        await db.run('UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?', [userId]);
 
         res.json({
             success: true,

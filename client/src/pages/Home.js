@@ -95,10 +95,7 @@ const Home = () => {
                 Começar Agora
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              
-              <Button variant="outline" size="xl">
-                Saiba Mais
-              </Button>
+                          
             </div>
           </div>
         </div>

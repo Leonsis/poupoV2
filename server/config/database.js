@@ -45,7 +45,9 @@ class Database {
                 gross_salary REAL DEFAULT 0.00,
                 dark_mode BOOLEAN DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                is_banned BOOLEAN DEFAULT 0,
+                deleted_at DATETIME
             );
 
             CREATE TABLE IF NOT EXISTS bank_accounts (
@@ -55,6 +57,10 @@ class Database {
                 account_type TEXT NOT NULL,
                 account_category TEXT NOT NULL DEFAULT 'debito',
                 balance REAL DEFAULT 0.00,
+                credit_limit REAL DEFAULT 0.00,
+                current_debt REAL DEFAULT 0.00,
+                closing_date TEXT,
+                due_date TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -65,11 +71,13 @@ class Database {
                 user_id INTEGER NOT NULL,
                 amount REAL NOT NULL,
                 source TEXT NOT NULL,
-                date TEXT NOT NULL,
+                income_date TEXT NOT NULL,
                 description TEXT,
+                bank_account_id INTEGER,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+                FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL
             );
 
             CREATE TABLE IF NOT EXISTS expenses (
@@ -94,12 +102,21 @@ class Database {
                 description TEXT NOT NULL,
                 amount REAL NOT NULL,
                 due_date TEXT NOT NULL,
+                category TEXT,
                 is_paid BOOLEAN DEFAULT 0,
+                is_bill_or_invoice BOOLEAN DEFAULT 0,
+                total_installments INTEGER DEFAULT 1,
+                paid_installments INTEGER DEFAULT 0,
+                current_installment INTEGER DEFAULT 1,
+                is_overdue BOOLEAN DEFAULT 0,
+                original_fixed_expense_id INTEGER,
+                transition_month_year TEXT,
                 bank_account_id INTEGER,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-                FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL
+                FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL,
+                FOREIGN KEY (original_fixed_expense_id) REFERENCES fixed_expenses (id) ON DELETE SET NULL
             );
 
             CREATE TABLE IF NOT EXISTS transactions (
@@ -123,8 +140,34 @@ class Database {
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS monthly_summaries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                month_year TEXT NOT NULL,
+                total_income REAL DEFAULT 0,
+                total_expenses REAL DEFAULT 0,
+                total_fixed_expenses REAL DEFAULT 0,
+                total_credit_card_expenses REAL DEFAULT 0,
+                balance REAL DEFAULT 0,
+                income_details TEXT,
+                expenses_details TEXT,
+                fixed_expenses_details TEXT,
+                credit_card_expenses_details TEXT,
+                bank_accounts_summary TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS user_login_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                ip TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+            );
+
             CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-            CREATE INDEX IF NOT EXISTS idx_income_user_date ON income(user_id, date);
+            CREATE INDEX IF NOT EXISTS idx_income_user_date ON income(user_id, income_date);
             CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, expense_date);
             CREATE INDEX IF NOT EXISTS idx_fixed_expenses_user ON fixed_expenses(user_id);
         `;

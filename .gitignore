@@ -2,3 +2,31 @@
 node_modules/
 client/node_modules/
 server/node_modules/
+
+# Environment variables
+.env
+server/.env
+client/.env.local
+
+# Databases
+*.db
+server/database/*.db
+
+# Logs
+logs/
+*.log
+server/logs/
+
+# Build outputs
+client/build/
+dist/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

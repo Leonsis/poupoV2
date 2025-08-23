@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useFinancial } from './FinancialContext';
+// Removendo a importação do useNotifications para evitar dependência circular
 
 const AuthContext = createContext();
 
@@ -17,38 +18,51 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const { resetData } = useFinancial();
 
-  // Sistema de notificações customizado
-  const addNotification = (type, message) => {
-    const id = Date.now() + Math.random();
-    const notification = {
-      id,
-      type,
-      message,
-      timestamp: new Date()
-    };
-    setNotifications(prev => [...prev, notification]);
-    
-    // Auto-remover após 5 segundos
+  // Sistema de notificações temporário para o AuthContext
+  const showSuccess = (message) => {
+    // Usar setTimeout para garantir que a notificação seja exibida após o contexto estar pronto
     setTimeout(() => {
-      removeNotification(id);
-    }, 5000);
+      const event = new CustomEvent('showNotification', {
+        detail: { type: 'success', message }
+      });
+      window.dispatchEvent(event);
+    }, 100);
   };
 
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+  const showError = (message) => {
+    setTimeout(() => {
+      const event = new CustomEvent('showNotification', {
+        detail: { type: 'error', message }
+      });
+      window.dispatchEvent(event);
+    }, 100);
   };
-
-  const showSuccess = (message) => addNotification('success', message);
-  const showError = (message) => addNotification('error', message);
-  const showWarning = (message) => addNotification('warning', message);
-  const showInfo = (message) => addNotification('info', message);
 
   useEffect(() => {
     // Verificar token ao inicializar
+    const verifyToken = async () => {
+      try {
+        const response = await api.get('/auth/verify', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data.success) {
+          setUser(response.data.user);
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } else {
+          logout();
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        logout();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (token) {
       verifyToken();
     } else {
@@ -56,25 +70,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const verifyToken = async () => {
-    try {
-      const response = await api.get('/auth/verify', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      if (response.data.success) {
-        setUser(response.data.user);
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      } else {
-        logout();
-      }
-    } catch (error) {
-      console.error('Erro ao verificar token:', error);
-      logout();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   const login = async (email, password) => {
     try {
@@ -179,13 +175,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    updateUserPreferences,
-    notifications,
-    removeNotification,
-    showSuccess,
-    showError,
-    showWarning,
-    showInfo
+    updateUserPreferences
   };
 
   return (

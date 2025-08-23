@@ -10,12 +10,15 @@ import {
   X,
   Trash2
 } from 'lucide-react';
+import { ConfirmModal, useNotifications } from '../ui';
 
 const UserProfile = () => {
   const { user, updateUserPreferences, logout } = useAuth();
+  const { showError } = useNotifications();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -67,7 +70,6 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível!')) return;
     setIsDeleting(true);
     try {
       const response = await fetch(`/api/auth/delete-account`, {
@@ -80,9 +82,10 @@ const UserProfile = () => {
       }
       logout();
     } catch (error) {
-      alert('Erro ao excluir conta: ' + (error.message || 'Tente novamente.'));
+      showError('Erro ao excluir conta: ' + (error.message || 'Tente novamente.'));
     } finally {
       setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -231,7 +234,7 @@ const UserProfile = () => {
 
       <div className="mt-8 text-center">
         <button
-          onClick={handleDeleteAccount}
+          onClick={() => setShowDeleteConfirm(true)}
           className="btn-danger flex items-center justify-center space-x-2 mx-auto w-full sm:w-auto"
           disabled={isDeleting}
         >
@@ -239,6 +242,19 @@ const UserProfile = () => {
           <span>Excluir Conta</span>
         </button>
       </div>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteAccount}
+        title="Confirmar Exclusão"
+        message="Tem certeza que deseja excluir sua conta? Esta ação é irreversível!"
+        confirmText="Excluir Conta"
+        cancelText="Cancelar"
+        type="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 };
