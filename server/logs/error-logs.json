@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1755907318244.1274,
+    "level": "TEST",
+    "message": "Teste de log",
+    "data": {
+      "test": true
+    },
+    "timestamp": "2025-08-23T00:01:58.244Z",
+    "processId": 15324
+  }
+]

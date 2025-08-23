@@ -505,6 +505,15 @@ router.post('/expenses', [
             // Log detalhado dos erros de validação
             errorLogger.logValidationError(req, errors);
             
+            // Log adicional para debug
+            console.log('=== ERROS DE VALIDAÇÃO DETALHADOS ===');
+            console.log('Body recebido:', JSON.stringify(req.body, null, 2));
+            console.log('Erros encontrados:', JSON.stringify(errors.array(), null, 2));
+            errors.array().forEach((error, index) => {
+                console.log(`Erro ${index + 1}: Campo="${error.path}", Valor="${error.value}", Mensagem="${error.msg}"`);
+            });
+            console.log('=====================================');
+            
             return res.status(400).json({
                 success: false,
                 errors: errors.array()
