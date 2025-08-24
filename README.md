@@ -354,8 +354,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ## 👨‍💻 Autor
 
 **Poupo Team**
-- Email: contato@poupo.com
-- GitHub: [@poupo-team](https://github.com/poupo-team)
+- Email: caiolenni@gmail.com
+- Website: [caioleonni.com](https://www.caioleonni.com)
 
 ## 🙏 Agradecimentos
 
