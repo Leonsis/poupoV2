@@ -1,233 +1,5 @@
 [
   {
-    "id": 1756136282229.1482,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.229Z",
-    "processId": 5636
-  },
-  {
-    "id": 1756136282267.0017,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.267Z",
-    "processId": 5636
-  },
-  {
-    "id": 1756136282321.486,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.321Z",
-    "processId": 5636
-  },
-  {
-    "id": 1756136282390.8718,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.390Z",
-    "processId": 5636
-  },
-  {
-    "id": 1756136282452.4539,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.452Z",
-    "processId": 5636
-  },
-  {
-    "id": 1756136282532.521,
-    "level": "REQUEST_ERROR",
-    "message": "Erro na requisição",
-    "data": {
-      "method": "GET",
-      "url": "/api/financial/fixed-expenses/with-transition",
-      "headers": {
-        "host": "192.168.150.190:5000",
-        "connection": "keep-alive",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-        "accept": "application/json, text/plain, */*",
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNjI1MiwiZXhwIjoxNzU2NzQxMDUyfQ.DBohF88c7Iv6GJDMrJAnBGfEfzpjEznpj_VxY-3kxoI",
-        "origin": "http://localhost:3002",
-        "referer": "http://localhost:3002/",
-        "accept-encoding": "gzip, deflate",
-        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      "body": {},
-      "query": {},
-      "params": {},
-      "user": {
-        "userId": 1,
-        "email": "caiolenni@gmail.com",
-        "iat": 1756136252,
-        "exp": 1756741052
-      },
-      "error": {
-        "message": "HTTP 500",
-        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1294:25",
-        "name": "Error"
-      },
-      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
-      "statusCode": 500
-    },
-    "timestamp": "2025-08-25T15:38:02.532Z",
-    "processId": 5636
-  },
-  {
     "id": 1756136282584.668,
     "level": "REQUEST_ERROR",
     "message": "Erro na requisição",
@@ -38029,5 +37801,245 @@
     },
     "timestamp": "2025-08-25T15:49:18.480Z",
     "processId": 22748
+  },
+  {
+    "id": 1756137457184.673,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:156:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-08-25T15:57:37.184Z",
+    "processId": 5044
+  },
+  {
+    "id": 1756137785681.986,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:156:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-08-25T16:03:05.681Z",
+    "processId": 3472
+  },
+  {
+    "id": 1756137845782.4841,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/api/financial/fixed-expenses/check-transition",
+      "headers": {
+        "host": "192.168.150.190:5000",
+        "connection": "keep-alive",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNzg0MywiZXhwIjoxNzU2NzQyNjQzfQ.gO7ivVMVPbY4wiCR9u3F2CeHbucM9FFGSXn_bioFGUc",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {},
+      "query": {},
+      "params": {},
+      "user": {
+        "userId": 1,
+        "email": "caiolenni@gmail.com",
+        "iat": 1756137843,
+        "exp": 1756742643
+      },
+      "error": {
+        "message": "HTTP 500",
+        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1274:25\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
+      "statusCode": 500
+    },
+    "timestamp": "2025-08-25T16:04:05.782Z",
+    "processId": 13584
+  },
+  {
+    "id": 1756137845960.925,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/api/financial/fixed-expenses/check-transition",
+      "headers": {
+        "host": "192.168.150.190:5000",
+        "connection": "keep-alive",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNzg0MywiZXhwIjoxNzU2NzQyNjQzfQ.gO7ivVMVPbY4wiCR9u3F2CeHbucM9FFGSXn_bioFGUc",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {},
+      "query": {},
+      "params": {},
+      "user": {
+        "userId": 1,
+        "email": "caiolenni@gmail.com",
+        "iat": 1756137843,
+        "exp": 1756742643
+      },
+      "error": {
+        "message": "HTTP 500",
+        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1274:25\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
+      "statusCode": 500
+    },
+    "timestamp": "2025-08-25T16:04:05.960Z",
+    "processId": 13584
+  },
+  {
+    "id": 1756137846130.072,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/api/financial/fixed-expenses/with-transition",
+      "headers": {
+        "host": "192.168.150.190:5000",
+        "connection": "keep-alive",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNzg0MywiZXhwIjoxNzU2NzQyNjQzfQ.gO7ivVMVPbY4wiCR9u3F2CeHbucM9FFGSXn_bioFGUc",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {},
+      "query": {},
+      "params": {},
+      "user": {
+        "userId": 1,
+        "email": "caiolenni@gmail.com",
+        "iat": 1756137843,
+        "exp": 1756742643
+      },
+      "error": {
+        "message": "HTTP 500",
+        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1312:25",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
+      "statusCode": 500
+    },
+    "timestamp": "2025-08-25T16:04:06.130Z",
+    "processId": 13584
+  },
+  {
+    "id": 1756137846368.822,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/api/financial/fixed-expenses/with-transition",
+      "headers": {
+        "host": "192.168.150.190:5000",
+        "connection": "keep-alive",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NjEzNzg0MywiZXhwIjoxNzU2NzQyNjQzfQ.gO7ivVMVPbY4wiCR9u3F2CeHbucM9FFGSXn_bioFGUc",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {},
+      "query": {},
+      "params": {},
+      "user": {
+        "userId": 1,
+        "email": "caiolenni@gmail.com",
+        "iat": 1756137843,
+        "exp": 1756742643
+      },
+      "error": {
+        "message": "HTTP 500",
+        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:166:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:159:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:1312:25",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
+      "statusCode": 500
+    },
+    "timestamp": "2025-08-25T16:04:06.368Z",
+    "processId": 13584
   }
 ]

@@ -243,14 +243,6 @@ export const FinancialProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [resetMonthlyData]);
 
-    // Carregar dados iniciais apenas uma vez quando houver token
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token && !hasLoadedInitialData) {
-            loadInitialData();
-        }
-    }, [hasLoadedInitialData, loadInitialData]);
-
     // ===== FUNÇÕES DE CRIAÇÃO =====
     const createBankAccount = async(accountData) => {
         try {
