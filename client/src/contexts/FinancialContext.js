@@ -626,7 +626,7 @@ export const FinancialProvider = ({ children }) => {
     };
 
     // ===== TRANSIÇÃO MENSAL DE DESPESAS FIXAS =====
-    const checkMonthlyTransition = async() => {
+    const checkMonthlyTransition = useCallback(async() => {
         try {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.get('/financial/fixed-expenses/check-transition');
@@ -635,9 +635,9 @@ export const FinancialProvider = ({ children }) => {
             console.error('Erro ao verificar transição mensal:', error);
             return { success: false, message: 'Erro ao verificar transição mensal' };
         }
-    };
+    }, [shouldLoadData]);
 
-    const executeMonthlyTransition = async() => {
+    const executeMonthlyTransition = useCallback(async() => {
         try {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.post('/financial/fixed-expenses/execute-transition');
@@ -654,9 +654,9 @@ export const FinancialProvider = ({ children }) => {
             showNotification('error', message);
             return { success: false, message };
         }
-    };
+    }, [shouldLoadData, loadFixedExpenses, showNotification]);
 
-    const loadFixedExpensesWithTransition = async() => {
+    const loadFixedExpensesWithTransition = useCallback(async() => {
         try {
             if (!shouldLoadData()) return;
             const response = await api.get('/financial/fixed-expenses/with-transition');
@@ -669,7 +669,7 @@ export const FinancialProvider = ({ children }) => {
             console.error('Erro ao carregar despesas fixas com transição:', error);
             setFixedExpenses([]);
         }
-    };
+    }, [shouldLoadData]);
 
     const payOverdueExpense = async(expenseId, bankAccountId) => {
         try {
@@ -694,7 +694,7 @@ export const FinancialProvider = ({ children }) => {
         }
     };
 
-    const getOverdueExpensesCount = async() => {
+    const getOverdueExpensesCount = useCallback(async() => {
         try {
             if (!shouldLoadData()) return 0;
             const response = await api.get('/financial/fixed-expenses/overdue-count');
@@ -706,7 +706,7 @@ export const FinancialProvider = ({ children }) => {
             console.error('Erro ao contar despesas vencidas:', error);
             return 0;
         }
-    };
+    }, [shouldLoadData]);
 
     // ===== CONSELHOS FINANCEIROS =====
     const loadFinancialAdvice = async() => {

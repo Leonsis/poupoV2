@@ -712,9 +712,22 @@ router.get('/fixed-expenses', async (req, res) => {
 router.post('/fixed-expenses', [
     body('description').notEmpty().withMessage('Descrição é obrigatória'),
     body('amount').isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
-    body('due_date').isISO8601().withMessage('Data de vencimento inválida'),
+    body('due_date').isInt({ min: 1, max: 31 }).withMessage('Dia de vencimento deve estar entre 1 e 31'),
     body('category').optional().isLength({ max: 100 }).withMessage('Categoria muito longa'),
-    body('bank_account_id').optional().isInt({ min: 1 }).withMessage('ID da conta bancária inválido')
+    body('bank_account_id').optional().isInt({ min: 1 }).withMessage('ID da conta bancária inválido'),
+    body('is_boleto').optional().isBoolean().withMessage('Campo is_boleto deve ser booleano'),
+    body('total_installments').optional().custom((value, { req }) => {
+        if (req.body.is_boleto && (!value || value === '' || parseInt(value) < 1)) {
+            throw new Error('Total de parcelas é obrigatório e deve ser maior que zero quando é boleto');
+        }
+        return true;
+    }),
+    body('paid_installments').optional().custom((value, { req }) => {
+        if (req.body.is_boleto && (value === undefined || value === null || parseInt(value) < 0)) {
+            throw new Error('Parcelas pagas deve ser zero ou maior quando é boleto');
+        }
+        return true;
+    })
 ], async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -727,9 +740,14 @@ router.post('/fixed-expenses', [
 
         const { description, amount, due_date, bank_account_id, category, is_boleto, total_installments, paid_installments } = req.body;
 
+        // Tratar campos de boleto e parcelas
+        const isBoleto = Boolean(is_boleto);
+        const totalInstallments = isBoleto && total_installments && total_installments !== '' ? parseInt(total_installments) : null;
+        const paidInstallments = isBoleto && paid_installments && paid_installments !== '' ? parseInt(paid_installments) : 0;
+
         const result = await db.run(
             'INSERT INTO fixed_expenses (user_id, description, amount, due_date, bank_account_id, category, is_boleto, total_installments, paid_installments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, description, amount, due_date, bank_account_id, category, is_boleto ? 1 : 0, total_installments || null, paid_installments || 0]
+            [req.user.userId, description, amount, due_date, bank_account_id, category, isBoleto ? 1 : 0, totalInstallments, paidInstallments]
         );
 
         const expense = await db.get(

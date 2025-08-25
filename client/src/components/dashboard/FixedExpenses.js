@@ -71,23 +71,19 @@ const FixedExpenses = () => {
 
     setIsLoading(true);
     try {
-      // Montar data completa para due_date
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1; // Janeiro = 0
-      const day = String(formData.due_date).padStart(2, '0');
-      const due_date = `${year}-${String(month).padStart(2, '0')}-${day}`;
-
       const result = await createFixedExpense({
         ...formData,
-        due_date // sobrescreve o due_date para o formato ISO
+        due_date: parseInt(formData.due_date) // Garantir que seja um número inteiro
       });
       if (result.success) {
         setFormData({
           description: '',
           amount: '',
           due_date: '',
-          category: '' // removido bank_account_id
+          category: '',
+          is_boleto: false,
+          total_installments: '',
+          paid_installments: ''
         });
         setShowForm(false);
       }
@@ -186,7 +182,7 @@ const FixedExpenses = () => {
     };
 
     checkTransitionAndLoadData();
-  }, [checkMonthlyTransition, getOverdueExpensesCount, loadFixedExpensesWithTransition]);
+  }, []); // Executar apenas uma vez ao montar o componente
 
   const handleExecuteTransition = async () => {
     try {

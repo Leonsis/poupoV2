@@ -14,7 +14,7 @@ class FixedExpenseTransitionService {
       SELECT COUNT(*) as count 
       FROM fixed_expenses 
       WHERE user_id = ? 
-      AND month_year IS NULL 
+      AND transition_month_year IS NULL 
       AND is_overdue = 0
     `;
     
@@ -38,8 +38,7 @@ class FixedExpenseTransitionService {
       await db.run(`
         UPDATE fixed_expenses 
         SET is_paid = 0, 
-            month_year = ?, 
-            payment_date = NULL
+            transition_month_year = ?
         WHERE user_id = ? 
         AND is_paid = 1 
         AND is_overdue = 0
@@ -51,7 +50,7 @@ class FixedExpenseTransitionService {
         WHERE user_id = ? 
         AND is_paid = 0 
         AND is_overdue = 0
-        AND month_year IS NULL
+        AND transition_month_year IS NULL
       `, [userId]);
 
       for (const expense of unpaidExpenses) {
@@ -59,7 +58,7 @@ class FixedExpenseTransitionService {
         await db.run(`
           UPDATE fixed_expenses 
           SET is_overdue = 1, 
-              month_year = ?
+              transition_month_year = ?
           WHERE id = ?
         `, [currentMonthYear, expense.id]);
 
@@ -68,7 +67,7 @@ class FixedExpenseTransitionService {
           INSERT INTO fixed_expenses (
             user_id, description, amount, due_date, is_paid, 
             bank_account_id, category, is_boleto, total_installments, 
-            paid_installments, is_overdue, original_expense_id, month_year
+            paid_installments, is_overdue, original_fixed_expense_id, transition_month_year
           ) VALUES (?, ?, ?, ?, 0, ?, ?, ?, ?, ?, 0, ?, ?)
         `, [
           expense.user_id,
@@ -124,10 +123,9 @@ class FixedExpenseTransitionService {
       await db.run(`
         UPDATE fixed_expenses 
         SET is_paid = 1, 
-            payment_date = ?,
             bank_account_id = ?
         WHERE id = ?
-      `, [paymentDate, bankAccountId, expenseId]);
+      `, [bankAccountId, expenseId]);
 
       // Criar um gasto correspondente no mês atual
       await db.run(`
