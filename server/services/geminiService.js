@@ -18,14 +18,14 @@ class GeminiService {
             return {
                 success: true,
                 advice: text,
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         } catch (error) {
             console.error('Erro na Gemini API:', error);
             return {
                 success: false,
                 error: 'Não foi possível gerar conselho financeiro no momento',
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         }
     }
@@ -156,14 +156,14 @@ class GeminiService {
             return {
                 success: true,
                 analysis: response.text(),
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         } catch (error) {
             console.error('Erro na análise de tendências:', error);
             return {
                 success: false,
                 error: 'Não foi possível analisar as tendências',
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         }
     }
@@ -193,14 +193,14 @@ class GeminiService {
             return {
                 success: true,
                 goals: response.text(),
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         } catch (error) {
             console.error('Erro na geração de metas:', error);
             return {
                 success: false,
                 error: 'Não foi possível gerar metas de economia',
-                timestamp: new Date().toISOString()
+                timestamp: require('../utils/dateUtils').getCurrentDateTime()
             };
         }
     }

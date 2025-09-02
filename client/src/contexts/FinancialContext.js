@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
+import { getLocalISOString } from '../utils/dateUtils';
 
 const FinancialContext = createContext();
 
@@ -226,7 +227,7 @@ export const FinancialProvider = ({ children }) => {
                     console.log('Primeiro dia do mês detectado. Resetando dados mensais...');
                     try {
                         await resetMonthlyData();
-                        localStorage.setItem(lastResetKey, today.toISOString());
+                        localStorage.setItem(lastResetKey, getLocalISOString());
                     } catch (error) {
                         console.error('Erro no reset mensal automático:', error);
                     }
@@ -353,7 +354,7 @@ export const FinancialProvider = ({ children }) => {
                         status: error.response?.status,
                         statusText: error.response?.statusText
                     },
-                    timestamp: new Date().toISOString()
+                                            timestamp: getLocalISOString()
                 });
             }
 
@@ -378,7 +379,8 @@ export const FinancialProvider = ({ children }) => {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.post('/financial/fixed-expenses', expenseData);
             if (response.data.success) {
-                setFixedExpenses(prev => [...prev, response.data.fixed_expense]);
+                // Recarregar despesas fixas com transição em vez de adicionar diretamente ao estado
+                await loadFixedExpensesWithTransition();
                 await loadSummary(); // Atualiza o overview
                 showNotification('success', 'Despesa fixa registrada com sucesso!');
                 return { success: true };
@@ -469,10 +471,8 @@ export const FinancialProvider = ({ children }) => {
             if (bankAccountId) payload.bank_account_id = bankAccountId;
             const response = await api.put(`/financial/fixed-expenses/${id}/pay`, payload);
             if (response.data.success) {
-                const paidInstallments = response.data.fixed_expense?.paid_installments;
-                setFixedExpenses(prev =>
-                    prev.map(exp => exp.id === id ? {...exp, is_paid: isPaid, paid_installments: paidInstallments !== undefined ? paidInstallments : exp.paid_installments } : exp)
-                );
+                // Recarregar despesas fixas com transição em vez de atualizar diretamente o estado
+                await loadFixedExpensesWithTransition();
                 await loadBankAccounts(); // Atualizar saldos
                 await loadSummary(); // Atualiza o overview
                 showNotification('success', 'Status de pagamento atualizado!');
@@ -493,7 +493,8 @@ export const FinancialProvider = ({ children }) => {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.put(`/financial/fixed-expenses/${expenseId}`, updateData);
             if (response.data.success) {
-                setFixedExpenses(prev => prev.map(item => item.id === expenseId ? {...item, ...updateData, ...response.data.fixed_expense } : item));
+                // Recarregar despesas fixas com transição em vez de atualizar diretamente o estado
+                await loadFixedExpensesWithTransition();
                 await loadBankAccounts();
                 await loadSummary();
                 showNotification('success', 'Conta da despesa fixa atualizada com sucesso!');
@@ -601,7 +602,8 @@ export const FinancialProvider = ({ children }) => {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.delete(`/financial/fixed-expenses/${id}`);
             if (response.data.success) {
-                setFixedExpenses(prev => prev.filter(exp => exp.id !== id));
+                // Recarregar despesas fixas com transição em vez de atualizar diretamente o estado
+                await loadFixedExpensesWithTransition();
                 await loadBankAccounts(); // Atualiza saldos das contas após exclusão
                 await loadSummary(); // Atualiza o overview
                 showNotification('success', 'Despesa fixa excluída com sucesso!');
@@ -629,12 +631,31 @@ export const FinancialProvider = ({ children }) => {
         }
     }, [shouldLoadData]);
 
+    const loadFixedExpensesWithTransition = useCallback(async() => {
+        try {
+            if (!shouldLoadData()) return;
+            console.log('🔄 Carregando despesas fixas com transição...');
+            const response = await api.get('/financial/fixed-expenses/with-transition');
+            console.log('📋 Resposta da API:', response.data);
+            if (response.data.success) {
+                console.log('✅ Despesas fixas carregadas:', response.data.expenses);
+                setFixedExpenses(response.data.expenses || []);
+            } else {
+                console.log('❌ Erro na resposta da API:', response.data);
+                setFixedExpenses([]);
+            }
+        } catch (error) {
+            console.error('❌ Erro ao carregar despesas fixas com transição:', error);
+            setFixedExpenses([]);
+        }
+    }, [shouldLoadData]);
+
     const executeMonthlyTransition = useCallback(async() => {
         try {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
             const response = await api.post('/financial/fixed-expenses/execute-transition');
             if (response.data.success) {
-                await loadFixedExpenses(); // Recarregar despesas fixas
+                await loadFixedExpensesWithTransition(); // Recarregar despesas fixas com transição
                 showNotification('success', 'Transição mensal executada com sucesso!');
                 return { success: true };
             } else {
@@ -646,22 +667,7 @@ export const FinancialProvider = ({ children }) => {
             showNotification('error', message);
             return { success: false, message };
         }
-    }, [shouldLoadData, loadFixedExpenses, showNotification]);
-
-    const loadFixedExpensesWithTransition = useCallback(async() => {
-        try {
-            if (!shouldLoadData()) return;
-            const response = await api.get('/financial/fixed-expenses/with-transition');
-            if (response.data.success) {
-                setFixedExpenses(response.data.expenses || []);
-            } else {
-                setFixedExpenses([]);
-            }
-        } catch (error) {
-            console.error('Erro ao carregar despesas fixas com transição:', error);
-            setFixedExpenses([]);
-        }
-    }, [shouldLoadData]);
+    }, [shouldLoadData, loadFixedExpensesWithTransition, showNotification]);
 
     const payOverdueExpense = async(expenseId, bankAccountId) => {
         try {
@@ -670,7 +676,7 @@ export const FinancialProvider = ({ children }) => {
                 bank_account_id: bankAccountId
             });
             if (response.data.success) {
-                await loadFixedExpenses(); // Recarregar despesas fixas
+                await loadFixedExpensesWithTransition(); // Recarregar despesas fixas com transição
                 await loadBankAccounts(); // Atualizar saldos
                 await loadSummary(); // Atualizar overview
                 showNotification('success', 'Despesa vencida paga com sucesso!');

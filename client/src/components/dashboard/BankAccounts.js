@@ -474,10 +474,10 @@ const BankAccounts = () => {
                     {account.due_date && (
                       <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-between">
                         <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                          Vencimento
+                          Vencimento:
                         </span>
                         <span className="text-lg font-bold text-blue-700 dark:text-blue-300">
-                          {account.due_date}º do mês
+                          Dia {account.due_date}
                         </span>
                         <button
                           className="btn-outline px-2 py-1 ml-2"

@@ -38,6 +38,30 @@ const FinancialOverview = () => {
     }
   }, [selectedPeriod, loadSummary, loadLastFinancialAdvice]);
 
+  // Forçar atualização quando o componente for montado
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      console.log('🔄 FinancialOverview montado, carregando dados...');
+      loadSummary(selectedPeriod);
+      loadBankAccounts();
+    }
+  }, []); // Executar apenas uma vez ao montar
+
+  // Atualizar dados automaticamente a cada 30 segundos
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const interval = setInterval(() => {
+        console.log('🔄 Atualização automática da Visão Geral...');
+        loadSummary(selectedPeriod);
+        loadBankAccounts();
+      }, 30000); // 30 segundos
+
+      return () => clearInterval(interval);
+    }
+  }, [selectedPeriod, loadSummary, loadBankAccounts]);
+
   const handleLoadAdvice = async () => {
     setIsLoadingAdvice(true);
     try {

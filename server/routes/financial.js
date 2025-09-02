@@ -75,9 +75,12 @@ router.post('/bank-accounts', [
         const numericCreditLimit = credit_limit !== undefined ? parseFloat(credit_limit) || 0 : null;
         const numericDueDate = due_date !== undefined ? parseInt(due_date) || null : null;
 
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
         const result = await db.run(
-            'INSERT INTO bank_accounts (user_id, account_name, account_type, account_category, balance, credit_limit, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, account_name, account_type, account_category, numericBalance, numericCreditLimit, numericDueDate]
+            'INSERT INTO bank_accounts (user_id, account_name, account_type, account_category, balance, credit_limit, due_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [req.user.userId, account_name, account_type, account_category, numericBalance, numericCreditLimit, numericDueDate, currentDateTime, currentDateTime]
         );
 
         console.log('Resultado da inserção:', result);
@@ -264,8 +267,11 @@ router.put('/bank-accounts/:id', async (req, res) => {
                 message: 'Nenhum campo para atualizar'
             });
         }
-        params.push(id, userId);
-        const sql = `UPDATE bank_accounts SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?`;
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
+        params.push(currentDateTime, id, userId);
+        const sql = `UPDATE bank_accounts SET ${updates.join(', ')}, updated_at = ? WHERE id = ? AND user_id = ?`;
         await db.run(sql, params);
 
         const updatedAccount = await db.get(
@@ -345,21 +351,25 @@ router.post('/income', [
 
         // Garantir tipos corretos
         const parsedAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-        const parsedDate = income_date ? new Date(income_date).toISOString().split('T')[0] : null;
+        const { formatDateToLocal } = require('../utils/dateUtils');
+        const parsedDate = income_date ? formatDateToLocal(income_date) : null;
         const desc = typeof description === 'string' ? description : (description ? String(description) : '');
         let validBankAccountId = Number.isInteger(Number(bank_account_id)) && Number(bank_account_id) > 0 ? Number(bank_account_id) : null;
         if (bank_account_id === undefined || bank_account_id === '' || bank_account_id === null) {
             validBankAccountId = null;
         }
 
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
         // Inserir ganho, incluindo bank_account_id como null explicitamente se não houver conta
         let insertSql, insertParams;
         if (validBankAccountId !== null) {
-            insertSql = 'INSERT INTO income (user_id, amount, source, income_date, description, bank_account_id) VALUES (?, ?, ?, ?, ?, ?)';
-            insertParams = [req.user.userId, parsedAmount, source, parsedDate, desc, validBankAccountId];
+            insertSql = 'INSERT INTO income (user_id, amount, source, income_date, description, bank_account_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            insertParams = [req.user.userId, parsedAmount, source, parsedDate, desc, validBankAccountId, currentDateTime, currentDateTime];
         } else {
-            insertSql = 'INSERT INTO income (user_id, amount, source, income_date, description, bank_account_id) VALUES (?, ?, ?, ?, ?, ?)';
-            insertParams = [req.user.userId, parsedAmount, source, parsedDate, desc, null];
+            insertSql = 'INSERT INTO income (user_id, amount, source, income_date, description, bank_account_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            insertParams = [req.user.userId, parsedAmount, source, parsedDate, desc, null, currentDateTime, currentDateTime];
         }
         console.log('Comando SQL:', insertSql, insertParams);
         const result = await db.run(insertSql, insertParams);
@@ -368,8 +378,8 @@ router.post('/income', [
         if (validBankAccountId) {
             console.log(`Atualizando saldo da conta ${validBankAccountId} com +${parsedAmount}`);
             await db.run(
-                'UPDATE bank_accounts SET balance = balance + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                [parsedAmount, validBankAccountId, req.user.userId]
+                'UPDATE bank_accounts SET balance = balance + ?, updated_at = ? WHERE id = ? AND user_id = ?',
+                [parsedAmount, currentDateTime, validBankAccountId, req.user.userId]
             );
             console.log('Saldo atualizado com sucesso');
         }
@@ -605,9 +615,12 @@ router.post('/expenses', [
             }
         }
 
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
         const result = await db.run(
-            'INSERT INTO expenses (user_id, amount, description, payment_method, expense_date, category, installments, bank_account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, processedData.amount, processedData.description, processedData.payment_method, processedData.expense_date, processedData.category, processedData.installments, processedData.bank_account_id]
+            'INSERT INTO expenses (user_id, amount, description, payment_method, expense_date, category, installments, bank_account_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [req.user.userId, processedData.amount, processedData.description, processedData.payment_method, processedData.expense_date, processedData.category, processedData.installments, processedData.bank_account_id, currentDateTime, currentDateTime]
         );
 
         // Atualizar saldo/limite da conta bancária se especificada
@@ -616,8 +629,8 @@ router.post('/expenses', [
                 // Para débito: deduzir do saldo
                 console.log(`Atualizando saldo da conta ${processedData.bank_account_id} com -${processedData.amount} (débito)`);
                 await db.run(
-                    'UPDATE bank_accounts SET balance = balance - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                    [processedData.amount, processedData.bank_account_id, req.user.userId]
+                    'UPDATE bank_accounts SET balance = balance - ?, updated_at = ? WHERE id = ? AND user_id = ?',
+                    [processedData.amount, currentDateTime, processedData.bank_account_id, req.user.userId]
                 );
                 console.log('Saldo atualizado com sucesso');
             } else if (processedData.payment_method === 'credito') {
@@ -625,7 +638,7 @@ router.post('/expenses', [
                 console.log(`Atualizando limite da conta ${processedData.bank_account_id} com -${processedData.amount} (crédito)`);
                 await db.run(
                     'UPDATE bank_accounts SET credit_limit = credit_limit - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                    [processedData.amount, processedData.bank_account_id, req.user.userId]
+                    [processedData.amount, currentDateTime, processedData.bank_account_id, req.user.userId]
                 );
                 console.log('Limite atualizado com sucesso');
             }
@@ -745,9 +758,12 @@ router.post('/fixed-expenses', [
         const totalInstallments = isBoleto && total_installments && total_installments !== '' ? parseInt(total_installments) : null;
         const paidInstallments = isBoleto && paid_installments && paid_installments !== '' ? parseInt(paid_installments) : 0;
 
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
         const result = await db.run(
-            'INSERT INTO fixed_expenses (user_id, description, amount, due_date, bank_account_id, category, is_boleto, total_installments, paid_installments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, description, amount, due_date, bank_account_id, category, isBoleto ? 1 : 0, totalInstallments, paidInstallments]
+            'INSERT INTO fixed_expenses (user_id, description, amount, due_date, bank_account_id, category, is_boleto, total_installments, paid_installments, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [req.user.userId, description, amount, due_date, bank_account_id, category, isBoleto ? 1 : 0, totalInstallments, paidInstallments, currentDateTime, currentDateTime]
         );
 
         const expense = await db.get(
@@ -808,22 +824,22 @@ router.put('/fixed-expenses/:id/pay', async (req, res) => {
             // Só marca como paga se todas as parcelas forem quitadas
             setPaid = newPaidInstallments >= totalInstallments;
             await db.run(
-                'UPDATE fixed_expenses SET paid_installments = ?, is_paid = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-                [newPaidInstallments, setPaid ? 1 : 0, id]
+                'UPDATE fixed_expenses SET paid_installments = ?, is_paid = ?, updated_at = ? WHERE id = ?',
+                [newPaidInstallments, setPaid ? 1 : 0, currentDateTime, id]
             );
         } else {
             // Se não for boleto, marca como paga normalmente
             await db.run(
-                'UPDATE fixed_expenses SET is_paid = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-                [id]
+                'UPDATE fixed_expenses SET is_paid = 1, updated_at = ? WHERE id = ?',
+                [currentDateTime, id]
             );
         }
 
         // Atualizar saldo da conta bancária se especificada
         if (bank_account_id) {
             await db.run(
-                'UPDATE bank_accounts SET balance = balance - ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                [expense.amount, bank_account_id, req.user.userId]
+                'UPDATE bank_accounts SET balance = balance - ?, updated_at = ? WHERE id = ? AND user_id = ?',
+                [expense.amount, currentDateTime, bank_account_id, req.user.userId]
             );
             // Atualizar o bank_account_id da despesa fixa para garantir restituição correta na exclusão
             await db.run(
@@ -875,20 +891,22 @@ router.delete('/fixed-expenses/:id', async (req, res) => {
         // Restituir valor à conta bancária, se necessário
         if (expense.bank_account_id) {
             let valorRestituir = 0;
-            if (expense.is_boleto) {
-                // Restitui o valor das parcelas já pagas
-                const parcelasPagas = parseInt(expense.paid_installments, 10) || 0;
-                valorRestituir = parcelasPagas * parseFloat(expense.amount);
-                if (valorRestituir > 0) {
-                    console.log(`[FIXED-EXPENSE-DELETE] Restituindo R$${valorRestituir} (boleto, ${parcelasPagas} parcelas pagas) para conta ${expense.bank_account_id}`);
-                    await db.run(
-                        'UPDATE bank_accounts SET balance = balance + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
-                        [valorRestituir, expense.bank_account_id, userId]
-                    );
-                }
-            } else {
-                // Para despesas normais, só restitui se estiver paga
-                if (expense.is_paid) {
+            
+            // Só restitui se a despesa foi realmente paga
+            if (expense.is_paid) {
+                if (expense.is_boleto) {
+                    // Para boletos, restitui o valor das parcelas já pagas
+                    const parcelasPagas = parseInt(expense.paid_installments, 10) || 0;
+                    valorRestituir = parcelasPagas * parseFloat(expense.amount);
+                    if (valorRestituir > 0) {
+                        console.log(`[FIXED-EXPENSE-DELETE] Restituindo R$${valorRestituir} (boleto, ${parcelasPagas} parcelas pagas) para conta ${expense.bank_account_id}`);
+                        await db.run(
+                            'UPDATE bank_accounts SET balance = balance + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
+                            [valorRestituir, expense.bank_account_id, userId]
+                        );
+                    }
+                } else {
+                    // Para despesas normais, restitui o valor total se estiver paga
                     valorRestituir = parseFloat(expense.amount);
                     console.log(`[FIXED-EXPENSE-DELETE] Restituindo R$${valorRestituir} (fixa normal paga) para conta ${expense.bank_account_id}`);
                     await db.run(
@@ -896,9 +914,45 @@ router.delete('/fixed-expenses/:id', async (req, res) => {
                         [valorRestituir, expense.bank_account_id, userId]
                     );
                 }
+            } else {
+                console.log(`[FIXED-EXPENSE-DELETE] Despesa não estava paga, não há restituição necessária`);
             }
         }
 
+        // Deletar gastos relacionados criados pelo pagamento de despesas vencidas
+        // Buscar gastos que foram criados pelo pagamento desta despesa fixa
+        const relatedExpenses = await db.query(
+            'SELECT id FROM expenses WHERE description = ? AND user_id = ? AND amount = ? AND payment_method = ?',
+            [expense.description, userId, expense.amount, 'debito']
+        );
+        
+        if (relatedExpenses.length > 0) {
+            console.log(`[FIXED-EXPENSE-DELETE] Deletando ${relatedExpenses.length} gastos relacionados`);
+            for (const relatedExpense of relatedExpenses) {
+                // Restituir valor do gasto relacionado se necessário
+                const relatedExpenseData = await db.get(
+                    'SELECT * FROM expenses WHERE id = ?',
+                    [relatedExpense.id]
+                );
+                
+                if (relatedExpenseData && relatedExpenseData.bank_account_id) {
+                    console.log(`[FIXED-EXPENSE-DELETE] Restituindo R$${relatedExpenseData.amount} do gasto relacionado para conta ${relatedExpenseData.bank_account_id}`);
+                    await db.run(
+                        'UPDATE bank_accounts SET balance = balance + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
+                        [relatedExpenseData.amount, relatedExpenseData.bank_account_id, userId]
+                    );
+                }
+                
+                // Deletar o gasto relacionado
+                await db.run(
+                    'DELETE FROM expenses WHERE id = ?',
+                    [relatedExpense.id]
+                );
+            }
+        }
+
+        // Deletar apenas a despesa fixa específica (não as relacionadas)
+        console.log(`[FIXED-EXPENSE-DELETE] Deletando apenas a despesa específica ID ${expenseId}`);
         await db.run(
             'DELETE FROM fixed_expenses WHERE id = ? AND user_id = ?',
             [expenseId, userId]
@@ -1039,8 +1093,9 @@ router.get('/summary', [
             }
         }
 
-        const startDateStr = startDate.toISOString().split('T')[0];
-        const endDateStr = endDate.toISOString().split('T')[0];
+        const { formatDateToLocal } = require('../utils/dateUtils');
+        const startDateStr = formatDateToLocal(startDate);
+        const endDateStr = formatDateToLocal(endDate);
 
         // Buscar dados do período
         const income = await db.query(
@@ -1098,15 +1153,27 @@ router.get('/summary', [
             [userId, startDateStr, endDateStr]
         );
 
-        // Somar apenas despesas fixas não pagas
+        // Buscar TODAS as despesas fixas (pagas + não pagas) para exibição
         const fixedExpenses = await db.query(
+            'SELECT SUM(amount) as total FROM fixed_expenses WHERE user_id = ?',
+            [userId]
+        );
+
+        // Buscar apenas despesas fixas NÃO PAGAS para cálculo do saldo
+        const unpaidFixedExpenses = await db.query(
             'SELECT SUM(amount) as total FROM fixed_expenses WHERE user_id = ? AND is_paid = 0',
             [userId]
         );
 
-        // Buscar despesas fixas detalhadas
+        // Buscar apenas despesas fixas PAGAS para cálculo do saldo
+        const paidFixedExpenses = await db.query(
+            'SELECT SUM(amount) as total FROM fixed_expenses WHERE user_id = ? AND is_paid = 1',
+            [userId]
+        );
+
+        // Buscar despesas fixas detalhadas (todas para exibição)
         const fixedExpensesDetails = await db.query(
-            'SELECT fe.*, ba.account_name, ba.account_category FROM fixed_expenses fe LEFT JOIN bank_accounts ba ON fe.bank_account_id = ba.id WHERE fe.user_id = ? AND fe.is_paid = 0 ORDER BY fe.due_date ASC',
+            'SELECT fe.*, ba.account_name, ba.account_category FROM fixed_expenses fe LEFT JOIN bank_accounts ba ON fe.bank_account_id = ba.id WHERE fe.user_id = ? ORDER BY fe.due_date ASC',
             [userId]
         );
 
@@ -1120,11 +1187,33 @@ router.get('/summary', [
             [userId]
         );
 
-        // Garantir que todas as contas tenham account_category
-        const bankAccountsWithCategory = bankAccounts.map(account => ({
-            ...account,
-            account_category: account.account_category || 'debito'
-        }));
+        // Garantir que todas as contas tenham account_category e calcular saldo para cartões de crédito
+        const bankAccountsWithCategory = bankAccounts.map(account => {
+            let calculatedBalance = account.balance;
+            
+            // Para cartões de crédito, calcular saldo como (limite - gastos)
+            if (account.account_category === 'credito' && account.credit_limit) {
+                // Buscar gastos específicos deste cartão de crédito
+                const cardExpenses = creditCardExpensesDetails.filter(expense => 
+                    expense.bank_account_id === account.id
+                );
+                
+                const totalCardExpenses = cardExpenses.reduce((sum, expense) => 
+                    sum + parseFloat(expense.amount || 0), 0
+                );
+                
+                // Saldo = Limite - Gastos
+                calculatedBalance = parseFloat(account.credit_limit) - totalCardExpenses;
+            }
+            
+            return {
+                ...account,
+                account_category: account.account_category || 'debito',
+                balance: calculatedBalance,
+                // Para cartões de crédito, manter o limite original
+                original_credit_limit: account.account_category === 'credito' ? account.credit_limit : null
+            };
+        });
 
 
 
@@ -1138,7 +1227,8 @@ router.get('/summary', [
             totalExpenses: expenses[0]?.total || 0,
             totalFixedExpenses: fixedExpenses[0]?.total || 0,
             totalCreditCardExpenses: creditCardExpenses[0]?.total || 0,
-            balance: (income[0]?.total || 0) - (expenses[0]?.total || 0) - (fixedExpenses[0]?.total || 0),
+            // Saldo = Receitas - Despesas Variáveis - Despesas Fixas PAGAS
+            balance: (income[0]?.total || 0) - (expenses[0]?.total || 0) - (paidFixedExpenses[0]?.total || 0),
             expensesByMethod,
             bankAccounts: bankAccountsWithCategory,
             // Dados detalhados
@@ -1192,11 +1282,42 @@ router.get('/financial-advice', async (req, res) => {
             [userId]
         );
 
-        // Garantir que todas as contas tenham account_category
-        const bankAccountsWithCategory = bankAccounts.map(account => ({
-            ...account,
-            account_category: account.account_category || 'debito'
-        }));
+        // Buscar gastos com cartão de crédito para cálculo de saldo
+        const creditCardExpenses = await db.query(
+            `SELECT e.*, ba.account_name, ba.account_category 
+             FROM expenses e 
+             LEFT JOIN bank_accounts ba ON e.bank_account_id = ba.id 
+             WHERE e.user_id = ? AND (e.payment_method = 'credito' OR ba.account_category = 'credito')`,
+            [userId]
+        );
+
+        // Garantir que todas as contas tenham account_category e calcular saldo para cartões de crédito
+        const bankAccountsWithCategory = bankAccounts.map(account => {
+            let calculatedBalance = account.balance;
+            
+            // Para cartões de crédito, calcular saldo como (limite - gastos)
+            if (account.account_category === 'credito' && account.credit_limit) {
+                // Buscar gastos específicos deste cartão de crédito
+                const cardExpenses = creditCardExpenses.filter(expense => 
+                    expense.bank_account_id === account.id
+                );
+                
+                const totalCardExpenses = cardExpenses.reduce((sum, expense) => 
+                    sum + parseFloat(expense.amount || 0), 0
+                );
+                
+                // Saldo = Limite - Gastos
+                calculatedBalance = parseFloat(account.credit_limit) - totalCardExpenses;
+            }
+            
+            return {
+                ...account,
+                account_category: account.account_category || 'debito',
+                balance: calculatedBalance,
+                // Para cartões de crédito, manter o limite original
+                original_credit_limit: account.account_category === 'credito' ? account.credit_limit : null
+            };
+        });
 
         // Buscar o último conselho salvo para o usuário
         const lastAdviceRow = await db.get(
@@ -1220,7 +1341,7 @@ router.get('/financial-advice', async (req, res) => {
         if (advice && advice.success && advice.advice) {
             await db.run(
                 'INSERT INTO financial_advice (user_id, advice, created_at) VALUES (?, ?, ?)',
-                [userId, advice.advice, advice.timestamp || new Date().toISOString()]
+                [userId, advice.advice, advice.timestamp || require('../utils/dateUtils').getCurrentDateTime()]
             );
         }
 

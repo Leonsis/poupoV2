@@ -10,6 +10,7 @@ import {
   Circle
 } from 'lucide-react';
 import { ConfirmModal, useNotifications, Input } from '../ui';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 
 const FixedExpenses = () => {
   const { 
@@ -26,6 +27,7 @@ const FixedExpenses = () => {
     getOverdueExpensesCount
   } = useFinancial();
   const { showError, showSuccess } = useNotifications();
+  const location = useLocation(); // Get the current location
   
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,9 +51,7 @@ const FixedExpenses = () => {
     paid_installments: '' // novo campo
   });
 
-  // Edição inline da conta associada
-  const [editingFixedId, setEditingFixedId] = useState(null);
-  const [selectedFixedAccountId, setSelectedFixedAccountId] = useState('');
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -143,32 +143,37 @@ const FixedExpenses = () => {
     }
   };
 
-  // Edição inline da conta associada
-  const handleEditFixedAccount = (expense) => {
-    setEditingFixedId(expense.id);
-    setSelectedFixedAccountId(expense.bank_account_id || '');
-  };
 
-  const handleSaveFixedAccount = async (expense) => {
-    if (!selectedFixedAccountId) return;
-    await updateFixedExpenseAccount(expense.id, { bank_account_id: selectedFixedAccountId });
-    setEditingFixedId(null);
-    setSelectedFixedAccountId('');
-  };
 
-  const handleCancelEditFixed = () => {
-    setEditingFixedId(null);
-    setSelectedFixedAccountId('');
-  };
+  // Monitorar mudanças no estado fixedExpenses
+  useEffect(() => {
+    console.log('📋 Estado das despesas fixas atualizado:', fixedExpenses);
+  }, [fixedExpenses]);
 
   // Verificar transição mensal e carregar despesas vencidas
   useEffect(() => {
     const checkTransitionAndLoadData = async () => {
       try {
+        console.log('🔄 Iniciando carregamento de dados...');
         // Verificar se precisa fazer transição mensal
         const transitionCheck = await checkMonthlyTransition();
         if (transitionCheck.needsTransition) {
           setShowTransitionModal(true);
+          // Executar transição automaticamente
+          setTimeout(async () => {
+            try {
+              const result = await executeMonthlyTransition();
+              if (result.success) {
+                // Fechar modal após 2 segundos
+                setTimeout(() => {
+                  setShowTransitionModal(false);
+                }, 2000);
+              }
+            } catch (error) {
+              console.error('Erro ao executar transição:', error);
+              setShowTransitionModal(false);
+            }
+          }, 1000); // Aguardar 1 segundo antes de executar
         }
 
         // Carregar despesas com informações de transição
@@ -176,12 +181,27 @@ const FixedExpenses = () => {
 
         // Contar despesas vencidas
         await getOverdueExpensesCount();
+        console.log('✅ Carregamento de dados concluído');
       } catch (error) {
-        console.error('Erro ao verificar transição mensal:', error);
+        console.error('❌ Erro ao verificar transição mensal:', error);
       }
     };
 
     checkTransitionAndLoadData();
+  }, [location.pathname]); // Executar sempre que a rota mudar para /dashboard/fixed-expenses
+
+  // Carregar dados quando o componente for montado
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await loadFixedExpensesWithTransition();
+        await getOverdueExpensesCount();
+      } catch (error) {
+        console.error('Erro ao carregar dados iniciais:', error);
+      }
+    };
+
+    loadData();
   }, []); // Executar apenas uma vez ao montar o componente
 
   const handleExecuteTransition = async () => {
@@ -517,118 +537,111 @@ const FixedExpenses = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {fixedExpenses.map((expense) => (
-              <div
-                key={expense.id}
-                className={`p-4 rounded-lg border-2 transition-all duration-200 ${
-                  expense.is_paid
-                    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-                    : 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                                         <div className="flex items-center space-x-3 mb-2">
-                       <h4 className="font-semibold text-gray-900 dark:text-light">
-                         {expense.description}
-                       </h4>
-                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                         expense.is_overdue
-                           ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
-                           : expense.is_paid
-                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                           : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                       }`}>
-                         {expense.is_overdue ? 'Vencida' : expense.is_paid ? 'Paga' : 'Pendente'}
-                       </span>
-                     </div>
-                    
-                    <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-light">
-                      <div>
-                        <span className="font-medium">Valor:</span> {formatCurrency(expense.amount)}
+            {fixedExpenses.map((expense) => {
+              // Verificação de segurança para evitar erros
+              if (!expense || !expense.id) {
+                console.warn('Despesa inválida encontrada:', expense);
+                return null;
+              }
+              
+              return (
+                <div
+                  key={expense.id}
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                    expense.is_paid
+                      ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                      : 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h4 className="font-semibold text-gray-900 dark:text-light">
+                          {expense.description}
+                        </h4>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          expense.is_overdue
+                            ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+                            : expense.is_paid
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                        }`}>
+                          {expense.is_overdue ? 'Vencida' : expense.is_paid ? 'Paga' : 'Pendente'}
+                        </span>
                       </div>
-                      <div>
-                        <span className="font-medium">Vencimento:</span> Dia {expense.due_date}
-                      </div>
-                      <div>
-                        <span className="font-medium">Categoria:</span> {expense.category || 'Não especificada'}
-                      </div>
-                    </div>
-                    {/* Exibir info de boleto/parcelas SOMENTE se for boleto */}
-                    {Boolean(expense.is_boleto) && (
-                      <div className="mt-2 text-sm text-blue-700 dark:text-blue-300">
-                        <span className="font-medium">Boleto:</span> {expense.paid_installments || 0} de {expense.total_installments || 0} pagos
-                        {Number.isFinite(Number(expense.total_installments)) && Number.isFinite(Number(expense.paid_installments)) && (
-                          <span> ({(expense.total_installments - expense.paid_installments) > 0 ? `${expense.total_installments - expense.paid_installments} a pagar` : 'Todos pagos'})</span>
-                        )}
-                      </div>
-                    )}
-                    {editingFixedId === expense.id ? (
-                      <div className="flex items-center space-x-2 mt-1">
-                        <select
-                          className="input-primary"
-                          value={selectedFixedAccountId}
-                          onChange={e => setSelectedFixedAccountId(e.target.value)}
-                        >
-                          <option value="">Selecione uma conta</option>
-                          {bankAccounts.map(account => (
-                            <option key={account.id} value={account.id}>
-                              {account.account_name} - {formatCurrency(account.balance)}
-                            </option>
-                          ))}
-                        </select>
-                        <button className="btn-primary px-2 py-1 text-xs" onClick={() => handleSaveFixedAccount(expense)}>Salvar</button>
-                        <button className="btn-outline px-2 py-1 text-xs" onClick={handleCancelEditFixed}>Cancelar</button>
-                      </div>
-                    ) : (
-                      expense.account_name && (
-                        <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Conta: {expense.account_name}
-                          <button className="btn-outline px-2 py-1 text-xs" onClick={() => handleEditFixedAccount(expense)}>Editar</button>
+                      
+                      <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-light">
+                        <div>
+                          <span className="font-medium">Valor:</span> {formatCurrency(expense.amount)}
                         </div>
-                      )
-                    )}
+                        <div>
+                          <span className="font-medium">Vencimento:</span> Dia {expense.due_date}
+                        </div>
+                        <div>
+                          <span className="font-medium">Categoria:</span> {expense.category || 'Não especificada'}
+                        </div>
+                      </div>
+                      
+                      {/* Exibir info de boleto/parcelas SOMENTE se for boleto */}
+                      {Boolean(expense.is_boleto) && (
+                        <div className="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                          <span className="font-medium">Boleto:</span> {expense.paid_installments || 0} de {expense.total_installments || 0} pagos
+                          {Number.isFinite(Number(expense.total_installments)) && Number.isFinite(Number(expense.paid_installments)) && (
+                            <span> ({(expense.total_installments - expense.paid_installments) > 0 ? `${expense.total_installments - expense.paid_installments} a pagar` : 'Todos pagos'})</span>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Exibir conta bancária (somente leitura) */}
+                      {expense.account_name && (
+                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                          Conta: {expense.account_name}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col items-end space-y-2">
+                      {expense.is_overdue ? (
+                        <button
+                          onClick={() => {
+                            setSelectedOverdueExpense(expense);
+                            setShowOverduePaymentModal(true);
+                          }}
+                          className="p-2 rounded-full text-orange-600 hover:text-orange-700 transition-colors"
+                          title="Pagar despesa vencida"
+                        >
+                          <DollarSign className="w-6 h-6" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleTogglePayment(expense.id, expense.is_paid)}
+                          className={`p-2 rounded-full transition-colors ${
+                            expense.is_paid
+                              ? 'text-green-600 hover:text-green-700'
+                              : 'text-yellow-600 hover:text-yellow-700'
+                          }`}
+                          title={expense.is_paid ? 'Marcar como pendente' : 'Marcar como paga'}
+                        >
+                          {expense.is_paid ? (
+                            <CheckCircle className="w-6 h-6" />
+                          ) : (
+                            <Circle className="w-6 h-6" />
+                          )}
+                        </button>
+                      )}
+                      
+                      <button
+                        onClick={() => handleDelete(expense.id)}
+                        className="p-2 rounded-full text-red-600 hover:text-red-800 transition-colors"
+                        title="Excluir despesa fixa"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
                   </div>
-                                     <div className="flex flex-col items-end space-y-2">
-                     {expense.is_overdue ? (
-                       <button
-                         onClick={() => {
-                           setSelectedOverdueExpense(expense);
-                           setShowOverduePaymentModal(true);
-                         }}
-                         className="p-2 rounded-full text-orange-600 hover:text-orange-700 transition-colors"
-                         title="Pagar despesa vencida"
-                       >
-                         <DollarSign className="w-6 h-6" />
-                       </button>
-                     ) : (
-                       <button
-                         onClick={() => handleTogglePayment(expense.id, expense.is_paid)}
-                         className={`p-2 rounded-full transition-colors ${
-                           expense.is_paid
-                             ? 'text-green-600 hover:text-green-700'
-                             : 'text-yellow-600 hover:text-yellow-700'
-                         }`}
-                         title={expense.is_paid ? 'Marcar como pendente' : 'Marcar como paga'}
-                       >
-                         {expense.is_paid ? (
-                           <CheckCircle className="w-6 h-6" />
-                         ) : (
-                           <Circle className="w-6 h-6" />
-                         )}
-                       </button>
-                     )}
-                     <button
-                       onClick={() => handleDelete(expense.id)}
-                       className="p-2 rounded-full text-red-600 hover:text-red-800 transition-colors"
-                       title="Excluir despesa fixa"
-                     >
-                       <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                     </button>
-                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -649,29 +662,20 @@ const FixedExpenses = () => {
        {showTransitionModal && (
          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md relative mx-4">
-             <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-light">Transição Mensal</h4>
+             {/* Botão X para fechar */}
+             <button
+               onClick={() => setShowTransitionModal(false)}
+               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+             >
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+               </svg>
+             </button>
+             
+             <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-light">Aviso</h4>
              <p className="mb-4 text-gray-700 dark:text-light">
-               É necessário fazer a transição para o novo mês. As despesas fixas serão atualizadas:
+               Você tem despesas em atraso.
              </p>
-             <ul className="mb-6 text-sm text-gray-600 dark:text-light space-y-2">
-               <li>• Despesas pagas serão resetadas para o novo mês</li>
-               <li>• Despesas não pagas serão marcadas como vencidas</li>
-               <li>• Novas despesas serão criadas para o novo mês</li>
-             </ul>
-             <div className="flex justify-end space-x-3">
-               <button
-                 className="btn-outline"
-                 onClick={() => setShowTransitionModal(false)}
-               >
-                 Cancelar
-               </button>
-               <button
-                 className="btn-primary"
-                 onClick={handleExecuteTransition}
-               >
-                 Executar Transição
-               </button>
-             </div>
            </div>
          </div>
        )}

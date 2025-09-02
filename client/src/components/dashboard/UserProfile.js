@@ -11,6 +11,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { ConfirmModal, useNotifications } from '../ui';
+import { formatDateToLocal } from '../../utils/dateUtils';
 
 const UserProfile = () => {
   const { user, updateUserPreferences, logout } = useAuth();
@@ -38,10 +39,10 @@ const UserProfile = () => {
     setIsLoading(true);
     try {
       let birthDate = formData.birth_date;
-      if (birthDate) {
-        const date = new Date(birthDate + 'T00:00:00');
-        birthDate = date.toISOString().split('T')[0];
-      }
+              if (birthDate) {
+          const date = new Date(birthDate + 'T00:00:00');
+          birthDate = formatDateToLocal(date);
+        }
       
       const result = await updateUserPreferences({
         name: formData.name,

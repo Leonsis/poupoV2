@@ -1,5 +1,6 @@
 // middleware/detailedLogger.js
 const util = require('util');
+const { getCurrentDateTime } = require('../utils/dateUtils');
 
 function detailedLogger(req, res, next) {
   const start = process.hrtime();
@@ -8,7 +9,7 @@ function detailedLogger(req, res, next) {
 
   // Log de requisição
   console.log('[REQUEST]', {
-    time: new Date().toISOString(),
+    time: getCurrentDateTime(),
     method,
     url: originalUrl,
     user,
@@ -29,7 +30,7 @@ function detailedLogger(req, res, next) {
       responseData = data;
     }
     console.log('[RESPONSE]', {
-      time: new Date().toISOString(),
+      time: getCurrentDateTime(),
       method,
       url: originalUrl,
       status: res.statusCode,

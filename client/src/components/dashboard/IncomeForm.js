@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
 import { Input, ConfirmModal, useNotifications } from '../ui';
+import { getCurrentDate } from '../../utils/dateUtils';
 import {
     TrendingUp,
     Plus,
@@ -29,7 +30,7 @@ const IncomeForm = () => {
 
     const [formData, setFormData] = useState({
         amount: '',
-        income_date: new Date().toISOString().split('T')[0],
+        income_date: getCurrentDate(),
         source: '',
         description: '',
         bank_account_id: ''
@@ -102,7 +103,7 @@ const IncomeForm = () => {
             if (result.success) {
                 setFormData({
                     amount: '',
-                    income_date: new Date().toISOString().split('T')[0],
+                    income_date: getCurrentDate(),
                     source: '',
                     description: '',
                     bank_account_id: ''

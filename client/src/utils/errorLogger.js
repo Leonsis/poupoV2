@@ -1,4 +1,6 @@
 // Sistema de logs de erro detalhado para o frontend
+import { getCurrentDateTime, formatDateToLocal } from './dateUtils';
+
 class ErrorLogger {
     constructor() {
         this.logs = [];
@@ -17,7 +19,7 @@ class ErrorLogger {
                 colno: event.colno,
                 error: event.error,
                 stack: event.error?.stack,
-                timestamp: new Date().toISOString()
+                timestamp: getCurrentDateTime()
             });
         });
 
@@ -26,7 +28,7 @@ class ErrorLogger {
             this.log('PROMISE_ERROR', 'Promessa rejeitada não tratada', {
                 reason: event.reason,
                 promise: event.promise,
-                timestamp: new Date().toISOString()
+                timestamp: getCurrentDateTime()
             });
         });
 
@@ -38,7 +40,7 @@ class ErrorLogger {
                     typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
                 ).join(' '),
                 args: args,
-                timestamp: new Date().toISOString()
+                timestamp: getCurrentDateTime()
             });
             originalConsoleError.apply(console, args);
         };
@@ -51,7 +53,7 @@ class ErrorLogger {
                     typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
                 ).join(' '),
                 args: args,
-                timestamp: new Date().toISOString()
+                timestamp: getCurrentDateTime()
             });
             originalConsoleWarn.apply(console, args);
         };
@@ -64,7 +66,7 @@ class ErrorLogger {
             level,
             message,
             data,
-            timestamp: new Date().toISOString(),
+            timestamp: getCurrentDateTime(),
             url: window.location.href,
             userAgent: navigator.userAgent
         };
@@ -100,7 +102,7 @@ class ErrorLogger {
                 stack: error?.stack,
                 name: error?.name
             },
-            timestamp: new Date().toISOString()
+            timestamp: getCurrentDateTime()
         });
     }
 
@@ -110,7 +112,7 @@ class ErrorLogger {
             field,
             value,
             validationRule,
-            timestamp: new Date().toISOString()
+            timestamp: getCurrentDateTime()
         });
     }
 
@@ -158,7 +160,7 @@ class ErrorLogger {
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `error-logs-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = `error-logs-${getCurrentDateTime().split('T')[0]}.json`;
         link.click();
         URL.revokeObjectURL(url);
     }

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { getCurrentDateTime } = require('../utils/dateUtils');
 
 class ErrorLogger {
     constructor() {
@@ -43,7 +44,7 @@ class ErrorLogger {
             level,
             message,
             data,
-            timestamp: new Date().toISOString(),
+            timestamp: getCurrentDateTime(),
             processId: process.pid
         };
 
@@ -134,7 +135,7 @@ class ErrorLogger {
     }
 
     exportLogs() {
-        const exportFile = path.join(__dirname, '..', 'logs', `error-logs-export-${new Date().toISOString().split('T')[0]}.json`);
+        const exportFile = path.join(__dirname, '..', 'logs', `error-logs-export-${require('../utils/dateUtils').getCurrentDateTime().split('T')[0]}.json`);
         try {
             fs.writeFileSync(exportFile, JSON.stringify(this.logs, null, 2));
             return exportFile;

@@ -29,13 +29,8 @@ router.get('/users', verifyAdminCredentials, async (req, res) => {
       ORDER BY created_at DESC
     `;
     
-    db.db.all(query, [], (err, rows) => {
-      if (err) {
-        console.error('Erro ao buscar usuários:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-      res.json(rows);
-    });
+    const users = await db.query(query);
+    res.json(users);
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -48,26 +43,16 @@ router.patch('/users/:id/ban', verifyAdminCredentials, async (req, res) => {
     const { id } = req.params;
     
     // Verificar se o usuário existe
-    db.db.get('SELECT id, name as username FROM users WHERE id = ?', [id], (err, user) => {
-      if (err) {
-        console.error('Erro ao buscar usuário:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-      
-      if (!user) {
-        return res.status(404).json({ error: 'Usuário não encontrado' });
-      }
-      
-      // Banir o usuário
-      db.db.run('UPDATE users SET is_banned = 1 WHERE id = ?', [id], function(err) {
-        if (err) {
-          console.error('Erro ao banir usuário:', err);
-          return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        
-        res.json({ message: `Usuário ${user.username} foi banido com sucesso` });
-      });
-    });
+    const user = await db.get('SELECT id, name as username FROM users WHERE id = ?', [id]);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    
+    // Banir o usuário
+    await db.run('UPDATE users SET is_banned = 1 WHERE id = ?', [id]);
+    
+    res.json({ message: `Usuário ${user.username} foi banido com sucesso` });
   } catch (error) {
     console.error('Erro ao banir usuário:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -80,26 +65,16 @@ router.patch('/users/:id/unban', verifyAdminCredentials, async (req, res) => {
     const { id } = req.params;
     
     // Verificar se o usuário existe
-    db.db.get('SELECT id, name as username FROM users WHERE id = ?', [id], (err, user) => {
-      if (err) {
-        console.error('Erro ao buscar usuário:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-      
-      if (!user) {
-        return res.status(404).json({ error: 'Usuário não encontrado' });
-      }
-      
-      // Desbanir o usuário
-      db.db.run('UPDATE users SET is_banned = 0 WHERE id = ?', [id], function(err) {
-        if (err) {
-          console.error('Erro ao desbanir usuário:', err);
-          return res.status(500).json({ error: 'Erro interno do servidor' });
-        }
-        
-        res.json({ message: `Usuário ${user.username} foi desbanido com sucesso` });
-      });
-    });
+    const user = await db.get('SELECT id, name as username FROM users WHERE id = ?', [id]);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    
+    // Desbanir o usuário
+    await db.run('UPDATE users SET is_banned = 0 WHERE id = ?', [id]);
+    
+    res.json({ message: `Usuário ${user.username} foi desbanido com sucesso` });
   } catch (error) {
     console.error('Erro ao desbanir usuário:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
@@ -118,13 +93,8 @@ router.get('/stats', verifyAdminCredentials, async (req, res) => {
       FROM users
     `;
     
-    db.db.get(query, [], (err, stats) => {
-      if (err) {
-        console.error('Erro ao buscar estatísticas:', err);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
-      }
-      res.json(stats);
-    });
+    const stats = await db.get(query);
+    res.json(stats);
   } catch (error) {
     console.error('Erro ao buscar estatísticas:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });

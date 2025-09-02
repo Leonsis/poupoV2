@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
 import { Button, Input, Card, ConfirmModal, useNotifications } from '../ui';
+import { getCurrentDate } from '../../utils/dateUtils';
 import {
     CreditCard,
     Plus,
@@ -31,7 +32,7 @@ const ExpenseForm = () => {
 
     const [formData, setFormData] = useState({
         amount: '',
-        expense_date: new Date().toISOString().split('T')[0],
+        expense_date: getCurrentDate(),
         payment_method: 'debito',
         installments: '',
         description: '',
@@ -110,7 +111,7 @@ const ExpenseForm = () => {
                 showSuccess('Gasto registrado com sucesso!');
                 setFormData({
                     amount: '',
-                    expense_date: new Date().toISOString().split('T')[0],
+                    expense_date: getCurrentDate(),
                     payment_method: 'debito',
                     installments: '',
                     description: '',

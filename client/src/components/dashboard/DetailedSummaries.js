@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLocation } from 'react-router-dom';
 import { 
   BarChart3, 
   TrendingUp,
@@ -28,6 +29,7 @@ const DetailedSummaries = () => {
   } = useFinancial();
   const { user } = useAuth();
   const { showError, showSuccess } = useNotifications();
+  const location = useLocation();
   
   const [summaries, setSummaries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +86,26 @@ const DetailedSummaries = () => {
       loadData();
     }
   }, [selectedPeriod, selectedMonth, user]);
+
+  // Forçar atualização quando navegar para esta página
+  useEffect(() => {
+    if (user && location.pathname === '/dashboard/detailed-summaries') {
+      console.log('🔄 Navegação detectada, recarregando resumos...');
+      loadSummaries();
+    }
+  }, [location.pathname, user]);
+
+  // Atualizar dados automaticamente a cada 30 segundos quando estiver na página
+  useEffect(() => {
+    if (user && location.pathname === '/dashboard/detailed-summaries') {
+      const interval = setInterval(() => {
+        console.log('🔄 Atualização automática dos resumos...');
+        loadSummaries();
+      }, 30000); // 30 segundos
+
+      return () => clearInterval(interval);
+    }
+  }, [location.pathname, user]);
 
   // Verificar se há resumos pendentes para gerar
   const checkForPendingSummaries = async () => {
@@ -490,6 +512,12 @@ const DetailedSummaries = () => {
           <p className="text-gray-600 dark:text-light mt-1">
             Visualize resumos financeiros detalhados por período
           </p>
+          {loading && (
+            <div className="flex items-center mt-2 text-sm text-blue-600 dark:text-blue-400">
+              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+              Atualizando dados...
+            </div>
+          )}
         </div>
       </div>
 
@@ -533,11 +561,19 @@ const DetailedSummaries = () => {
           
           <div className="flex items-end">
             <Button
-              onClick={loadSummaries}
+              onClick={() => {
+                console.log('🔄 Atualização manual solicitada...');
+                setLoading(true);
+                loadSummaries().finally(() => {
+                  setLoading(false);
+                  showSuccess('Dados atualizados com sucesso!');
+                });
+              }}
               className="btn-primary"
+              disabled={loading}
             >
-              <Eye className="w-4 h-4 mr-2" />
-              Atualizar
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? 'Atualizando...' : 'Atualizar'}
             </Button>
           </div>
         </div>
@@ -842,13 +878,17 @@ const DetailedSummaries = () => {
                             {account.account_name}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {account.account_type} • {account.account_category}
+                            {account.account_category === "credito" ? (
+                              "Cartão de Crédito"
+                            ) : (
+                              `${account.account_type} • ${account.account_category}`
+                            )}
                           </div>
                           <div className="mt-2">
                             <div className="text-sm">
                               <span className="font-medium">Saldo:</span> {formatCurrency(account.balance)}
                             </div>
-                            {account.credit_limit && (
+                            {account.account_category === "credito" && account.credit_limit && (
                               <div className="text-sm">
                                 <span className="font-medium">Limite:</span> {formatCurrency(account.credit_limit)}
                               </div>

@@ -1,9 +1,10 @@
 // utils/detailedLogger.js
 // Logging detalhado para o client React (console)
+import { getCurrentDateTime } from './dateUtils';
 
 export function logRequest({ url, method, body, params, query }) {
   console.log('[CLIENT REQUEST]', {
-    time: new Date().toISOString(),
+    time: getCurrentDateTime(),
     method,
     url,
     params,
@@ -14,7 +15,7 @@ export function logRequest({ url, method, body, params, query }) {
 
 export function logResponse({ url, method, status, duration, response }) {
   console.log('[CLIENT RESPONSE]', {
-    time: new Date().toISOString(),
+    time: getCurrentDateTime(),
     method,
     url,
     status,
@@ -25,8 +26,8 @@ export function logResponse({ url, method, status, duration, response }) {
 
 export function logError({ url, method, error }) {
   console.error('[CLIENT ERROR]', {
-    time: new Date().toISOString(),
-    method,
+    time: getCurrentDateTime(),
+    error,
     url,
     error,
   });

@@ -9,6 +9,30 @@ class Database {
         this.init();
     }
 
+    // Função para obter data/hora atual no formato correto (fuso horário local)
+    getCurrentDateTime() {
+        const now = new Date();
+        // Usar fuso horário local (Brasil) em vez de UTC
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // Função para obter data atual no formato YYYY-MM-DD (fuso horário local)
+    getCurrentDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
+    }
+
     async init() {
         try {
             // Criar diretório do banco se não existir
@@ -44,8 +68,8 @@ class Database {
                 phone TEXT,
                 gross_salary REAL DEFAULT 0.00,
                 dark_mode BOOLEAN DEFAULT 0,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
+                updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 is_banned BOOLEAN DEFAULT 0,
                 deleted_at DATETIME
             );
@@ -61,8 +85,8 @@ class Database {
                 current_debt REAL DEFAULT 0.00,
                 closing_date TEXT,
                 due_date TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
+                updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
 
@@ -74,8 +98,8 @@ class Database {
                 income_date TEXT NOT NULL,
                 description TEXT,
                 bank_account_id INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
+                updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                 FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL
             );
@@ -90,8 +114,8 @@ class Database {
                 card_name TEXT,
                 expense_date TEXT NOT NULL,
                 bank_account_id INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
+                updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                 FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL
             );
@@ -112,8 +136,8 @@ class Database {
                 original_fixed_expense_id INTEGER,
                 transition_month_year TEXT,
                 bank_account_id INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
+                updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                 FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL,
                 FOREIGN KEY (original_fixed_expense_id) REFERENCES fixed_expenses (id) ON DELETE SET NULL
@@ -127,7 +151,7 @@ class Database {
                 description TEXT,
                 bank_account_id INTEGER,
                 date TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                 FOREIGN KEY (bank_account_id) REFERENCES bank_accounts (id) ON DELETE SET NULL
             );
@@ -136,7 +160,7 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 advice TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
 
@@ -154,7 +178,7 @@ class Database {
                 fixed_expenses_details TEXT,
                 credit_card_expenses_details TEXT,
                 bank_accounts_summary TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
 
@@ -162,7 +186,7 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 ip TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             );
 

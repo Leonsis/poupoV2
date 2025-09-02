@@ -67,7 +67,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Middleware de logging
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    const { getCurrentDateTime } = require('./utils/dateUtils');
+    console.log(`${getCurrentDateTime()} - ${req.method} ${req.path}`);
     next();
 });
 
@@ -87,7 +88,7 @@ app.get('/api/health', (req, res) => {
     res.json({
         success: true,
         message: 'Sistema Poupo funcionando!',
-        timestamp: new Date().toISOString(),
+        timestamp: require('./utils/dateUtils').getCurrentDateTime(),
         environment: process.env.NODE_ENV || 'development'
     });
 });

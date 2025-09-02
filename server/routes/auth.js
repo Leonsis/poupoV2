@@ -47,7 +47,8 @@ router.post('/register', [
         // Garantir que a data seja armazenada no formato correto
         let formattedBirthDate = birth_date;
         if (birth_date) {
-            formattedBirthDate = new Date(birth_date + 'T00:00:00').toISOString().split('T')[0];
+            const { formatDateToLocal } = require('../utils/dateUtils');
+            formattedBirthDate = formatDateToLocal(birth_date);
         }
         
         // Inserir usuário
@@ -66,9 +67,12 @@ router.post('/register', [
         );
 
         // Criar conta bancária padrão
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
+        
         await db.run(
-            'INSERT INTO bank_accounts (user_id, account_name, account_type, balance) VALUES (?, ?, ?, ?)',
-            [userId, 'Conta Principal', 'corrente', 0]
+            'INSERT INTO bank_accounts (user_id, account_name, account_type, balance, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+            [userId, 'Conta Principal', 'corrente', 0, currentDateTime, currentDateTime]
         );
 
         // Gerar token JWT
@@ -250,7 +254,8 @@ router.put('/preferences', auth, [
         if (birth_date !== undefined) {
             updateFields.push('birth_date = ?');
             // Garantir que a data seja armazenada no formato correto
-            const formattedDate = new Date(birth_date + 'T00:00:00').toISOString().split('T')[0];
+            const { formatDateToLocal } = require('../utils/dateUtils');
+        const formattedDate = formatDateToLocal(birth_date);
             updateValues.push(formattedDate);
         }
 
