@@ -278,11 +278,13 @@ const FixedExpenses = () => {
                 onChange={e => setSelectedBankId(e.target.value)}
               >
                 <option value="">Selecione uma conta</option>
-                {bankAccounts.map(account => (
-                  <option key={account.id} value={account.id}>
-                    {account.account_name} - {formatCurrency(account.balance)}
-                  </option>
-                ))}
+                {bankAccounts
+                  .filter(account => account.is_visible !== 0 && account.is_visible !== false)
+                  .map(account => (
+                    <option key={account.id} value={account.id}>
+                      {account.account_name} - {formatCurrency(account.balance)}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="flex justify-end space-x-3 mt-6">
@@ -701,11 +703,13 @@ const FixedExpenses = () => {
                  onChange={e => setSelectedBankId(e.target.value)}
                >
                  <option value="">Selecione uma conta</option>
-                 {bankAccounts.map(account => (
-                   <option key={account.id} value={account.id}>
-                     {account.account_name} - {formatCurrency(account.balance)}
-                   </option>
-                 ))}
+                 {bankAccounts
+                   .filter(account => account.is_visible !== 0 && account.is_visible !== false)
+                   .map(account => (
+                     <option key={account.id} value={account.id}>
+                       {account.account_name} - {formatCurrency(account.balance)}
+                     </option>
+                   ))}
                </select>
              </div>
              <div className="flex justify-end space-x-3">

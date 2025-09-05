@@ -27,10 +27,11 @@ router.get('/bank-accounts', async (req, res) => {
 
         console.log('Contas encontradas:', accounts);
 
-        // Garantir que todas as contas tenham account_category
+        // Garantir que todas as contas tenham account_category e is_visible
         const accountsWithCategory = accounts.map(account => ({
             ...account,
-            account_category: account.account_category || 'debito'
+            account_category: account.account_category || 'debito',
+            is_visible: account.is_visible !== undefined ? account.is_visible : true
         }));
 
         console.log('Contas com categoria:', accountsWithCategory);
@@ -66,21 +67,22 @@ router.post('/bank-accounts', [
             });
         }
 
-        const { account_name, account_type, account_category, balance, credit_limit, due_date } = req.body;
+        const { account_name, account_type, account_category, balance, credit_limit, due_date, is_visible } = req.body;
 
-        console.log('Criando conta bancária:', { account_name, account_type, account_category, balance, credit_limit, due_date });
+        console.log('Criando conta bancária:', { account_name, account_type, account_category, balance, credit_limit, due_date, is_visible });
 
         // Garantir que o saldo seja um número
         const numericBalance = balance !== undefined ? parseFloat(balance) || 0 : 0;
         const numericCreditLimit = credit_limit !== undefined ? parseFloat(credit_limit) || 0 : null;
         const numericDueDate = due_date !== undefined ? parseInt(due_date) || null : null;
+        const visibleAccount = is_visible !== undefined ? is_visible : true;
 
         const { getCurrentDateTime } = require('../utils/dateUtils');
         const currentDateTime = getCurrentDateTime();
         
         const result = await db.run(
-            'INSERT INTO bank_accounts (user_id, account_name, account_type, account_category, balance, credit_limit, due_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [req.user.userId, account_name, account_type, account_category, numericBalance, numericCreditLimit, numericDueDate, currentDateTime, currentDateTime]
+            'INSERT INTO bank_accounts (user_id, account_name, account_type, account_category, balance, credit_limit, due_date, is_visible, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [req.user.userId, account_name, account_type, account_category, numericBalance, numericCreditLimit, numericDueDate, visibleAccount, currentDateTime, currentDateTime]
         );
 
         console.log('Resultado da inserção:', result);
@@ -91,13 +93,14 @@ router.post('/bank-accounts', [
             [result.id]
         );
 
-        // Garantir que a conta tenha account_category e balance
+        // Garantir que a conta tenha account_category, balance e is_visible
         const accountWithCategory = {
             ...account,
             account_category: account?.account_category || account_category || 'debito',
             balance: parseFloat(account?.balance) || numericBalance || 0,
             credit_limit: parseFloat(account?.credit_limit) || numericCreditLimit || 0,
-            due_date: account?.due_date || numericDueDate
+            due_date: account?.due_date || numericDueDate,
+            is_visible: account?.is_visible !== undefined ? account.is_visible : visibleAccount
         };
 
         res.status(201).json({
@@ -183,12 +186,13 @@ router.delete('/bank-accounts/:id', async (req, res) => {
             [accountId, req.user.userId]
         );
 
-        // Buscar contas restantes e calcular saldo líquido
+        // Buscar contas restantes e calcular saldo líquido (apenas contas visíveis)
         const accounts = await db.query(
             'SELECT * FROM bank_accounts WHERE user_id = ?',
             [req.user.userId]
         );
-        const net_balance = accounts.reduce((sum, acc) => sum + (parseFloat(acc.balance) || 0), 0);
+        const { calculateNetBalance } = require('../utils/dateUtils');
+        const net_balance = calculateNetBalance(accounts);
 
         // Preparar mensagem informativa
         let message = 'Conta bancária excluída com sucesso';
@@ -223,8 +227,8 @@ router.put('/bank-accounts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user.userId;
-        const { account_name, account_type, account_category, credit_limit, due_date } = req.body;
-        console.log('Requisição para atualizar conta:', { id, account_name, account_type, account_category, credit_limit, due_date });
+        const { account_name, account_type, account_category, credit_limit, due_date, is_visible } = req.body;
+        console.log('Requisição para atualizar conta:', { id, account_name, account_type, account_category, credit_limit, due_date, is_visible });
 
         // Verificar se a conta existe e pertence ao usuário
         const account = await db.get(
@@ -260,6 +264,10 @@ router.put('/bank-accounts/:id', async (req, res) => {
         if (due_date !== undefined) {
             updates.push('due_date = ?');
             params.push(due_date);
+        }
+        if (is_visible !== undefined) {
+            updates.push('is_visible = ?');
+            params.push(is_visible);
         }
         if (updates.length === 0) {
             return res.status(400).json({
@@ -1187,7 +1195,7 @@ router.get('/summary', [
             [userId]
         );
 
-        // Garantir que todas as contas tenham account_category e calcular saldo para cartões de crédito
+        // Garantir que todas as contas tenham account_category, is_visible e calcular saldo para cartões de crédito
         const bankAccountsWithCategory = bankAccounts.map(account => {
             let calculatedBalance = account.balance;
             
@@ -1209,6 +1217,7 @@ router.get('/summary', [
             return {
                 ...account,
                 account_category: account.account_category || 'debito',
+                is_visible: account.is_visible !== undefined ? account.is_visible : true,
                 balance: calculatedBalance,
                 // Para cartões de crédito, manter o limite original
                 original_credit_limit: account.account_category === 'credito' ? account.credit_limit : null
@@ -1218,6 +1227,10 @@ router.get('/summary', [
 
 
 
+
+        // Calcular saldo líquido (soma dos saldos das contas de débito visíveis)
+        const { calculateNetBalance } = require('../utils/dateUtils');
+        const net_balance = calculateNetBalance(bankAccountsWithCategory);
 
         const summary = {
             period,
@@ -1229,6 +1242,8 @@ router.get('/summary', [
             totalCreditCardExpenses: creditCardExpenses[0]?.total || 0,
             // Saldo = Receitas - Despesas Variáveis - Despesas Fixas PAGAS
             balance: (income[0]?.total || 0) - (expenses[0]?.total || 0) - (paidFixedExpenses[0]?.total || 0),
+            // Saldo Líquido = Soma dos saldos das contas de débito
+            net_balance,
             expensesByMethod,
             bankAccounts: bankAccountsWithCategory,
             // Dados detalhados

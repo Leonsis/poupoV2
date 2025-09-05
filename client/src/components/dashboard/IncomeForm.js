@@ -235,11 +235,13 @@ const IncomeForm = () => {
                                 className="input-primary"
                             >
                                 <option value="">Selecione uma conta</option>
-                                {bankAccounts.filter(account => account.account_category === 'debito').map(account => (
-                                    <option key={account.id} value={account.id}>
-                                        {account.account_name} - {formatCurrency(account.balance)}
-                                    </option>
-                                ))}
+                                {bankAccounts
+                                    .filter(account => account.account_category === 'debito')
+                                    .map(account => (
+                                        <option key={account.id} value={account.id}>
+                                            {account.account_name} - {formatCurrency(account.balance)}
+                                        </option>
+                                    ))}
                             </select>
                         </div>
 
@@ -393,11 +395,13 @@ const IncomeForm = () => {
                                                     className="input-primary"
                                                 >
                                                     <option value="">Selecione uma conta</option>
-                                                    {bankAccounts.filter(account => account.account_category === 'debito').map(account => (
-                                                        <option key={account.id} value={account.id}>
-                                                            {account.account_name} - {formatCurrency(account.balance)}
-                                                        </option>
-                                                    ))}
+                                                    {bankAccounts
+                                                        .filter(account => account.account_category === 'debito')
+                                                        .map(account => (
+                                                            <option key={account.id} value={account.id}>
+                                                                {account.account_name} - {formatCurrency(account.balance)}
+                                                            </option>
+                                                        ))}
                                                 </select>
                             ) : (
                                 item.account_name || 'Não especificada'

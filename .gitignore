@@ -4,29 +4,29 @@ client/node_modules/
 server/node_modules/
 
 # Environment variables
-.env
-server/.env
-client/.env.local
+#.env
+#server/.env
+#client/.env.local
 
 # Databases
-*.db
-server/database/*.db
+#*.db
+#server/database/*.db
 
 # Logs
-logs/
-*.log
-server/logs/
+#logs/
+#*.log
+#server/logs/
 
 # Build outputs
-client/build/
-dist/
+#client/build/
+#dist/
 
 # IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
+#.vscode/
+#.idea/
+#*.swp
+#*.swo
 
 # OS files
-.DS_Store
-Thumbs.db
+#.DS_Store
+#Thumbs.db

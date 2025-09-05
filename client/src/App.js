@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { FinancialProvider } from './contexts/FinancialContext';
+import { PrivacyProvider } from './contexts/PrivacyContext';
 
 // Componentes
 import Home from './pages/Home';
@@ -33,9 +34,10 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <FinancialProvider>
-          <AuthProvider>
-            <div className="App min-h-screen bg-gray-50 dark:bg-dark transition-colors duration-300">
+        <PrivacyProvider>
+          <FinancialProvider>
+            <AuthProvider>
+              <div className="App min-h-screen bg-gray-50 dark:bg-dark transition-colors duration-300">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -68,9 +70,10 @@ function App() {
                   },
                 }}
               />
-            </div>
-          </AuthProvider>
-        </FinancialProvider>
+              </div>
+            </AuthProvider>
+          </FinancialProvider>
+        </PrivacyProvider>
       </Router>
     </ThemeProvider>
   );

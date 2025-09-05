@@ -325,6 +325,11 @@ const ExpenseForm = () => {
                                 </label>
                                 {(() => {
                             const compatibleAccounts = bankAccounts.filter(account => {
+                                // Filtrar apenas contas visíveis
+                                if (account.is_visible === 0 || account.is_visible === false) {
+                                    return false;
+                                }
+                                
                                 // Se o método de pagamento for crédito, mostrar apenas contas de crédito
                                 if (formData.payment_method === 'credito') {
                                     return account.account_category === 'credito';
@@ -528,6 +533,11 @@ const ExpenseForm = () => {
                                                         <option value="">Selecione uma conta</option>
                                                         {bankAccounts
                             .filter(account => {
+                                // Filtrar apenas contas visíveis
+                                if (account.is_visible === 0 || account.is_visible === false) {
+                                    return false;
+                                }
+                                
                                 // Se o método de pagamento for crédito, mostrar apenas contas de crédito
                                 if (item.payment_method === 'credito') {
                                     return account.account_category === 'credito';

@@ -29,6 +29,17 @@ function getCurrentDate() {
 function formatDateToLocal(date) {
     if (!date) return null;
     
+    // Se for uma string no formato YYYY-MM-DD, retornar como está
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return date;
+    }
+    
+    // Se for uma string com data e hora, extrair apenas a data
+    if (typeof date === 'string' && date.includes('T')) {
+        return date.split('T')[0];
+    }
+    
+    // Para outros casos, usar a lógica anterior
     const d = new Date(date);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -41,6 +52,25 @@ function formatDateToLocal(date) {
 function formatDateTimeToLocal(date) {
     if (!date) return null;
     
+    // Se for uma string no formato YYYY-MM-DD HH:MM:SS, retornar como está
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
+        return date;
+    }
+    
+    // Se for uma string com data e hora ISO, converter para formato local
+    if (typeof date === 'string' && date.includes('T')) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const seconds = String(d.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    
+    // Para outros casos, usar a lógica anterior
     const d = new Date(date);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -77,6 +107,30 @@ function getCurrentTimeBrazilian() {
     });
 }
 
+// ===== FUNÇÕES PARA CÁLCULOS MONETÁRIOS =====
+
+// Função para arredondar valores monetários para 2 casas decimais
+function roundMoney(value) {
+    return Math.round(parseFloat(value || 0) * 100) / 100;
+}
+
+// Função para somar valores monetários com precisão
+function addMoney(a, b) {
+    return roundMoney(roundMoney(a) + roundMoney(b));
+}
+
+// Função para subtrair valores monetários com precisão
+function subtractMoney(a, b) {
+    return roundMoney(roundMoney(a) - roundMoney(b));
+}
+
+// Função para calcular saldo líquido de contas com precisão
+function calculateNetBalance(accounts) {
+    return accounts
+        .filter(acc => acc.account_category === 'debito' && acc.is_visible !== 0 && acc.is_visible !== false)
+        .reduce((sum, acc) => addMoney(sum, acc.balance), 0);
+}
+
 module.exports = {
     getCurrentDateTime,
     getCurrentDate,
@@ -84,5 +138,10 @@ module.exports = {
     formatDateTimeToLocal,
     getLocalISOString,
     getTodayBrazilian,
-    getCurrentTimeBrazilian
+    getCurrentTimeBrazilian,
+    // Funções monetárias
+    roundMoney,
+    addMoney,
+    subtractMoney,
+    calculateNetBalance
 };

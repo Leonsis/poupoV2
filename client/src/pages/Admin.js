@@ -6,9 +6,14 @@ import {
   UserCheck, 
   LogOut,
   Eye,
-  EyeOff
+  EyeOff,
+  Plus,
+  X,
+  Trash2,
+  Key,
+  Database
 } from 'lucide-react';
-import { Card, Button, useNotifications } from '../components/ui';
+import { Card, Button, useNotifications, Input } from '../components/ui';
 import api from '../services/api';
 
 const Admin = () => {
@@ -16,12 +21,25 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [banningUser, setBanningUser] = useState(null);
   const [unbanningUser, setUnbanningUser] = useState(null);
+  const [deletingUser, setDeletingUser] = useState(null);
+  const [resettingPassword, setResettingPassword] = useState(null);
+  const [clearingDatabase, setClearingDatabase] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    birth_date: '',
+    phone: ''
+  });
   
 
   const { showSuccess, showError } = useNotifications();
@@ -58,6 +76,74 @@ const Admin = () => {
     setIsAuthenticated(false);
     setCredentials({ username: '', password: '' });
     showSuccess('Logout realizado com sucesso!');
+  };
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    
+    // Validações básicas
+    if (newUser.password !== newUser.confirmPassword) {
+      showError('As senhas não coincidem!');
+      return;
+    }
+    
+    if (newUser.password.length < 6) {
+      showError('A senha deve ter pelo menos 6 caracteres!');
+      return;
+    }
+    
+    if (!newUser.name.trim() || !newUser.email.trim()) {
+      showError('Nome e email são obrigatórios!');
+      return;
+    }
+    
+    setCreatingUser(true);
+    
+    try {
+      const response = await api.post('/auth/register', {
+        name: newUser.name.trim(),
+        email: newUser.email.trim(),
+        password: newUser.password,
+        birth_date: newUser.birth_date || null,
+        phone: newUser.phone || null,
+        gross_salary: 0
+      });
+      
+      if (response.data.success) {
+        showSuccess('Usuário criado com sucesso!');
+        setShowCreateUserModal(false);
+        setNewUser({
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          birth_date: '',
+          phone: ''
+        });
+        // Recarregar lista de usuários
+        await fetchUsers();
+      } else {
+        showError(response.data.message || 'Erro ao criar usuário');
+      }
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      const errorMessage = error.response?.data?.message || 'Erro ao criar usuário';
+      showError(errorMessage);
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
+  const resetCreateUserForm = () => {
+    setNewUser({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      birth_date: '',
+      phone: ''
+    });
+    setShowCreateUserModal(false);
   };
 
   const fetchUsers = async () => {
@@ -98,6 +184,97 @@ const Admin = () => {
       showError('Erro ao desbanir usuário');
     } finally {
       setUnbanningUser(null);
+    }
+  };
+
+  const handleDeleteUser = async (userId, username) => {
+    const confirmDelete = window.confirm(
+      `⚠️ Deletar Usuário\n\n` +
+      `Você está prestes a deletar o usuário "${username}" e TODOS os seus dados:\n` +
+      `• Contas bancárias\n` +
+      `• Receitas e despesas\n` +
+      `• Despesas fixas\n` +
+      `• Conselhos financeiros\n` +
+      `• Resumos mensais\n\n` +
+      `As informações básicas do usuário (nome, email, datas) serão mantidas no painel administrativo para histórico.\n\n` +
+      `Tem certeza que deseja continuar?`
+    );
+    
+    if (!confirmDelete) return;
+    
+    setDeletingUser(userId);
+    try {
+      await api.delete(`/admin/users/${userId}`);
+      showSuccess(`Usuário ${username} e todos os seus dados foram deletados. Informações básicas mantidas no painel administrativo.`);
+      await fetchUsers();
+    } catch (error) {
+      console.error('Erro ao deletar usuário:', error);
+      showError('Erro ao deletar usuário');
+    } finally {
+      setDeletingUser(null);
+    }
+  };
+
+  const handleResetPassword = async (userId, username) => {
+    const confirmReset = window.confirm(
+      `🔑 Resetar Senha\n\n` +
+      `Você está prestes a resetar a senha do usuário "${username}" para "123456".\n\n` +
+      `O usuário precisará alterar a senha no próximo login por segurança.\n\n` +
+      `Deseja continuar?`
+    );
+    
+    if (!confirmReset) return;
+    
+    setResettingPassword(userId);
+    try {
+      const response = await api.patch(`/admin/users/${userId}/reset-password`);
+      showSuccess(`Senha do usuário ${username} foi resetada para 123456 com sucesso!`);
+      await fetchUsers();
+    } catch (error) {
+      console.error('Erro ao resetar senha:', error);
+      showError('Erro ao resetar senha');
+    } finally {
+      setResettingPassword(null);
+    }
+  };
+
+  const handleClearDatabase = async () => {
+    const confirmClear = window.confirm(
+      `🗑️ LIMPAR BANCO DE DADOS\n\n` +
+      `⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\n` +
+      `Você está prestes a limpar COMPLETAMENTE o banco de dados, removendo:\n` +
+      `• Todos os usuários\n` +
+      `• Todas as contas bancárias\n` +
+      `• Todas as receitas e despesas\n` +
+      `• Todas as despesas fixas\n` +
+      `• Todos os conselhos financeiros\n` +
+      `• Todos os resumos mensais\n\n` +
+      `O sistema ficará completamente limpo para novos testes.\n\n` +
+      `Tem CERTEZA ABSOLUTA que deseja continuar?`
+    );
+    
+    if (!confirmClear) return;
+    
+    // Segunda confirmação
+    const doubleConfirm = window.confirm(
+      `🚨 CONFIRMAÇÃO FINAL 🚨\n\n` +
+      `Você está prestes a DELETAR TODOS OS DADOS do sistema.\n\n` +
+      `Esta ação NÃO PODE SER DESFEITA!\n\n` +
+      `Digite "CONFIRMAR" para continuar:`
+    );
+    
+    if (!doubleConfirm) return;
+    
+    setClearingDatabase(true);
+    try {
+      const response = await api.post('/admin/clear-database');
+      showSuccess('Banco de dados limpo com sucesso! Todos os dados foram removidos.');
+      await fetchUsers();
+    } catch (error) {
+      console.error('Erro ao limpar banco de dados:', error);
+      showError('Erro ao limpar banco de dados');
+    } finally {
+      setClearingDatabase(false);
     }
   };
 
@@ -257,12 +434,37 @@ const Admin = () => {
       {/* Conteúdo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-light mb-2">
-            Gerenciamento de Usuários
-          </h2>
-          <p className="text-gray-600 dark:text-light">
-            Visualize e gerencie todos os usuários do sistema
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-light mb-2">
+                Gerenciamento de Usuários
+              </h2>
+              <p className="text-gray-600 dark:text-light">
+                Visualize e gerencie todos os usuários do sistema
+              </p>
+            </div>
+            
+            <div className="mt-4 lg:mt-0">
+              <Button
+                onClick={handleClearDatabase}
+                disabled={clearingDatabase}
+                variant="danger"
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {clearingDatabase ? (
+                  <>
+                    <div className="spinner w-4 h-4 mr-2"></div>
+                    Limpando...
+                  </>
+                ) : (
+                  <>
+                    <Database className="w-4 h-4 mr-2" />
+                    Limpar Banco de Dados
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         <Card>
@@ -271,13 +473,23 @@ const Admin = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
                 Lista de Usuários ({users.length})
               </h3>
-              <Button
-                onClick={fetchUsers}
-                variant="primary"
-                disabled={loading}
-              >
-                {loading ? 'Carregando...' : 'Atualizar'}
-              </Button>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => setShowCreateUserModal(true)}
+                  variant="primary"
+                  className="flex items-center"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Criar Usuário
+                </Button>
+                <Button
+                  onClick={fetchUsers}
+                  variant="secondary"
+                  disabled={loading}
+                >
+                  {loading ? 'Carregando...' : 'Atualizar'}
+                </Button>
+              </div>
             </div>
 
             {loading ? (
@@ -352,35 +564,69 @@ const Admin = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex space-x-2">
-                            {!user.is_banned && !user.deleted_at ? (
-                              <Button
-                                onClick={() => handleBanUser(user.id, user.username)}
-                                disabled={banningUser === user.id}
-                                variant="danger"
-                                size="sm"
-                              >
-                                {banningUser === user.id ? (
-                                  <div className="spinner w-3 h-3"></div>
+                          <div className="flex flex-wrap gap-2">
+                            {!user.deleted_at ? (
+                              <>
+                                {!user.is_banned ? (
+                                  <Button
+                                    onClick={() => handleBanUser(user.id, user.username)}
+                                    disabled={banningUser === user.id}
+                                    variant="danger"
+                                    size="sm"
+                                  >
+                                    {banningUser === user.id ? (
+                                      <div className="spinner w-3 h-3"></div>
+                                    ) : (
+                                      <Ban className="w-3 h-3 mr-1" />
+                                    )}
+                                    Banir
+                                  </Button>
                                 ) : (
-                                  <Ban className="w-3 h-3 mr-1" />
+                                  <Button
+                                    onClick={() => handleUnbanUser(user.id, user.username)}
+                                    disabled={unbanningUser === user.id}
+                                    variant="success"
+                                    size="sm"
+                                  >
+                                    {unbanningUser === user.id ? (
+                                      <div className="spinner w-3 h-3"></div>
+                                    ) : (
+                                      <UserCheck className="w-3 h-3 mr-1" />
+                                    )}
+                                    Desbanir
+                                  </Button>
                                 )}
-                                Banir
-                              </Button>
-                            ) : user.is_banned && !user.deleted_at ? (
-                              <Button
-                                onClick={() => handleUnbanUser(user.id, user.username)}
-                                disabled={unbanningUser === user.id}
-                                variant="success"
-                                size="sm"
-                              >
-                                {unbanningUser === user.id ? (
-                                  <div className="spinner w-3 h-3"></div>
-                                ) : (
-                                  <UserCheck className="w-3 h-3 mr-1" />
-                                )}
-                                Desbanir
-                              </Button>
+                                
+                                <Button
+                                  onClick={() => handleResetPassword(user.id, user.username)}
+                                  disabled={resettingPassword === user.id}
+                                  variant="secondary"
+                                  size="sm"
+                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                  {resettingPassword === user.id ? (
+                                    <div className="spinner w-3 h-3"></div>
+                                  ) : (
+                                    <Key className="w-3 h-3 mr-1" />
+                                  )}
+                                  Resetar Senha
+                                </Button>
+                                
+                                <Button
+                                  onClick={() => handleDeleteUser(user.id, user.username)}
+                                  disabled={deletingUser === user.id}
+                                  variant="danger"
+                                  size="sm"
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  {deletingUser === user.id ? (
+                                    <div className="spinner w-3 h-3"></div>
+                                  ) : (
+                                    <Trash2 className="w-3 h-3 mr-1" />
+                                  )}
+                                  Deletar
+                                </Button>
+                              </>
                             ) : (
                               <span className="text-gray-400 dark:text-gray-500 text-xs">Nenhuma ação disponível</span>
                             )}
@@ -395,6 +641,121 @@ const Admin = () => {
           </div>
         </Card>
       </div>
+
+      {/* Modal de Criação de Usuário */}
+      {showCreateUserModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-dark-light rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-light">
+                Criar Novo Usuário
+              </h3>
+              <button
+                onClick={resetCreateUserForm}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateUser} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Nome Completo *
+                </label>
+                <Input
+                  type="text"
+                  value={newUser.name}
+                  onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                  placeholder="Digite o nome completo"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Email *
+                </label>
+                <Input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                  placeholder="Digite o email"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Senha *
+                </label>
+                <Input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                  placeholder="Mínimo 6 caracteres"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Confirmar Senha *
+                </label>
+                <Input
+                  type="password"
+                  value={newUser.confirmPassword}
+                  onChange={(e) => setNewUser({...newUser, confirmPassword: e.target.value})}
+                  placeholder="Confirme a senha"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Data de Nascimento
+                </label>
+                <Input
+                  type="date"
+                  value={newUser.birth_date}
+                  onChange={(e) => setNewUser({...newUser, birth_date: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-light mb-2">
+                  Telefone
+                </label>
+                <Input
+                  type="tel"
+                  value={newUser.phone}
+                  onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <Button
+                  type="button"
+                  onClick={resetCreateUserForm}
+                  variant="secondary"
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="flex-1"
+                  disabled={creatingUser}
+                >
+                  {creatingUser ? 'Criando...' : 'Criar Usuário'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

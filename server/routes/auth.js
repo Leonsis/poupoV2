@@ -310,6 +310,69 @@ router.put('/preferences', auth, [
     }
 });
 
+// Alterar senha do usuário
+router.put('/change-password', auth, [
+    body('currentPassword').notEmpty().withMessage('Senha atual é obrigatória'),
+    body('newPassword').isLength({ min: 6 }).withMessage('Nova senha deve ter pelo menos 6 caracteres'),
+    body('confirmPassword').custom((value, { req }) => {
+        if (value !== req.body.newPassword) {
+            throw new Error('Confirmação de senha não confere');
+        }
+        return true;
+    })
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            });
+        }
+
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.user.userId;
+
+        // Buscar usuário atual
+        const user = await db.get('SELECT password_hash FROM users WHERE id = ?', [userId]);
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
+        }
+
+        // Verificar senha atual
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+        if (!isCurrentPasswordValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Senha atual incorreta'
+            });
+        }
+
+        // Criptografar nova senha
+        const saltRounds = 12;
+        const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
+
+        // Atualizar senha
+        await db.run('UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [newPasswordHash, userId]);
+
+        res.json({
+            success: true,
+            message: 'Senha alterada com sucesso'
+        });
+
+    } catch (error) {
+        console.error('Erro ao alterar senha:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
 // Exclusão de conta de usuário e dados relacionados
 router.delete('/delete-account', auth, async (req, res) => {
     try {

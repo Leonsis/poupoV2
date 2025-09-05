@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
+import { usePrivacy } from '../../contexts/PrivacyContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { 
@@ -15,7 +16,7 @@ import {
   RefreshCw,
   AlertCircle
 } from 'lucide-react';
-import { Card, Button, useNotifications } from '../ui';
+import { Card, Button, useNotifications, PrivacyValue } from '../ui';
 import jsPDF from 'jspdf';
 
 const DetailedSummaries = () => {
@@ -28,6 +29,7 @@ const DetailedSummaries = () => {
     generateAllPendingSummaries 
   } = useFinancial();
   const { user } = useAuth();
+  const { isPrivacyMode } = usePrivacy();
   const { showError, showSuccess } = useNotifications();
   const location = useLocation();
   
@@ -645,46 +647,68 @@ const DetailedSummaries = () => {
 
               <div className="p-6">
                 {/* Resumo Geral */}
-                <div className="grid md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
-                      {formatCurrency(summary.data.totalIncome)}
+                    <div className="text-xl md:text-3xl font-bold text-green-600 mb-2">
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.data.totalIncome)}
+                      </PrivacyValue>
                     </div>
-                    <div className="text-gray-600 dark:text-light flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 mr-1" />
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
+                      <TrendingUp className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                       Receitas
                     </div>
                   </div>
                   
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-red-600 mb-2">
-                      {formatCurrency(summary.data.totalExpenses)}
+                    <div className="text-xl md:text-3xl font-bold text-red-600 mb-2">
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.data.totalExpenses)}
+                      </PrivacyValue>
                     </div>
-                    <div className="text-gray-600 dark:text-light flex items-center justify-center">
-                      <TrendingDown className="w-4 h-4 mr-1" />
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
+                      <TrendingDown className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                       Despesas
                     </div>
                   </div>
                   
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">
-                      {formatCurrency(summary.data.totalFixedExpenses)}
+                    <div className="text-xl md:text-3xl font-bold text-orange-600 mb-2">
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.data.totalFixedExpenses)}
+                      </PrivacyValue>
                     </div>
-                    <div className="text-gray-600 dark:text-light flex items-center justify-center">
-                      <FileText className="w-4 h-4 mr-1" />
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
+                      <FileText className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                       Despesas Fixas
                     </div>
                   </div>
                   
                   <div className="text-center">
-                    <div className={`text-3xl font-bold mb-2 ${
+                    <div className={`text-xl md:text-3xl font-bold mb-2 ${
                       summary.data.balance >= 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {formatCurrency(summary.data.balance)}
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.data.balance)}
+                      </PrivacyValue>
                     </div>
-                    <div className="text-gray-600 dark:text-light flex items-center justify-center">
-                      <DollarSign className="w-4 h-4 mr-1" />
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
+                      <DollarSign className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                       Saldo
+                    </div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className={`text-xl md:text-3xl font-bold mb-2 ${
+                      summary.data.net_balance >= 0 ? 'text-blue-600' : 'text-red-600'
+                    }`}>
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.data.net_balance || 0)}
+                      </PrivacyValue>
+                    </div>
+                    <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
+                      <PiggyBank className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                      Saldo Líquido
                     </div>
                   </div>
                 </div>
@@ -869,34 +893,102 @@ const DetailedSummaries = () => {
                   <div className="mt-8">
                     <h4 className="text-lg font-semibold text-gray-900 dark:text-light mb-4 flex items-center">
                       <PiggyBank className="w-5 h-5 mr-2 text-purple-600" />
-                      Contas Bancárias
+                      Contas Bancárias Visíveis
                     </h4>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {summary.data.bankAccounts.map((account, index) => (
-                        <div key={index} className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                          <div className="font-medium text-gray-900 dark:text-light">
-                            {account.account_name}
+                      {summary.data.bankAccounts.filter(account => account.is_visible !== 0 && account.is_visible !== false).map((account, index) => (
+                        <div key={index} className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="font-medium text-gray-900 dark:text-light">
+                              {account.account_name}
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              {account.account_type === 'poupanca' && (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
+                                  <PiggyBank className="w-3 h-3 mr-1" />
+                                  Poupança
+                                </span>
+                              )}
+                              {account.account_category === 'credito' && (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300">
+                                  <CreditCard className="w-3 h-3 mr-1" />
+                                  Crédito
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                             {account.account_category === "credito" ? (
                               "Cartão de Crédito"
                             ) : (
                               `${account.account_type} • ${account.account_category}`
                             )}
                           </div>
-                          <div className="mt-2">
+                          <div className="space-y-1">
                             <div className="text-sm">
-                              <span className="font-medium">Saldo:</span> {formatCurrency(account.balance)}
+                              <span className="font-medium">Saldo:</span> 
+                              <span className={`ml-1 font-semibold ${
+                                account.balance >= 0 ? 'text-green-600' : 'text-red-600'
+                              }`}>
+                                <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                  {formatCurrency(account.balance)}
+                                </PrivacyValue>
+                              </span>
                             </div>
                             {account.account_category === "credito" && account.credit_limit && (
                               <div className="text-sm">
-                                <span className="font-medium">Limite:</span> {formatCurrency(account.credit_limit)}
+                                <span className="font-medium">Limite:</span> 
+                                <span className="ml-1 font-semibold text-purple-600">
+                                  <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                    {formatCurrency(account.credit_limit)}
+                                  </PrivacyValue>
+                                </span>
                               </div>
                             )}
                           </div>
                         </div>
                       ))}
                     </div>
+                    
+                    {/* Contas Invisíveis (apenas para informação) */}
+                    {summary.data.bankAccounts.filter(account => account.is_visible === 0 || account.is_visible === false).length > 0 && (
+                      <div className="mt-6">
+                        <h5 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                          <Eye className="w-4 h-4 mr-2 text-gray-500" />
+                          Contas Invisíveis (não incluídas no saldo líquido)
+                        </h5>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {summary.data.bankAccounts.filter(account => account.is_visible === 0 || account.is_visible === false).map((account, index) => (
+                            <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-l-4 border-gray-400 opacity-75">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="font-medium text-gray-600 dark:text-gray-400">
+                                  {account.account_name}
+                                </div>
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                                  <Eye className="w-3 h-3 mr-1" />
+                                  Invisível
+                                </span>
+                              </div>
+                              <div className="text-sm text-gray-500 dark:text-gray-500 mb-3">
+                                {account.account_category === "credito" ? (
+                                  "Cartão de Crédito"
+                                ) : (
+                                  `${account.account_type} • ${account.account_category}`
+                                )}
+                              </div>
+                              <div className="text-sm">
+                                <span className="font-medium text-gray-500">Saldo:</span> 
+                                <span className="ml-1 font-semibold text-gray-600 dark:text-gray-400">
+                                  <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                    {formatCurrency(account.balance)}
+                                  </PrivacyValue>
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

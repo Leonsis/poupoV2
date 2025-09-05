@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
+import { usePrivacy } from '../../contexts/PrivacyContext';
 import { 
   CreditCard, 
   Plus, 
@@ -11,11 +12,12 @@ import {
   PiggyBank,
   TrendingUp
 } from 'lucide-react';
-import { ConfirmModal, useNotifications } from '../ui';
+import { ConfirmModal, useNotifications, PrivacyValue } from '../ui';
 
 const BankAccounts = () => {
   const { bankAccounts, createBankAccount, deleteBankAccount, isLoading, updateBankAccount } = useFinancial();
   const { showError, showSuccess } = useNotifications();
+  const { isPrivacyMode } = usePrivacy();
   const [isCreating, setIsCreating] = useState(false);
 
   const [deletingAccount, setDeletingAccount] = useState(null);
@@ -457,7 +459,9 @@ const BankAccounts = () => {
                         Limite
                       </span>
                       <span className="text-lg font-bold text-purple-700 dark:text-purple-300">
-                        {account.credit_limit ? formatCurrency(account.credit_limit) : 'Não informado'}
+                        <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                          {account.credit_limit ? formatCurrency(account.credit_limit) : 'Não informado'}
+                        </PrivacyValue>
                       </span>
                       <button
                         className="btn-outline px-2 py-1 ml-2"
@@ -505,7 +509,9 @@ const BankAccounts = () => {
                             ? 'text-green-600 dark:text-green-400' 
                             : 'text-red-600 dark:text-red-400'
                         }`}>
-                          {formatCurrency((account.balance === undefined || account.balance === null || (account.balance === 0 && (!account.hasOwnProperty('balance') || account.balance === 0))) ? 0 : account.balance)}
+                          <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                            {formatCurrency((account.balance === undefined || account.balance === null || (account.balance === 0 && (!account.hasOwnProperty('balance') || account.balance === 0))) ? 0 : account.balance)}
+                          </PrivacyValue>
                         </span>
                       </div>
                     </div>
@@ -519,6 +525,43 @@ const BankAccounts = () => {
                         {getAccountTypeLabel(account.account_type)}
                       </span>
                     </div>
+                    
+                    {/* Toggle de Visibilidade para contas poupança */}
+                    {account.account_type === 'poupanca' && (
+                      <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center justify-between">
+                        <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                          Conta Visível
+                        </span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-yellow-700 dark:text-yellow-300">
+                            {account.is_visible === 1 || account.is_visible === true ? 'Sim' : 'Não'}
+                          </span>
+                          <button
+                            onClick={async () => {
+                              const isCurrentlyVisible = account.is_visible === 1 || account.is_visible === true;
+                              const newVisibility = !isCurrentlyVisible;
+                              console.log('Toggle visibilidade:', { 
+                                current: account.is_visible, 
+                                isVisible: isCurrentlyVisible, 
+                                newValue: newVisibility 
+                              });
+                              await updateBankAccount(account.id, { is_visible: newVisibility });
+                            }}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              account.is_visible === 1 || account.is_visible === true
+                                ? 'bg-green-600' 
+                                : 'bg-gray-200 dark:bg-gray-700'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                account.is_visible === 1 || account.is_visible === true ? 'translate-x-6' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
 

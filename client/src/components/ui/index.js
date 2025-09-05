@@ -4,3 +4,4 @@ export { default as Card } from './Card';
 export { default as Notification, useNotifications, NotificationContainer } from './Notification';
 export { default as ConfirmModal } from './ConfirmModal';
 export { default as StatCard } from './StatCard';
+export { default as PrivacyValue } from './PrivacyValue';

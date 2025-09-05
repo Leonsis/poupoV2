@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancial } from '../../contexts/FinancialContext';
-import { Button, Card, StatCard } from '../ui';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { Button, Card, StatCard, PrivacyValue } from '../ui';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -24,6 +25,7 @@ const FinancialOverview = () => {
     bankAccounts, // <-- Adicionado aqui
     resetMonthlyData
   } = useFinancial();
+  const { isPrivacyMode } = usePrivacy();
   
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [isLoadingAdvice, setIsLoadingAdvice] = useState(false);
@@ -181,29 +183,45 @@ const FinancialOverview = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title={`Saldo em Contas (${getPeriodLabel(selectedPeriod)})`}
-          value={formatCurrency(getTotalBankBalance())}
+          value={
+            <PrivacyValue isPrivacyMode={isPrivacyMode}>
+              {formatCurrency(getTotalBankBalance())}
+            </PrivacyValue>
+          }
           icon={TrendingUp}
           trendType="positive"
         />
         
         <StatCard
           title={`Gastos (${getPeriodLabel(selectedPeriod)})`}
-          value={formatCurrency(summary?.totalExpenses || 0)}
+          value={
+            <PrivacyValue isPrivacyMode={isPrivacyMode}>
+              {formatCurrency(summary?.totalExpenses || 0)}
+            </PrivacyValue>
+          }
           icon={TrendingDown}
           trendType="negative"
         />
         
-                 <StatCard
-           title="Despesas Fixas"
-           value={formatCurrency(summary?.totalFixedExpenses || 0)}
-           icon={FileText}
-         />
-         
-         <StatCard
-           title="Saldo Líquido"
-           value={formatCurrency(getNetBalance())}
-           icon={PiggyBank}
-         />
+        <StatCard
+          title="Despesas Fixas"
+          value={
+            <PrivacyValue isPrivacyMode={isPrivacyMode}>
+              {formatCurrency(summary?.totalFixedExpenses || 0)}
+            </PrivacyValue>
+          }
+          icon={FileText}
+        />
+        
+        <StatCard
+          title="Saldo Líquido"
+          value={
+            <PrivacyValue isPrivacyMode={isPrivacyMode}>
+              {formatCurrency(getNetBalance())}
+            </PrivacyValue>
+          }
+          icon={PiggyBank}
+        />
        </div>
 
              <div className="grid lg:grid-cols-3 gap-6">
@@ -219,7 +237,7 @@ const FinancialOverview = () => {
               <Card.Content>
              
              <div className="space-y-4">
-               {summary?.bankAccounts?.map((account) => {
+               {summary?.bankAccounts?.filter(account => account.is_visible !== 0 && account.is_visible !== false).map((account) => {
                  return (
                    <div key={account.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-lighter rounded-lg">
                      <div className="flex items-center space-x-3">
@@ -242,10 +260,12 @@ const FinancialOverview = () => {
                          {account.account_category === 'credito' ? 'Limite' : 'Saldo'}
                        </div>
                        <div className="text-lg font-bold text-gray-900 dark:text-light">
-                         {account.account_category === 'credito' 
-                           ? formatCurrency(account.credit_limit || 0)
-                           : formatCurrency(account.balance || 0)
-                         }
+                         <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                           {account.account_category === 'credito' 
+                             ? formatCurrency(account.credit_limit || 0)
+                             : formatCurrency(account.balance || 0)
+                           }
+                         </PrivacyValue>
                        </div>
                      </div>
                    </div>
@@ -280,7 +300,9 @@ const FinancialOverview = () => {
                      </span>
                    </div>
                    <span className="text-sm font-bold text-gray-900 dark:text-light">
-                     {formatCurrency(amount)}
+                     <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                       {formatCurrency(amount)}
+                     </PrivacyValue>
                    </span>
                  </div>
                ))}
@@ -363,7 +385,11 @@ const FinancialOverview = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <span className="text-gray-700 dark:text-light font-medium">Total Ganhos:</span>
-                    <span className="font-bold text-green-600">{formatCurrency(summary.totalIncome)}</span>
+                    <span className="font-bold text-green-600">
+                      <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                        {formatCurrency(summary.totalIncome)}
+                      </PrivacyValue>
+                    </span>
                   </div>
                   
                   {summary.incomeDetails && summary.incomeDetails.length > 0 ? (
@@ -380,7 +406,11 @@ const FinancialOverview = () => {
                               {income.account_name && ` • ${income.account_name}`}
                             </div>
                           </div>
-                          <span className="text-sm font-bold text-green-600">{formatCurrency(income.amount)}</span>
+                          <span className="text-sm font-bold text-green-600">
+                            <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                              {formatCurrency(income.amount)}
+                            </PrivacyValue>
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -403,8 +433,12 @@ const FinancialOverview = () => {
                   {/* Gastos Variáveis (Débito) */}
                   <div>
                     <div className="flex justify-between items-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg mb-3">
-                                              <span className="text-gray-700 dark:text-light font-medium">Gastos Variáveis (Débito):</span>
-                      <span className="font-bold text-red-600">{formatCurrency(summary.totalExpenses)}</span>
+                      <span className="text-gray-700 dark:text-light font-medium">Gastos Variáveis (Débito):</span>
+                      <span className="font-bold text-red-600">
+                        <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                          {formatCurrency(summary.totalExpenses)}
+                        </PrivacyValue>
+                      </span>
                     </div>
                     
                     {summary.expensesDetails && summary.expensesDetails.length > 0 ? (
@@ -434,7 +468,11 @@ const FinancialOverview = () => {
                                 </div>
                               </div>
                             </div>
-                            <span className="text-sm font-bold text-red-600">{formatCurrency(expense.amount)}</span>
+                            <span className="text-sm font-bold text-red-600">
+                              <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                {formatCurrency(expense.amount)}
+                              </PrivacyValue>
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -450,7 +488,11 @@ const FinancialOverview = () => {
                     <div>
                       <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg mb-3">
                         <span className="text-gray-700 dark:text-light font-medium">Gastos com Cartão de Crédito:</span>
-                        <span className="font-bold text-blue-600">{formatCurrency(summary.totalCreditCardExpenses)}</span>
+                        <span className="font-bold text-blue-600">
+                          <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                            {formatCurrency(summary.totalCreditCardExpenses)}
+                          </PrivacyValue>
+                        </span>
                       </div>
                       
                       {summary.creditCardExpensesDetails && summary.creditCardExpensesDetails.length > 0 ? (
@@ -476,7 +518,11 @@ const FinancialOverview = () => {
                                   )}
                                 </div>
                               </div>
-                              <span className="text-sm font-bold text-blue-600">{formatCurrency(expense.amount)}</span>
+                              <span className="text-sm font-bold text-blue-600">
+                                <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                  {formatCurrency(expense.amount)}
+                                </PrivacyValue>
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -488,7 +534,11 @@ const FinancialOverview = () => {
                   <div>
                     <div className="flex justify-between items-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg mb-3">
                       <span className="text-gray-700 dark:text-light font-medium">Despesas Fixas:</span>
-                      <span className="font-bold text-orange-600">{formatCurrency(summary.totalFixedExpenses || 0)}</span>
+                      <span className="font-bold text-orange-600">
+                        <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                          {formatCurrency(summary.totalFixedExpenses || 0)}
+                        </PrivacyValue>
+                      </span>
                     </div>
                     
                     {summary.fixedExpensesDetails && summary.fixedExpensesDetails.length > 0 ? (
@@ -501,7 +551,7 @@ const FinancialOverview = () => {
                                 {expense.description}
                               </div>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
-                                Vencimento: {new Date(expense.due_date).toLocaleDateString('pt-BR')}
+                                Vencimento: Dia {expense.due_date}
                                 {expense.account_name && (
                                   <div className="flex items-center gap-1 mt-1">
                                     <span className={`px-1 py-0.5 rounded text-xs ${
@@ -522,7 +572,11 @@ const FinancialOverview = () => {
                                 )}
                               </div>
                             </div>
-                            <span className="text-sm font-bold text-orange-600">{formatCurrency(expense.amount)}</span>
+                            <span className="text-sm font-bold text-orange-600">
+                              <PrivacyValue isPrivacyMode={isPrivacyMode}>
+                                {formatCurrency(expense.amount)}
+                              </PrivacyValue>
+                            </span>
                           </div>
                         ))}
                       </div>

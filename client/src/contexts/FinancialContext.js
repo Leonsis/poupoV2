@@ -259,12 +259,13 @@ export const FinancialProvider = ({ children }) => {
                 console.log('Nova conta recebida:', newAccount);
                 console.log('ID da nova conta:', newAccount.id, 'Tipo:', typeof newAccount.id);
 
-                // Garantir que a nova conta tenha account_category e balance
+                // Garantir que a nova conta tenha account_category, balance e is_visible
                 const accountWithCategory = {
                     ...newAccount,
                     id: parseInt(newAccount.id, 10), // Garantir que o ID seja um número
                     account_category: newAccount.account_category || accountData.account_category || 'debito',
-                    balance: parseFloat(newAccount.balance) || parseFloat(accountData.balance) || 0
+                    balance: parseFloat(newAccount.balance) || parseFloat(accountData.balance) || 0,
+                    is_visible: newAccount.is_visible !== undefined ? newAccount.is_visible : (accountData.is_visible !== undefined ? accountData.is_visible : true)
                 };
 
                 console.log('Conta final para adicionar ao estado:', accountWithCategory);
@@ -820,7 +821,9 @@ export const FinancialProvider = ({ children }) => {
     };
 
     const getTotalBankBalance = () => {
-        return (bankAccounts || []).reduce((sum, account) => sum + parseFloat(account.balance || 0), 0);
+        return (bankAccounts || [])
+            .filter(account => account.is_visible !== 0 && account.is_visible !== false)
+            .reduce((sum, account) => sum + parseFloat(account.balance || 0), 0);
     };
 
     const getExpensesByMethod = () => {

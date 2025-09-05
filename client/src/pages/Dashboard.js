@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useFinancial } from '../contexts/FinancialContext';
+import { usePrivacy } from '../contexts/PrivacyContext';
 import { Button, Card, NotificationContainer, useNotifications } from '../components/ui';
 import { 
   Menu, 
@@ -15,7 +16,9 @@ import {
   LogOut,
   Sun,
   Moon,
-  PiggyBank
+  PiggyBank,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 // Componentes das páginas
@@ -33,6 +36,7 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const { loadInitialData, hasLoadedInitialData } = useFinancial();
+  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const { notifications, removeNotification, showSuccess, showError } = useNotifications();
   const navigate = useNavigate();
   const location = useLocation();
@@ -255,8 +259,19 @@ const Dashboard = () => {
                   variant="ghost"
                   size="sm"
                   onClick={toggleTheme}
+                  title={isDarkMode ? 'Modo claro' : 'Modo escuro'}
                 >
                   {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={togglePrivacyMode}
+                  title={isPrivacyMode ? 'Mostrar valores' : 'Ocultar valores'}
+                  className={isPrivacyMode ? 'text-red-500 hover:text-red-600' : 'text-gray-500 hover:text-gray-600'}
+                >
+                  {isPrivacyMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </Button>
                 
                 <Button
