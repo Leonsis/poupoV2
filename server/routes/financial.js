@@ -6,6 +6,7 @@ const geminiService = require('../services/geminiService');
 const { errorLogger } = require('../middleware/errorLogger');
 const FixedExpenseTransitionService = require('../services/fixedExpenseTransitionService');
 const MonthlySummaryService = require('../services/monthlySummaryService');
+const MonthlyExpenseDuplicationService = require('../services/monthlyExpenseDuplicationService');
 
 const router = express.Router();
 router.use(auth); // Todas as rotas neste arquivo requerem autenticação
@@ -802,6 +803,8 @@ router.put('/fixed-expenses/:id/pay', async (req, res) => {
     try {
         const { id } = req.params;
         const { bank_account_id } = req.body;
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const currentDateTime = getCurrentDateTime();
 
         // Verificar se a despesa existe e pertence ao usuário
         const expense = await db.get(
@@ -1426,6 +1429,24 @@ router.post('/fixed-expenses/execute-transition', async (req, res) => {
         });
     } catch (error) {
         console.error('Erro ao executar transição mensal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno do servidor'
+        });
+    }
+});
+
+// Executar duplicação mensal de despesas fixas
+router.post('/fixed-expenses/execute-monthly-duplication', async (req, res) => {
+    try {
+        const result = await MonthlyExpenseDuplicationService.executeIfNeeded();
+        
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Erro ao executar duplicação mensal:', error);
         res.status(500).json({
             success: false,
             message: 'Erro interno do servidor'

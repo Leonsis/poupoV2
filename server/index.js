@@ -14,6 +14,7 @@ const adminRoutes = require('./routes/admin');
 
 const detailedLogger = require('./middleware/detailedLogger');
 const { errorLogger, errorLoggerMiddleware } = require('./middleware/errorLogger');
+const monthlyDuplicationMiddleware = require('./middleware/monthlyDuplication');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -77,6 +78,9 @@ app.use(detailedLogger);
 
 // Middleware de logging de erros
 app.use(errorLoggerMiddleware);
+
+// Middleware de duplicação mensal automática
+app.use(monthlyDuplicationMiddleware);
 
 // Rotas
 app.use('/api/auth', authRoutes);

@@ -11952,5 +11952,625 @@
     },
     "timestamp": "2025-09-04 23:17:12",
     "processId": 22992
+  },
+  {
+    "id": 1757039354151.9404,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "POST",
+      "url": "/api/auth/login",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "51",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidGVzdGVAZ21haWwuY29tIiwiaWF0IjoxNzU3MDM4NjM1LCJleHAiOjE3NTc2NDM0MzV9.WSKkIdvxvWBAjwzOpU6CydiK4EfCrWL9QQBn-M9OXiI",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "email": "caiolenni@gmail.com",
+        "password": "123456"
+      },
+      "query": {},
+      "params": {},
+      "error": {
+        "message": "HTTP 401",
+        "stack": "Error: HTTP 401\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\auth.js:131:36",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Email ou senha inválidos\"}",
+      "statusCode": 401
+    },
+    "timestamp": "2025-09-04 23:29:14",
+    "processId": 23480
+  },
+  {
+    "id": 1757039357823.6748,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/login",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/login",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/login"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:29:17",
+    "processId": 29612
+  },
+  {
+    "id": 1757039361674.88,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/admin",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/admin",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "purpose": "prefetch",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-purpose": "prefetch;prerender",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/admin"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:29:21",
+    "processId": 12848
+  },
+  {
+    "id": 1757039403044.0398,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/login",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/login"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:03",
+    "processId": 5392
+  },
+  {
+    "id": 1757039407541.085,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/login",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/login",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/login"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:07",
+    "processId": 9340
+  },
+  {
+    "id": 1757039407577.7437,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/login",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:07",
+    "processId": 9340
+  },
+  {
+    "id": 1757039407907.3416,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/login",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/login",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/login"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:07",
+    "processId": 9340
+  },
+  {
+    "id": 1757039428874.0068,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:28",
+    "processId": 23548
+  },
+  {
+    "id": 1757039433242.6716,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/admin",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/admin",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/admin"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:33",
+    "processId": 10660
+  },
+  {
+    "id": 1757039433672.7937,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/admin",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/admin",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/admin"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:157:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-04 23:30:33",
+    "processId": 10660
+  },
+  {
+    "id": 1757161793620.6086,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "POST",
+      "url": "/api/auth/login",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "51",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "email": "caiolenni@gmail.com",
+        "password": "123456"
+      },
+      "query": {},
+      "params": {},
+      "error": {
+        "message": "HTTP 401",
+        "stack": "Error: HTTP 401\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\auth.js:131:36",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Email ou senha inválidos\"}",
+      "statusCode": 401
+    },
+    "timestamp": "2025-09-06 09:29:53",
+    "processId": 12724
+  },
+  {
+    "id": 1757161795242.5442,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "POST",
+      "url": "/api/auth/login",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "51",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "email": "caiolenni@gmail.com",
+        "password": "123456"
+      },
+      "query": {},
+      "params": {},
+      "error": {
+        "message": "HTTP 401",
+        "stack": "Error: HTTP 401\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\auth.js:131:36",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Email ou senha inválidos\"}",
+      "statusCode": 401
+    },
+    "timestamp": "2025-09-06 09:29:55",
+    "processId": 23612
+  },
+  {
+    "id": 1757162027595.191,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "POST",
+      "url": "/api/auth/login",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "51",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "email": "caiolenni@gmail.com",
+        "password": "123456"
+      },
+      "query": {},
+      "params": {},
+      "error": {
+        "message": "HTTP 401",
+        "stack": "Error: HTTP 401\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\auth.js:131:36",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Email ou senha inválidos\"}",
+      "statusCode": 401
+    },
+    "timestamp": "2025-09-06 09:33:47",
+    "processId": 5088
+  },
+  {
+    "id": 1757162029197.6467,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "POST",
+      "url": "/api/auth/login",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "51",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "email": "caiolenni@gmail.com",
+        "password": "123456"
+      },
+      "query": {},
+      "params": {},
+      "error": {
+        "message": "HTTP 401",
+        "stack": "Error: HTTP 401\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\auth.js:131:36",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Email ou senha inválidos\"}",
+      "statusCode": 401
+    },
+    "timestamp": "2025-09-06 09:33:49",
+    "processId": 9796
+  },
+  {
+    "id": 1757162199701.3328,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "PUT",
+      "url": "/api/financial/fixed-expenses/1/pay",
+      "headers": {
+        "host": "192.168.0.6:5000",
+        "connection": "keep-alive",
+        "content-length": "38",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiY2Fpb2xlbm5pQGdtYWlsLmNvbSIsImlhdCI6MTc1NzE2MjE1NSwiZXhwIjoxNzU3NzY2OTU1fQ.9fWSGHgtgfxXyviFENSNvCkvBhlce6J4kiyW7BevVuM",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": "http://localhost:3002",
+        "referer": "http://localhost:3002/",
+        "accept-encoding": "gzip, deflate",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+      },
+      "body": {
+        "is_paid": true,
+        "bank_account_id": "3"
+      },
+      "query": {},
+      "params": {
+        "id": "1"
+      },
+      "user": {
+        "userId": 2,
+        "email": "caiolenni@gmail.com",
+        "iat": 1757162155,
+        "exp": 1757766955
+      },
+      "error": {
+        "message": "HTTP 500",
+        "stack": "Error: HTTP 500\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\routes\\financial.js:872:25",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Erro interno do servidor\"}",
+      "statusCode": 500
+    },
+    "timestamp": "2025-09-06 09:36:39",
+    "processId": 9596
   }
 ]

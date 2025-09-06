@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button, Card } from '../components/ui';
+import Footer from '../components/Footer';
 import { 
   TrendingUp, 
   Shield, 
@@ -194,27 +195,7 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
-              <PiggyBank className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold">Poupo</span>
-          </div>
-          
-          <p className="text-gray-400 mb-6">
-            Sistema de organização financeira inteligente e seguro
-          </p>
-          
-          <div className="text-sm text-gray-500">
-            © 2024 Poupo. Todos os direitos reservados.
-          </div>
-          <div className="text-xs text-gray-600 mt-2">
-            Desenvolvido por <span className="font-medium">Caio Leonni</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
