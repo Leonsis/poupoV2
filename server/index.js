@@ -11,6 +11,7 @@ require('./generate-frontend-env');
 const authRoutes = require('./routes/auth');
 const financialRoutes = require('./routes/financial');
 const adminRoutes = require('./routes/admin');
+const webhookRoutes = require('./routes/webhooks');
 
 const detailedLogger = require('./middleware/detailedLogger');
 const { errorLogger, errorLoggerMiddleware } = require('./middleware/errorLogger');
@@ -86,6 +87,7 @@ app.use(monthlyDuplicationMiddleware);
 app.use('/api/auth', authRoutes);
 app.use('/api/financial', financialRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/webhooks', webhookRoutes);
 
 // Rota de teste
 app.get('/api/health', (req, res) => {

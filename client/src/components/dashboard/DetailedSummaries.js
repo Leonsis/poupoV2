@@ -651,7 +651,7 @@ const DetailedSummaries = () => {
                   <div className="text-center">
                     <div className="text-xl md:text-3xl font-bold text-green-600 mb-2">
                       <PrivacyValue isPrivacyMode={isPrivacyMode}>
-                        {formatCurrency(summary.data.totalIncome)}
+                      {formatCurrency(summary.data.totalIncome)}
                       </PrivacyValue>
                     </div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
@@ -663,7 +663,7 @@ const DetailedSummaries = () => {
                   <div className="text-center">
                     <div className="text-xl md:text-3xl font-bold text-red-600 mb-2">
                       <PrivacyValue isPrivacyMode={isPrivacyMode}>
-                        {formatCurrency(summary.data.totalExpenses)}
+                      {formatCurrency(summary.data.totalExpenses)}
                       </PrivacyValue>
                     </div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
@@ -675,7 +675,7 @@ const DetailedSummaries = () => {
                   <div className="text-center">
                     <div className="text-xl md:text-3xl font-bold text-orange-600 mb-2">
                       <PrivacyValue isPrivacyMode={isPrivacyMode}>
-                        {formatCurrency(summary.data.totalFixedExpenses)}
+                      {formatCurrency(summary.data.totalFixedExpenses)}
                       </PrivacyValue>
                     </div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
@@ -689,7 +689,7 @@ const DetailedSummaries = () => {
                       summary.data.balance >= 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
                       <PrivacyValue isPrivacyMode={isPrivacyMode}>
-                        {formatCurrency(summary.data.balance)}
+                      {formatCurrency(summary.data.balance)}
                       </PrivacyValue>
                     </div>
                     <div className="text-xs md:text-sm text-gray-600 dark:text-light flex items-center justify-center">
@@ -899,9 +899,9 @@ const DetailedSummaries = () => {
                       {summary.data.bankAccounts.filter(account => account.is_visible !== 0 && account.is_visible !== false).map((account, index) => (
                         <div key={index} className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
                           <div className="flex items-center justify-between mb-2">
-                            <div className="font-medium text-gray-900 dark:text-light">
-                              {account.account_name}
-                            </div>
+                          <div className="font-medium text-gray-900 dark:text-light">
+                            {account.account_name}
+                          </div>
                             <div className="flex items-center space-x-2">
                               {account.account_type === 'poupanca' && (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">

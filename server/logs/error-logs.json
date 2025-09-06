@@ -12572,5 +12572,932 @@
     },
     "timestamp": "2025-09-06 09:36:39",
     "processId": 9596
+  },
+  {
+    "id": 1757168117073.8062,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:161:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 11:15:17",
+    "processId": 11900
+  },
+  {
+    "id": 1757168122257.8958,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/login",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/login",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/login"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:161:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 11:15:22",
+    "processId": 19636
+  },
+  {
+    "id": 1757169462721.4229,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/admin",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/admin",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/admin"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 11:37:42",
+    "processId": 22496
+  },
+  {
+    "id": 1757169462787.244,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/admin",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/admin",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/admin"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 11:37:42",
+    "processId": 22496
+  },
+  {
+    "id": 1757171066832.965,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:04:26",
+    "processId": 8016
+  },
+  {
+    "id": 1757171066907.827,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:04:26",
+    "processId": 8016
+  },
+  {
+    "id": 1757171459011.9204,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts/sync",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts/sync",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts/sync"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:10:59",
+    "processId": 11840
+  },
+  {
+    "id": 1757171459087.2952,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts/sync",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts/sync",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts/sync"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:10:59",
+    "processId": 11840
+  },
+  {
+    "id": 1757171465509.036,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:11:05",
+    "processId": 6744
+  },
+  {
+    "id": 1757171465645.9912,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:11:05",
+    "processId": 6744
+  },
+  {
+    "id": 1757172734063.7007,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:32:14",
+    "processId": 20680
+  },
+  {
+    "id": 1757172734277.3499,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:32:14",
+    "processId": 20680
+  },
+  {
+    "id": 1757173788476.378,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts/sync",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts/sync",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts/sync"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:49:48",
+    "processId": 29212
+  },
+  {
+    "id": 1757173788618.9753,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts/sync",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:49:48",
+    "processId": 29212
+  },
+  {
+    "id": 1757173788722.6926,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts/sync",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts/sync",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts/sync"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:49:48",
+    "processId": 29212
+  },
+  {
+    "id": 1757174158161.0115,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 12:55:58",
+    "processId": 26592
+  },
+  {
+    "id": 1757174585688.012,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 13:03:05",
+    "processId": 29468
+  },
+  {
+    "id": 1757174585907.3293,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "image",
+        "sec-fetch-mode": "no-cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/favicon.ico"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 13:03:05",
+    "processId": 29468
+  },
+  {
+    "id": 1757174586398.3306,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "if-none-match": "W/\"3d5-FvN5uwq+qrhmd6SAIc/SpQUVChg\"",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 13:03:06",
+    "processId": 29468
+  },
+  {
+    "id": 1757174743913.0933,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "HEAD",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 13:05:43",
+    "processId": 11936
+  },
+  {
+    "id": 1757174743993.8835,
+    "level": "REQUEST_ERROR",
+    "message": "Erro na requisição",
+    "data": {
+      "method": "GET",
+      "url": "/dashboard/bank-accounts",
+      "headers": {
+        "x-forwarded-host": "localhost:3002",
+        "x-forwarded-proto": "http",
+        "x-forwarded-port": "3002",
+        "x-forwarded-for": "127.0.0.1",
+        "cookie": "_ga=GA1.1.1849639877.1747152927; _ga_244W4EG5X7=GS2.1.s1751480455$o4$g0$t1751480455$j60$l0$h0",
+        "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "referer": "http://localhost:3002/dashboard/bank-accounts",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "accept": "*/*",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "connection": "close",
+        "host": "localhost:5000"
+      },
+      "body": {},
+      "query": {},
+      "params": {
+        "0": "/dashboard/bank-accounts"
+      },
+      "error": {
+        "message": "HTTP 404",
+        "stack": "Error: HTTP 404\n    at res.send (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:167:46)\n    at ServerResponse.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\response.js:278:15)\n    at res.json (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\middleware\\errorLogger.js:160:29)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\index.js:163:21\n    at Layer.handle [as handle_request] (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:286:9\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\Usuário\\Desktop\\Projetos\\poupoV2\\server\\node_modules\\express\\lib\\router\\index.js:421:3)",
+        "name": "Error"
+      },
+      "responseData": "{\"success\":false,\"message\":\"Rota não encontrada\"}",
+      "statusCode": 404
+    },
+    "timestamp": "2025-09-06 13:05:43",
+    "processId": 11936
   }
 ]

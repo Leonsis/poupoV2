@@ -277,7 +277,7 @@ export const FinancialProvider = ({ children }) => {
                 });
                 await loadSummary(); // Atualiza o overview após criar conta
                 showNotification('success', 'Conta bancária criada com sucesso!');
-                return { success: true };
+                return { success: true, account: accountWithCategory };
             } else {
                 return { success: false, message: response.data.message || 'Erro ao criar conta bancária' };
             }
@@ -423,6 +423,43 @@ export const FinancialProvider = ({ children }) => {
         }
     };
 
+    // ===== INTEGRAÇÕES BANCÁRIAS =====
+    const saveBankSyncSettings = async(accountId, settings) => {
+        try {
+            if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
+            const response = await api.post(`/financial/bank-accounts/${accountId}/sync-settings`, settings);
+            if (response.data.success) {
+                setBankAccounts(prev => prev.map(acc => acc.id === parseInt(accountId, 10) ? { ...acc, ...response.data.account } : acc));
+                showNotification('success', 'Sincronização configurada com sucesso!');
+                return { success: true };
+            }
+            return { success: false, message: response.data.message };
+        } catch (error) {
+            const message = error.response?.data?.message || 'Erro ao salvar configurações de sincronização';
+            showNotification('error', message);
+            return { success: false, message };
+        }
+    };
+
+    const syncBankAccountNow = async(accountId) => {
+        try {
+            if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
+            const response = await api.post(`/financial/bank-accounts/${accountId}/sync-now`);
+            if (response.data.success) {
+                await loadBankAccounts();
+                await loadExpenses();
+                await loadSummary();
+                showNotification('success', `Sincronização concluída: ${response.data.inserted || 0} transações novas`);
+                return { success: true };
+            }
+            return { success: false, message: response.data.message };
+        } catch (error) {
+            const message = error.response?.data?.message || 'Erro ao sincronizar agora';
+            showNotification('error', message);
+            return { success: false, message };
+        }
+    };
+
     const updateIncome = async(incomeId, updateData) => {
         try {
             if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
@@ -506,6 +543,31 @@ export const FinancialProvider = ({ children }) => {
             }
         } catch (error) {
             const message = error.response?.data?.message || 'Erro ao atualizar despesa fixa';
+            showNotification('error', message);
+            return { success: false, message };
+        }
+    };
+
+    // ===== IMPORTAÇÃO DE EXTRATOS =====
+    const importTransactions = async(accountId, file) => {
+        try {
+            if (!shouldLoadData()) return { success: false, message: 'Usuário não autenticado' };
+            const formData = new FormData();
+            formData.append('account_id', accountId);
+            formData.append('file', file);
+            const response = await api.post('/financial/import-transactions', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            if (response.data.success) {
+                await loadExpenses();
+                await loadBankAccounts();
+                await loadSummary();
+                showNotification('success', `Importação concluída: ${response.data.inserted || 0} transações`);
+                return { success: true };
+            }
+            return { success: false, message: response.data.message };
+        } catch (error) {
+            const message = error.response?.data?.message || 'Erro ao importar extrato';
             showNotification('error', message);
             return { success: false, message };
         }
@@ -893,7 +955,10 @@ export const FinancialProvider = ({ children }) => {
         generateMonthlySummary,
         listMonthlySummaries,
         getMonthlySummary,
-        generateAllPendingSummaries
+        generateAllPendingSummaries,
+
+        // Integrações
+        importTransactions
     };
 
     return (

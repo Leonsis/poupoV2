@@ -7,6 +7,8 @@ const { errorLogger } = require('../middleware/errorLogger');
 const FixedExpenseTransitionService = require('../services/fixedExpenseTransitionService');
 const MonthlySummaryService = require('../services/monthlySummaryService');
 const MonthlyExpenseDuplicationService = require('../services/monthlyExpenseDuplicationService');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const router = express.Router();
 router.use(auth); // Todas as rotas neste arquivo requerem autenticação
@@ -47,6 +49,97 @@ router.get('/bank-accounts', async (req, res) => {
             success: false,
             message: 'Erro interno do servidor'
         });
+    }
+});
+
+
+// Importação de extrato (OFX/CSV)
+router.post('/import-transactions', upload.single('file'), async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { account_id } = req.body;
+        const file = req.file;
+        if (!file || !account_id) {
+            return res.status(400).json({ success: false, message: 'Arquivo e conta são obrigatórios' });
+        }
+
+        const account = await db.get('SELECT * FROM bank_accounts WHERE id = ? AND user_id = ?', [account_id, userId]);
+        if (!account) {
+            return res.status(404).json({ success: false, message: 'Conta não encontrada' });
+        }
+
+        const content = file.buffer.toString('utf8');
+        const isOFX = file.originalname.toLowerCase().endsWith('.ofx') || content.includes('<OFX>');
+        const isCSV = file.originalname.toLowerCase().endsWith('.csv') || content.includes(',');
+
+        let inserted = 0;
+        const { getCurrentDateTime } = require('../utils/dateUtils');
+        const now = getCurrentDateTime();
+
+        const upsertExpense = async (dateStr, description, amountNum) => {
+            // Deduplicação simples: mesma data, descrição e valor para o usuário e conta
+            const existing = await db.get(
+                `SELECT id FROM expenses WHERE user_id = ? AND bank_account_id = ? AND expense_date = ? AND description = ? AND amount = ?`,
+                [userId, account_id, dateStr, description, Math.abs(amountNum)]
+            );
+            if (existing) return;
+            await db.run(
+                `INSERT INTO expenses (user_id, amount, description, payment_method, expense_date, category, installments, bank_account_id, created_at, updated_at)
+                 VALUES (?, ?, ?, 'debito', ?, NULL, NULL, ?, ?, ?)`,
+                [userId, Math.abs(amountNum), description || 'Transação', dateStr, account_id, now, now]
+            );
+            // atualizar saldo débito
+            await db.run('UPDATE bank_accounts SET balance = balance - ?, updated_at = ? WHERE id = ? AND user_id = ?', [Math.abs(amountNum), now, account_id, userId]);
+            inserted++;
+        };
+
+        if (isCSV) {
+            // CSV esperado: date,description,amount (amount negativo para saída ou coluna type=debit)
+            const lines = content.split(/\r?\n/).filter(l => l.trim().length > 0);
+            // detectar header
+            const header = lines[0].toLowerCase();
+            let startIdx = 0;
+            if (header.includes('date') && header.includes('amount')) {
+                startIdx = 1;
+            }
+            for (let i = startIdx; i < lines.length; i++) {
+                const parts = lines[i].split(',');
+                if (parts.length < 2) continue;
+                const date = parts[0].trim();
+                const description = (parts[1] || '').trim();
+                const amountRaw = (parts[2] || '').trim();
+                const amount = parseFloat(amountRaw.replace('.', '').replace(',', '.')) || parseFloat(amountRaw);
+                // apenas saídas
+                if (!isNaN(amount) && amount < 0) {
+                    await upsertExpense(date, description, amount);
+                }
+            }
+        } else if (isOFX) {
+            // Parsing simples de OFX (busca por <STMTTRN> ... <DTPOSTED>, <TRNAMT>, <MEMO>)
+            const txBlocks = content.split('<STMTTRN>').slice(1);
+            for (const block of txBlocks) {
+                const dateMatch = block.match(/<DTPOSTED>([^<]+)/i);
+                const amountMatch = block.match(/<TRNAMT>([^<]+)/i);
+                const memoMatch = block.match(/<MEMO>([^<]+)/i);
+                const typeMatch = block.match(/<TRNTYPE>([^<]+)/i);
+                if (!dateMatch || !amountMatch) continue;
+                const rawDate = dateMatch[1]; // YYYYMMDD ou YYYYMMDDHHmmss
+                const dateStr = `${rawDate.substring(0,4)}-${rawDate.substring(4,6)}-${rawDate.substring(6,8)}`;
+                const amount = parseFloat(amountMatch[1]);
+                const type = (typeMatch?.[1] || '').toLowerCase();
+                // considerar apenas débito
+                if (amount < 0 || type === 'debit' || type === 'debitcard' || type === 'pos') {
+                    await upsertExpense(dateStr, memoMatch?.[1] || 'Transação', amount);
+                }
+            }
+        } else {
+            return res.status(400).json({ success: false, message: 'Formato não suportado. Envie OFX ou CSV.' });
+        }
+
+        return res.json({ success: true, inserted });
+    } catch (error) {
+        console.error('Erro ao importar extrato:', error);
+        res.status(500).json({ success: false, message: 'Erro ao importar extrato' });
     }
 });
 

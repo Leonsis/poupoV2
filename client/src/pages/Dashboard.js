@@ -28,6 +28,7 @@ import ExpenseForm from '../components/dashboard/ExpenseForm';
 import FixedExpenses from '../components/dashboard/FixedExpenses';
 import FinancialOverview from '../components/dashboard/FinancialOverview';
 import BankAccounts from '../components/dashboard/BankAccounts';
+import BankSyncForm from './BankSyncForm';
 
 import DetailedSummaries from '../components/dashboard/DetailedSummaries';
 
@@ -213,6 +214,16 @@ const Dashboard = () => {
               >
                 <LogOut className="w-4 h-4" />
               </Button>
+
+              <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={togglePrivacyMode}
+                  title={isPrivacyMode ? 'Mostrar valores' : 'Ocultar valores'}
+                  className={isPrivacyMode ? 'text-red-500 hover:text-red-600' : 'text-gray-500 hover:text-gray-600'}
+                >
+                  {isPrivacyMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </Button>
             </div>
           </Card.Content>
         </Card>
@@ -297,6 +308,7 @@ const Dashboard = () => {
             <Route path="/detailed-summaries" element={<DetailedSummaries />} />
             <Route path="/overview" element={<FinancialOverview />} />
             <Route path="/bank-accounts" element={<BankAccounts />} />
+            <Route path="/bank-accounts/import" element={<BankSyncForm />} />
           </Routes>
         </main>
       </div>

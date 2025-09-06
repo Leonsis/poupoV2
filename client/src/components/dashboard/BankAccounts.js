@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFinancial } from '../../contexts/FinancialContext';
 import { usePrivacy } from '../../contexts/PrivacyContext';
 import { 
@@ -19,6 +20,7 @@ const BankAccounts = () => {
   const { showError, showSuccess } = useNotifications();
   const { isPrivacyMode } = usePrivacy();
   const [isCreating, setIsCreating] = useState(false);
+  const navigate = useNavigate();
 
   const [deletingAccount, setDeletingAccount] = useState(null);
   const [formData, setFormData] = useState({
@@ -205,13 +207,22 @@ const BankAccounts = () => {
         </div>
         
         {!isCreating && (
-          <button
-            onClick={() => setIsCreating(true)}
-            className="btn-primary flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Nova Conta ou Cartão</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsCreating(true)}
+              className="btn-primary flex items-center space-x-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Nova Conta ou Cartão</span>
+            </button>
+            {/*
+              <button
+              onClick={() => navigate('/dashboard/bank-accounts/import')}
+              className="btn-outline"
+            >
+              Importar Extrato (OFX/CSV)
+            </button>*/}
+          </div>
         )}
       </div>
 
@@ -335,6 +346,8 @@ const BankAccounts = () => {
               </div>
             )}
           </div>
+
+          {/* Sincronização removida daqui: será feita em formulário dedicado */}
 
           <div className="flex items-center justify-end space-x-3 mt-6">
             <button
@@ -564,6 +577,8 @@ const BankAccounts = () => {
                     )}
                   </>
                 )}
+
+                {/* Sincronização removida dos cartões */}
 
                 <div className="text-xs text-gray-500 dark:text-gray-400">
                   Criada em {new Date(account.created_at).toLocaleDateString('pt-BR')}

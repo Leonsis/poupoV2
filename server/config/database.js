@@ -85,6 +85,15 @@ class Database {
                 current_debt REAL DEFAULT 0.00,
                 closing_date TEXT,
                 due_date TEXT,
+                -- Campos de sincronização com bancos
+                sync_enabled BOOLEAN DEFAULT 0,
+                sync_provider TEXT,
+                sync_base_url TEXT,
+                sync_api_key TEXT,
+                provider_account_id TEXT,
+                last_sync_at DATETIME,
+                webhook_secret TEXT,
+                sync_status TEXT,
                 created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -114,6 +123,9 @@ class Database {
                 card_name TEXT,
                 expense_date TEXT NOT NULL,
                 bank_account_id INTEGER,
+                -- Identificadores externos para evitar duplicidades em sincronização
+                external_id TEXT,
+                external_provider TEXT,
                 created_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 updated_at DATETIME DEFAULT (datetime('now', 'localtime')),
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
@@ -206,7 +218,43 @@ class Database {
                     resolve();
                 }
             });
+        }).then(async () => {
+            // Ajustes pós-criação: garantir colunas e índices (migracao suave)
+            try {
+                await this.ensureSyncColumnsAndIndexes();
+            } catch (e) {
+                console.warn('Aviso ao garantir colunas/índices de sync:', e.message);
+            }
         });
+    }
+
+    async ensureSyncColumnsAndIndexes() {
+        // Garantir colunas em bank_accounts
+        const bankCols = await this.query("PRAGMA table_info(bank_accounts)");
+        const has = (name) => bankCols.some(c => c.name === name);
+        const tryAdd = async (sql) => {
+            try { await this.run(sql); } catch (e) { /* ignora se já existe */ }
+        };
+        if (!has('sync_enabled')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN sync_enabled BOOLEAN DEFAULT 0');
+        if (!has('sync_provider')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN sync_provider TEXT');
+        if (!has('sync_base_url')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN sync_base_url TEXT');
+        if (!has('sync_api_key')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN sync_api_key TEXT');
+        if (!has('provider_account_id')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN provider_account_id TEXT');
+        if (!has('last_sync_at')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN last_sync_at DATETIME');
+        if (!has('webhook_secret')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN webhook_secret TEXT');
+        if (!has('sync_status')) await tryAdd('ALTER TABLE bank_accounts ADD COLUMN sync_status TEXT');
+
+        // Garantir colunas em expenses
+        const expCols = await this.query("PRAGMA table_info(expenses)");
+        const hasExp = (name) => expCols.some(c => c.name === name);
+        if (!hasExp('external_id')) await tryAdd('ALTER TABLE expenses ADD COLUMN external_id TEXT');
+        if (!hasExp('external_provider')) await tryAdd('ALTER TABLE expenses ADD COLUMN external_provider TEXT');
+        // Índice único
+        try {
+            await this.run('CREATE UNIQUE INDEX IF NOT EXISTS idx_expenses_external_unique ON expenses(user_id, external_provider, external_id)');
+        } catch (e) {
+            // ignora
+        }
     }
 
     async testConnection() {
